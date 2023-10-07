@@ -43,7 +43,7 @@ export default function ProductGlance({ product, toggle, show }) {
   };
 
   const handleViewCart = () => {
-    window.location.href = "/cart"; // Replace with your desired URL
+    window.location.href = "/checkout"; // Replace with your desired URL
   };
 
   const NumberButton = () => {

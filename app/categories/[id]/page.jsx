@@ -32,7 +32,7 @@ export default async function ProductDetails({ params }) {
   const category = await getCategory(params.id);
 
   return (
-    <main style={{ marginTop: 50 }}>
+    <main style={{ marginTop: 20 }}>
       {category && (
         <ProductList
           productSection={`${category.name} Category`}

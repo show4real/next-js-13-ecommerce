@@ -264,6 +264,32 @@ const Checkout = () => {
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="px-4 pt-8">
+            <p class="text-xl font-medium">Summary</p>
+            <p class="text-gray-400">
+              Check your items. And select a suitable shipping method.
+            </p>
+            <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+              {cart.map((product) => (
+                <div class="flex flex-col rounded-lg bg-white sm:flex-row">
+                  {/* <img
+                    class="m-2 h-24 w-28 rounded-md border object-cover object-center"
+                    src={product.image}
+                    alt=""
+                  /> */}
+                  <div class="flex w-full flex-col px-4 py-4">
+                    <span class="font-semibold">{product.name}</span>
+                    <span class="float-right text-gray-400 pt-2">
+                      Quantity {product.quantity}
+                    </span>
+                    <p class="text-lg font-medium pt-3">
+                      {product.quantity} X &#8358;{formatNumber(product.price)}
+                    </p>
+                  </div>
+                </div>
+              ))}
 
               <div class="mt-6 border-t border-b py-2">
                 <div class="flex items-center justify-between">
@@ -281,38 +307,12 @@ const Checkout = () => {
                   &#8358;{formatNumber(totalPrice)}
                 </p>
               </div>
-            </div>
-            <button
-              onClick={handleSubmit}
-              class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-            >
-              {saving ? "Sending Order" : "Send Order"}
-            </button>
-          </div>
-          <div class="px-4 pt-8">
-            <p class="text-xl font-medium">Summary</p>
-            <p class="text-gray-400">
-              Check your items. And select a suitable shipping method.
-            </p>
-            <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-              {cart.map((product) => (
-                <div class="flex flex-col rounded-lg bg-white sm:flex-row">
-                  <img
-                    class="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                    src={product.image}
-                    alt=""
-                  />
-                  <div class="flex w-full flex-col px-4 py-4">
-                    <span class="font-semibold">{product.name}</span>
-                    <span class="float-right text-gray-400 pt-2">
-                      Quantity {product.quantity}
-                    </span>
-                    <p class="text-lg font-medium pt-3">
-                      {product.quantity} X &#8358;{formatNumber(product.price)}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              <button
+                onClick={handleSubmit}
+                class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+              >
+                {saving ? "Sending Order" : "Send Order"}
+              </button>
             </div>
           </div>
         </div>

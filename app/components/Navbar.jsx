@@ -14,10 +14,12 @@ import {
   getBrands,
 } from "../../services/productService";
 import { Button, Drawer } from "antd";
+import Logo from "../../public/logo5.png";
 
 import CartQuick from "./CartQuick";
 
 import useCartStore from "../store/zustand";
+import Image from "next/image";
 
 const navigation = {
   pages: [
@@ -211,7 +213,7 @@ export default function Navbar() {
                     ))}
                   </div>
 
-                  <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                  {/* <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                     <div className="flow-root">
                       <a
                         href="#"
@@ -228,9 +230,9 @@ export default function Navbar() {
                         Create account
                       </a>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="border-t border-gray-200 px-4 py-6">
+                  {/* <div className="border-t border-gray-200 px-4 py-6">
                     <a href="#" className="-m-2 flex items-center p-2">
                       <img
                         src="https://tailwindui.com/img/flags/flag-nigeria.svg"
@@ -242,7 +244,7 @@ export default function Navbar() {
                       </span>
                       <span className="sr-only">, change currency</span>
                     </a>
-                  </div>
+                  </div> */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -271,7 +273,17 @@ export default function Navbar() {
                 </button>
 
                 {/* Logo */}
-                <div className="ml-4 flex lg:ml-0"></div>
+                <div className="ml-2 flex lg:ml-0">
+                  <a href="/">
+                    <Image
+                      src={Logo}
+                      alt="Hayzeeonline Computer resources"
+                      width={50}
+                      placeholder="blur"
+                      quality={100}
+                    />
+                  </a>
+                </div>
 
                 {/* Flyout menus */}
                 <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
@@ -297,7 +309,7 @@ export default function Navbar() {
                                 "relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out"
                               )}
                             >
-                              Categories
+                              Collections
                             </Popover.Button>
                           </div>
 
@@ -383,7 +395,7 @@ export default function Navbar() {
                 </Popover.Group>
 
                 <div className="ml-auto flex items-center">
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                  {/* <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <a
                       href="#"
                       className="text-sm font-medium text-gray-700 hover:text-gray-800"
@@ -412,7 +424,7 @@ export default function Navbar() {
                       <span className="ml-3 block text-sm font-medium">NG</span>
                       <span className="sr-only">, change currency</span>
                     </a>
-                  </div>
+                  </div> */}
 
                   {/* Search */}
                   <div className="flex lg:ml-6">

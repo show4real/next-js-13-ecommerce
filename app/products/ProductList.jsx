@@ -19,6 +19,7 @@ import CategorySelect from "../components/CategorySelect";
 import RamSelect from "../components/RamSelect";
 import ProcessorSelect from "../components/ProcessorSelect";
 import SortSelect from "../components/SortSelect";
+import SocialIconMenu from "../components/SocialIconMenu";
 
 export default function ProductList({
   productSection,
@@ -213,7 +214,8 @@ export default function ProductList({
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-medium leading-4 tracking-tight text-gray-900 mt-8">
+        <SocialIconMenu />
+        <h2 className="text-2xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}
         </h2>
         <div>
