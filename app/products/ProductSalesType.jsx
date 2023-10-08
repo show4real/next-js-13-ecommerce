@@ -1,5 +1,5 @@
 "use client";
-import { getOtherSales } from "../../services/productService";
+import { getOtherSales } from "../services/productService";
 import React, { useState, useEffect } from "react";
 
 import ProductCard from "../components/ProductCard";

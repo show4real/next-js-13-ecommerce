@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 
 import useCartStore from "../store/zustand";
-import settings from "../../services/settings";
-import { authService } from "../../services/response";
+import settings from "../services/settings";
+import { authService } from "../services/response";
 import { notification } from "antd";
 import axios from "axios";
 

@@ -5,9 +5,9 @@ import {
   getCategories,
   getAllCats,
   getCategoryProducts,
-} from "../../services/productService";
+} from "../services/productService";
 import React, { useState, useEffect } from "react";
-import { Button, Drawer, Space, Row } from "antd";
+import { Button, Drawer, Space, Row, Pagination } from "antd";
 import { MenuUnfoldOutlined, DownOutlined } from "@ant-design/icons";
 import ProductCard from "../components/ProductCard";
 import CarouselHolder from "./CarouselHolder";
@@ -82,7 +82,8 @@ export default function ProductList({
           category,
           search_all,
         });
-        setProducts(res.products.data);
+        //setProducts(res.products.data);
+        setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
         setTotal(res.products.total);
       } else {
         const res = await getCategoryProducts({
@@ -108,6 +109,10 @@ export default function ProductList({
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  const handleLoadMore = () => {
+    setPage(page + 1);
   };
 
   const fetchBrands = () => {
@@ -171,6 +176,16 @@ export default function ProductList({
 
   const handleSorting = (sort) => {
     setSorting(sort);
+  };
+  const onPage = async (page, rows) => {
+    setPage(page);
+    setRows(rows);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    await fetchProducts();
   };
 
   const AllFilter = () => {
@@ -299,6 +314,20 @@ export default function ProductList({
             products.map((product, key) => (
               <ProductCard product={product} key={key} />
             ))}
+          {productSection === "Trending Products" &&
+            !loading &&
+            products.length > 0 && (
+              <button onClick={handleLoadMore}>More Products</button>
+            )}
+          {products.length > 0 && (
+            <Pagination
+              total={total}
+              showTotal={(total) => `Total ${total} Products`}
+              onChange={onPage}
+              pageSize={rows}
+              current={page}
+            />
+          )}
           {!loading && products.length < 1 && (
             <div className="text-gray-200 font-md p-16 justify-center">
               <i className="fa fa-ban" style={{ marginRight: 5 }} />

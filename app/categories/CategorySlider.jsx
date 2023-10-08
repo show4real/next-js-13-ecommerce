@@ -8,7 +8,7 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { getAllBrands, getAllCategories } from "../../services/productService";
+import { getAllBrands, getAllCategories } from "../services/productService";
 import CarouselHolder from "../products/CarouselHolder";
 
 const CategorySlider = ({ brand, category }) => {

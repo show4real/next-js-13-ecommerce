@@ -12,7 +12,7 @@ import {
   getAllBrands,
   getAllCats,
   getBrands,
-} from "../../services/productService";
+} from "../services/productService";
 import { Button, Drawer } from "antd";
 import Logo from "../../public/logo5.png";
 

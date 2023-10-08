@@ -4,7 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import ImageGallery from "react-image-gallery";
 import { Tag, Button, Dropdown, Menu, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
-import { getProductImages } from "../../services/productService";
+import { getProductImages } from "../services/productService";
 import useCartStore from "../store/zustand";
 import "./NumberButton.css";
 

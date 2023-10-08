@@ -14,7 +14,7 @@ import {
   getProductImages,
   getRelatedProduct,
   getProductInfos,
-} from "../../services/productService";
+} from "../services/productService";
 import useCartStore from "../store/zustand";
 import "./NumberButton.css";
 

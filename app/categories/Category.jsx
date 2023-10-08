@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, Fragment } from "react";
 import { Tabs, Button } from "antd";
-import { getCategories } from "../../services/productService";
+import { getCategories } from "../services/productService";
 import CarouselHolder from "../products/CarouselHolder";
 import ProductCard from "app/components/ProductCard";
 
