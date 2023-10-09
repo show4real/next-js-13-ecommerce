@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 const useCartStore = create((set) => ({
   cart: JSON.parse(localStorage.getItem("cart")) || [],
