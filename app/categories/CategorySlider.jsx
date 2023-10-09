@@ -100,7 +100,7 @@ const CategorySlider = ({ brand, category }) => {
                 {/* Add your carousel slides here */}
                 {category === "category" &&
                   categories.map((category, key) => (
-                    <div>
+                    <div key={key}>
                       <a
                         href={`/category/${category.slug}`}
                         style={{ textDecoration: "none", color: "black" }}
@@ -127,7 +127,7 @@ const CategorySlider = ({ brand, category }) => {
                   ))}
                 {brand === "brand" &&
                   brands.map((brand, key) => (
-                    <div>
+                    <div key={key}>
                       <a
                         href={`/brand/${brand.slug}`}
                         style={{ textDecoration: "none", color: "black" }}

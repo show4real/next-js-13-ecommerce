@@ -2,7 +2,8 @@
 import { getOtherSales } from "../services/productService";
 import React, { useState, useEffect } from "react";
 
-import ProductCard from "../components/ProductCard";
+// import ProductCard from "../components/ProductCard";
+import ProductCard from "app/components/ProductCard";
 import CarouselHolder from "./CarouselHolder";
 
 export default function ProductSaleType({ sale_type }) {

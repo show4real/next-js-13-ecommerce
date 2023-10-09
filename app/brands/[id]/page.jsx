@@ -1,4 +1,4 @@
-import ProductList from "../../products/ProductList";
+import ProductList from "/app/products/ProductList";
 
 import { notFound } from "next/navigation";
 

@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 
-import useCartStore from "../store/zustand";
-import settings from "../services/settings";
+import useCartStore from "/app/store/zustand";
+import settings from "/app/services/settings";
 import { authService } from "../services/response";
 import { notification } from "antd";
 import axios from "axios";
@@ -272,8 +272,11 @@ const Checkout = () => {
               Check your items. And select a suitable shipping method.
             </p>
             <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-              {cart.map((product) => (
-                <div class="flex flex-col rounded-lg bg-white sm:flex-row">
+              {cart.map((product, key) => (
+                <div
+                  class="flex flex-col rounded-lg bg-white sm:flex-row"
+                  key={key}
+                >
                   {/* <img
                     class="m-2 h-24 w-28 rounded-md border object-cover object-center"
                     src={product.image}
@@ -317,7 +320,7 @@ const Checkout = () => {
           </div>
         </div>
       ) : (
-        <div class="grid mt-28 px-4 bg-white place-content-center">
+        <div class="grid mt-28 px-4 bg-white place-content-center" key={key}>
           <div class="text-center">
             <h1 class="font-black text-gray-200 text-4xl">Empty Cart</h1>
 
@@ -325,7 +328,7 @@ const Checkout = () => {
               Oops!!
             </p>
 
-            <p class="mt-4 text-gray-500">We can't find Items in your Cart</p>
+            <p class="mt-4 text-gray-500">We cannot find Items in your Cart</p>
 
             <a
               href="/"

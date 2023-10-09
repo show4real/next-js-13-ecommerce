@@ -14,8 +14,8 @@ import {
   getProductImages,
   getRelatedProduct,
   getProductInfos,
-} from "../services/productService";
-import useCartStore from "../store/zustand";
+} from "/app/services/productService";
+import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
 
 const ProductDetail = ({ product }) => {

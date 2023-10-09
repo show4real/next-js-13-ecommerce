@@ -1,4 +1,4 @@
-import ProductDetail from "../../components/ProductDetail";
+import ProductDetail from "/app/components/ProductDetail";
 import { notFound } from "next/navigation";
 
 export const dynamicParams = true; // default val = true

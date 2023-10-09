@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useCartStore from "../store/zustand";
+import useCartStore from "/app/store/zustand";
 
 const CartQuick = () => {
   const [open, setOpen] = useState(true);

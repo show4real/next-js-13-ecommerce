@@ -4,8 +4,8 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import ImageGallery from "react-image-gallery";
 import { Tag, Button, Dropdown, Menu, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
-import { getProductImages } from "../services/productService";
-import useCartStore from "../store/zustand";
+import { getProductImages } from "/app/services/productService";
+import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
 
 export default function ProductGlance({ product, toggle, show }) {

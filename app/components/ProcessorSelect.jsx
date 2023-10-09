@@ -42,8 +42,10 @@ const ProcessorSelect = ({ processors, handleProcessor }) => {
       //   dropdownRender={renderProcessorDropdown}
       dropdownStyle={{ minWidth: 300 }}
     >
-      {processorsList.map((option) => (
-        <Checkbox value={option}>{option}</Checkbox>
+      {processorsList.map((option, key) => (
+        <Checkbox key={key} value={option}>
+          {option}
+        </Checkbox>
       ))}
     </Select>
   );

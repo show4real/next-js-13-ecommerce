@@ -1,4 +1,4 @@
-import Checkout from "../components/Checkout";
+import Checkout from "/app/components/Checkout";
 
 export const metadata = {
   title: "Uk Used Laptops Mobile Phones at Affordable Prices",

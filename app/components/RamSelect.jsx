@@ -36,8 +36,10 @@ const RamSelect = ({ rams, handleRam }) => {
       }}
       dropdownStyle={{ minWidth: 300 }}
     >
-      {ramsList.map((option) => (
-        <Checkbox value={option}>{option}</Checkbox>
+      {ramsList.map((option, key) => (
+        <Checkbox key={key} value={option}>
+          {option}
+        </Checkbox>
       ))}
     </Select>
   );

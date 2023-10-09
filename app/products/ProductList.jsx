@@ -9,17 +9,17 @@ import {
 import React, { useState, useEffect } from "react";
 import { Button, Drawer, Space, Row, Pagination } from "antd";
 import { MenuUnfoldOutlined, DownOutlined } from "@ant-design/icons";
-import ProductCard from "../components/ProductCard";
-import CarouselHolder from "./CarouselHolder";
-import PriceSelect from "../components/PriceSelect";
-import SearchSelect from "../components/SearchSelect";
-import StorageSelect from "../components/StorageSelect";
-import BrandSelect from "../components/BrandSelect";
-import CategorySelect from "../components/CategorySelect";
-import RamSelect from "../components/RamSelect";
-import ProcessorSelect from "../components/ProcessorSelect";
-import SortSelect from "../components/SortSelect";
-import SocialIconMenu from "../components/SocialIconMenu";
+import ProductCard from "/app/components/ProductCard";
+import CarouselHolder from "/app/products/CarouselHolder";
+import PriceSelect from "/app/components/PriceSelect";
+import SearchSelect from "/app/components/SearchSelect";
+import StorageSelect from "/app/components/StorageSelect";
+import BrandSelect from "/app/components/BrandSelect";
+import CategorySelect from "/app/components/CategorySelect";
+import RamSelect from "/app/components/RamSelect";
+import ProcessorSelect from "/app/components/ProcessorSelect";
+import SortSelect from "/app/components/SortSelect";
+import SocialIconMenu from "/app/components/SocialIconMenu";
 
 export default function ProductList({
   productSection,

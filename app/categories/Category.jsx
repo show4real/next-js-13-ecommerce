@@ -86,8 +86,9 @@ const Category = ({}) => {
                 <TabPane tab={category.name} key={key}>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {category.products.length &&
-                      category.products.map((product) => (
+                      category.products.map((product, key) => (
                         <div
+                          key={key}
                           className={`sm:ml-10 md:ml-0 lg:ml-0 xl:ml-0 ml-5`}
                           style={{
                             marginBottom: 20,

@@ -12,13 +12,13 @@ import {
   getAllBrands,
   getAllCats,
   getBrands,
-} from "../services/productService";
+} from "/app/services/productService";
 import { Button, Drawer } from "antd";
-import Logo from "../../public/logo5.png";
+import Logo from "/public/logo5.png";
 
 import CartQuick from "./CartQuick";
 
-import useCartStore from "../store/zustand";
+import useCartStore from "/app/store/zustand";
 import Image from "next/image";
 
 const navigation = {
@@ -184,8 +184,8 @@ export default function Navbar() {
                             className="mt-6 flex flex-col space-y-6"
                           >
                             {!loading &&
-                              categories.map((category) => (
-                                <li className="flow-root">
+                              categories.map((category, key) => (
+                                <li className="flow-root" key={key}>
                                   <a
                                     href={`/categories/${category.slug}`}
                                     className="-m-2 block p-2 text-gray-500"
@@ -288,7 +288,7 @@ export default function Navbar() {
                 {/* Flyout menus */}
                 <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                   <div className="flex h-full space-x-8">
-                    {navigation.pages.map((page) => (
+                    {navigation.pages.map((page, key) => (
                       <a
                         key={page.name}
                         href={page.href}
@@ -346,8 +346,11 @@ export default function Navbar() {
                                           className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
                                         >
                                           {!loading &&
-                                            categories.map((category) => (
-                                              <li className="flow-root">
+                                            categories.map((category, key) => (
+                                              <li
+                                                className="flow-root"
+                                                key={key}
+                                              >
                                                 <a
                                                   href={`/categories/${category.slug}`}
                                                   className="-m-2 block p-2 text-gray-500"
@@ -366,12 +369,13 @@ export default function Navbar() {
                                           Brands
                                         </p>
                                         <ul
+                                          key={1}
                                           role="list"
                                           aria-labelledby={`clothing-heading`}
                                           className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
                                         >
-                                          {brands.map((brand) => (
-                                            <li className="flex">
+                                          {brands.map((brand, key) => (
+                                            <li className="flex" key={key}>
                                               <a
                                                 href={`/brands/${brand.slug}`}
                                                 className="hover:text-gray-800"
