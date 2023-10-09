@@ -1,12 +1,10 @@
-"use client";
 import { create } from "zustand";
 
 const useCartStore = create((set) => ({
-  cart: JSON.parse(localStorage.getItem("cart")) || [],
+  cart: [], // Initialize cart as an empty array initially
   addToCart: (item) => {
     set((state) => {
       const updatedCart = [...state.cart, { ...item, quantity: 1 }];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return { cart: updatedCart };
     });
   },
@@ -15,7 +13,6 @@ const useCartStore = create((set) => ({
       const updatedCart = state.cart.filter(
         (cartItem) => cartItem.id !== itemId
       );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return { cart: updatedCart };
     });
   },
@@ -26,7 +23,6 @@ const useCartStore = create((set) => ({
       const updatedCart = state.cart.map((cartItem) =>
         cartItem.id === itemId ? { ...cartItem, quantity } : cartItem
       );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
       return { cart: updatedCart };
     });
   },
@@ -35,10 +31,8 @@ const useCartStore = create((set) => ({
       return total + cartItem.price * cartItem.quantity;
     }, 0);
   },
-
   clearCart: () => {
-    localStorage.removeItem("cart"); // Remove cart data from localStorage
-    set({ cart: [] });
+    return { cart: [] }; // Clear the cart state
   },
 }));
 
