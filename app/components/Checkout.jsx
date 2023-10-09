@@ -320,7 +320,7 @@ const Checkout = () => {
           </div>
         </div>
       ) : (
-        <div class="grid mt-28 px-4 bg-white place-content-center" key={key}>
+        <div class="grid mt-28 px-4 bg-white place-content-center" key={1}>
           <div class="text-center">
             <h1 class="font-black text-gray-200 text-4xl">Empty Cart</h1>
 
