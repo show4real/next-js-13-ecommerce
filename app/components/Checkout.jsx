@@ -139,30 +139,33 @@ const Checkout = () => {
   return (
     <>
       {cart.length > 0 ? (
-        <div class="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
-          <div class="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-            <p class="text-xl font-medium">Customer Details</p>
-            <p class="text-gray-400">
+        <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
+          <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
+            <p className="text-xl font-medium">Customer Details</p>
+            <p className="text-gray-400">
               Complete your order by providing your details.
             </p>
-            <div class="">
-              <label for="email" class="mt-4 mb-2 block text-sm font-medium">
+            <div className="">
+              <label
+                for="email"
+                className="mt-4 mb-2 block text-sm font-medium"
+              >
                 Email
               </label>
-              <div class="relative">
+              <div className="relative">
                 <input
                   type="text"
                   id="email"
                   name="email"
                   value={fields.email}
                   onChange={handleCartInput}
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="your.email@gmail.com"
                 />
-                <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 text-gray-400"
+                    className="h-4 w-4 text-gray-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -181,17 +184,17 @@ const Checkout = () => {
                   </span>
                 </div>
               </div>
-              <label for="name" class="mt-4 mb-2 block text-sm font-medium">
+              <label for="name" className="mt-4 mb-2 block text-sm font-medium">
                 Full Name
               </label>
-              <div class="relative">
+              <div className="relative">
                 <input
                   type="text"
                   id="email"
                   name="name"
                   value={fields.name}
                   onChange={handleCartInput}
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Your full Name"
                 />
                 <div>
@@ -202,18 +205,18 @@ const Checkout = () => {
               </div>
               <label
                 for="card-holder"
-                class="mt-4 mb-2 block text-sm font-medium"
+                className="mt-4 mb-2 block text-sm font-medium"
               >
                 Address
               </label>
-              <div class="relative">
+              <div className="relative">
                 <input
                   type="text"
                   id="card-holder"
                   name="address"
                   value={fields.address}
                   onChange={handleCartInput}
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Your full name here"
                 />
                 <div>
@@ -228,14 +231,14 @@ const Checkout = () => {
               >
                 Phone
               </label>
-              <div class="relative">
+              <div className="relative">
                 <input
                   type="text"
                   id="card-holder"
                   name="phone"
                   value={fields.phone}
                   onChange={handleCartInput}
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Your full name here"
                 />
                 <div>
@@ -246,15 +249,15 @@ const Checkout = () => {
               </div>
               <label
                 for="card-holder"
-                class="mt-4 mb-2 block text-sm font-medium"
+                className="mt-4 mb-2 block text-sm font-medium"
               >
                 Description
               </label>
-              <div class="relative">
+              <div className="relative">
                 <textarea
                   placeholder="Notes about your order, e.g. special notes for delivery. "
                   name="description"
-                  class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   value={fields.description}
                   onChange={handleCartInput}
                 />
@@ -266,53 +269,53 @@ const Checkout = () => {
               </div>
             </div>
           </div>
-          <div class="px-4 pt-8">
-            <p class="text-xl font-medium">Summary</p>
-            <p class="text-gray-400">
+          <div className="px-4 pt-8">
+            <p className="text-xl font-medium">Summary</p>
+            <p className="text-gray-400">
               Check your items. And select a suitable shipping method.
             </p>
-            <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+            <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
               {cart.map((product, key) => (
                 <div
-                  class="flex flex-col rounded-lg bg-white sm:flex-row"
+                  className="flex flex-col rounded-lg bg-white sm:flex-row"
                   key={key}
                 >
                   {/* <img
-                    class="m-2 h-24 w-28 rounded-md border object-cover object-center"
+                    className="m-2 h-24 w-28 rounded-md border object-cover object-center"
                     src={product.image}
                     alt=""
                   /> */}
-                  <div class="flex w-full flex-col px-4 py-4">
-                    <span class="font-semibold">{product.name}</span>
-                    <span class="float-right text-gray-400 pt-2">
+                  <div className="flex w-full flex-col px-4 py-4">
+                    <span className="font-semibold">{product.name}</span>
+                    <span className="float-right text-gray-400 pt-2">
                       Quantity {product.quantity}
                     </span>
-                    <p class="text-lg font-medium pt-3">
+                    <p className="text-lg font-medium pt-3">
                       {product.quantity} X &#8358;{formatNumber(product.price)}
                     </p>
                   </div>
                 </div>
               ))}
 
-              <div class="mt-6 border-t border-b py-2">
-                <div class="flex items-center justify-between">
-                  <p class="text-sm font-medium text-gray-900">Subtotal</p>
-                  <p class="font-semibold text-gray-900">
+              <div className="mt-6 border-t border-b py-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">Subtotal</p>
+                  <p className="font-semibold text-gray-900">
                     {" "}
                     &#8358;{formatNumber(totalPrice)}
                   </p>
                 </div>
               </div>
-              <div class="mt-6 flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-900">Total</p>
-                <p class="text-2xl font-semibold text-gray-900">
+              <div className="mt-6 flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-900">Total</p>
+                <p className="text-2xl font-semibold text-gray-900">
                   {" "}
                   &#8358;{formatNumber(totalPrice)}
                 </p>
               </div>
               <button
                 onClick={handleSubmit}
-                class="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
+                className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
               >
                 {saving ? "Sending Order" : "Send Order"}
               </button>
@@ -320,19 +323,21 @@ const Checkout = () => {
           </div>
         </div>
       ) : (
-        <div class="grid mt-28 px-4 bg-white place-content-center" key={1}>
-          <div class="text-center">
-            <h1 class="font-black text-gray-200 text-4xl">Empty Cart</h1>
+        <div className="grid mt-28 px-4 bg-white place-content-center" key={1}>
+          <div className="text-center">
+            <h1 className="font-black text-gray-200 text-4xl">Empty Cart</h1>
 
-            <p class="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Oops!!
             </p>
 
-            <p class="mt-4 text-gray-500">We cannot find Items in your Cart</p>
+            <p className="mt-4 text-gray-500">
+              We cannot find Items in your Cart
+            </p>
 
             <a
               href="/"
-              class="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
+              className="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
             >
               Go Back Home
             </a>

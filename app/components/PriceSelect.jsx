@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Slider, Select, InputNumber, Button } from "antd";
 const { Option } = Select;
 
 const PriceSelect = ({ price, handlePrice, fetchProducts }) => {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
   const handleParser = (inputValue) => {
     // Only accept valid numeric values
     const numericValue = parseInt(inputValue, 10);
     return isNaN(numericValue) ? "" : numericValue;
   };
+
+  const closeDropdown = () => {
+    setDropdownVisible(false);
+  };
+
   return (
     <Select
       style={{ width: "100%", height: 50 }}
@@ -99,22 +106,26 @@ const PriceSelect = ({ price, handlePrice, fetchProducts }) => {
           </div>
           <div className="flex justify-end pt-5">
             <button
-              class="bg-blue-950 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              className="bg-blue-950 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
               type="button"
-              onClick={fetchProducts}
+              onClick={() => {
+                fetchProducts();
+                closeDropdown();
+              }}
             >
               Apply Filter
             </button>
           </div>
         </div>
       )}
+      onDropdownVisibleChange={(visible) => setDropdownVisible(visible)}
+      open={dropdownVisible}
     >
       <Option value="range">
         {" "}
         <span
           style={{
             fontWeight: "bold",
-
             color: "black",
           }}
         >

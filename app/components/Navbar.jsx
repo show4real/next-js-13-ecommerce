@@ -17,7 +17,7 @@ import { Button, Drawer } from "antd";
 import Logo from "/public/logo5.png";
 
 import CartQuick from "./CartQuick";
-
+import SearchSuggestion from "/app/components/SearchSuggestion";
 import useCartStore from "/app/store/zustand";
 import Image from "next/image";
 
@@ -41,12 +41,22 @@ export default function Navbar() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [openCart, setOpenCart] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
 
   const showDrawer = () => {
     setOpenCart(true);
   };
+
   const onCloseCart = () => {
     setOpenCart(false);
+  };
+
+  const onCloseSearch = () => {
+    setOpenSearch(false);
+  };
+
+  const showSearchDrawer = () => {
+    setOpenSearch(true);
   };
 
   const { cart } = useCartStore();
@@ -431,17 +441,40 @@ export default function Navbar() {
                   </div> */}
 
                   {/* Search */}
-                  <div className="flex lg:ml-6">
-                    <a
-                      href="#"
-                      className="p-2 text-gray-400 hover:text-gray-500"
-                    >
-                      <span className="sr-only">Search</span>
-                      <MagnifyingGlassIcon
-                        className="h-6 w-6"
-                        aria-hidden="true"
-                      />
-                    </a>
+                  <div className="flex">
+                    <>
+                      <button
+                        type="primary"
+                        onClick={showSearchDrawer}
+                        className="group -m-2 flex items-center p-2"
+                      >
+                        <MagnifyingGlassIcon
+                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      <Drawer
+                        title="Quick Search"
+                        placement="right"
+                        onClose={onCloseSearch}
+                        open={openSearch}
+                      >
+                        <div className="mt-0 mb-2 flex justify-center text-center text-sm text-gray-500">
+                          <p>
+                            <button
+                              type="button"
+                              className="font-medium text-indigo-600 hover:text-indigo-500"
+                              onClick={onCloseSearch}
+                            >
+                              Back to Menu
+                              <span aria-hidden="true"> &rarr;</span>
+                            </button>
+                          </p>
+                        </div>
+                        <SearchSuggestion />
+                      </Drawer>
+                    </>
                   </div>
 
                   {/* Cart */}

@@ -29,7 +29,7 @@ export default function ProductList({
 }) {
   const [products, setProducts] = useState([]);
 
-  const [rows, setRows] = useState(10);
+  const [rows, setRows] = useState(12);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
 
@@ -47,6 +47,7 @@ export default function ProductList({
   const [category, setCategory] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [newLoading, setNewLoading] = useState(false);
 
   const [mobileFilter, setFilter] = useState(false);
   const [filterPosition, setFilterPosition] = useState("left");
@@ -60,9 +61,13 @@ export default function ProductList({
   };
 
   useEffect(() => {
-    fetchProducts();
-    fetchBrands();
-    fetchCategories();
+    if (productSection == "Trending Products" && products.length > 0) {
+      loadMoreProducts();
+    } else {
+      fetchProducts();
+      fetchBrands();
+      fetchCategories();
+    }
   }, [brand, rams, sort, storages, processors, category, rows, page]);
 
   const fetchProducts = async () => {
@@ -82,8 +87,8 @@ export default function ProductList({
           category,
           search_all,
         });
-        //setProducts(res.products.data);
-        setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+        setProducts(res.products.data);
+        //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
         setTotal(res.products.total);
       } else {
         const res = await getCategoryProducts({
@@ -109,6 +114,31 @@ export default function ProductList({
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  const loadMoreProducts = async () => {
+    setNewLoading(true);
+    getProducts({
+      page,
+      rows,
+      price,
+      brand,
+      rams,
+      sort,
+      storages,
+      processors,
+      category,
+      search_all,
+    }).then(
+      (res) => {
+        setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+        setTotal(res.products.total);
+        setNewLoading(false);
+      },
+      (error) => {
+        setNewLoading(false);
+      }
+    );
   };
 
   const handleLoadMore = () => {
@@ -234,7 +264,7 @@ export default function ProductList({
           {productSection}
         </h2>
         <div>
-          <div class="grid grid-cols-6 justify-center pt-8 pb-5">
+          <div className="grid grid-cols-6 justify-center pt-8 pb-5">
             <div className="col-start-2 col-span-4">
               <SearchSelect
                 search_all={search_all}
@@ -244,32 +274,33 @@ export default function ProductList({
             </div>
           </div>
         </div>
-        <div className="lg:hidden md:hidden xl:hidden pt-5">
+        <div className="lg:hidden md:hidden xl:hidden ">
           <>
             <Space>
-              <div
-                className="same-style mobile-off-canvas d-block d-lg-none"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  onClick={showFilter}
-                  style={{
-                    backgroundColor: "",
-                    color: "#0E1B4D",
-                    paddingTop: 0,
-                    borderColor: "#0E1B4D",
-                  }}
-                >
-                  {/* <MenuUnfoldOutlined /> */}
-                  <span className="font-bold pt-1 text-base">Filter</span>
-                  <DownOutlined
+              <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">
+                <div>
+                  <Button
                     onClick={showFilter}
-                    style={{ paddingLeft: 10, bottom: 30 }}
-                  />
-                </Button>
+                    style={{
+                      backgroundColor: "",
+                      // color: "#0E1B4D",
+                      paddingTop: 0,
+                      // borderColor: "#0E1B4D",
+                    }}
+                  >
+                    {/* <MenuUnfoldOutlined /> */}
+                    <span className="font-medium pt-1 text-small">
+                      Show Product Filter
+                    </span>
+                    <DownOutlined
+                      onClick={showFilter}
+                      style={{ paddingLeft: 5, bottom: 20 }}
+                    />
+                  </Button>
+                </div>
+                <div className="pl-10">
+                  <SortSelect sort={sort} handleSorting={handleSorting} />
+                </div>
               </div>
             </Space>
             <Drawer
@@ -302,11 +333,7 @@ export default function ProductList({
           </div>
           <AllFilter />
         </div>
-        <div className="flex pt-10 justify-end">
-          <div className="order-last">
-            <SortSelect sort={sort} handleSorting={handleSorting} />
-          </div>
-        </div>
+
         {loading && <CarouselHolder />}
 
         <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
@@ -314,12 +341,58 @@ export default function ProductList({
             products.map((product, key) => (
               <ProductCard product={product} key={key} />
             ))}
-          {productSection === "Trending Products" &&
-            !loading &&
-            products.length > 0 && (
-              <button onClick={handleLoadMore}>More Products</button>
+        </div>
+        <div>
+          {newLoading && (
+            <div style={{ textAlign: "center" }}>
+              <div class="flex justify-center items-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500 border-r-2 border-b-2"></div>
+              </div>
+            </div>
+          )}
+          {!loading &&
+            products.length < total &&
+            productSection == "Trending Products" && (
+              <div
+                style={{
+                  textAlign: "center",
+
+                  alignItems: "center",
+                }}
+              >
+                {/* <button onClick={handleLoadMore} className="load-more-button">
+                  Load More
+                </button> */}
+                <button
+                  onClick={handleLoadMore}
+                  href="#_"
+                  className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-blue-700 rounded-full shadow-md group"
+                >
+                  <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span class="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
+                    Load More
+                  </span>
+                  <span class="relative invisible">Load More</span>
+                </button>
+              </div>
             )}
-          {products.length > 0 && (
+
+          {products.length > 0 && productSection != "Trending Products" && (
             <Pagination
               total={total}
               showTotal={(total) => `Total ${total} Products`}

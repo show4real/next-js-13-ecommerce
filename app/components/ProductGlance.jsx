@@ -107,11 +107,11 @@ export default function ProductGlance({ product, toggle, show }) {
 
     return (
       <Dropdown overlay={menu} placement="bottomRight" arrow>
-        <div class="flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+        <div className="flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
           <button
             type="button"
             // style={{ width: "400px" }}
-            class="inline-flex items-center w-full justify-center rounded-md border-2  bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-blue-500"
+            className="inline-flex items-center w-full justify-center rounded-md border-2  bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-blue-500"
           >
             Buy Now
           </button>
@@ -160,10 +160,10 @@ export default function ProductGlance({ product, toggle, show }) {
                     <span className="sr-only">Close</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
-                  <section class=" sm:py-16">
-                    <div class="container mx-auto px-4">
-                      <div class="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
-                        <div class="lg:col-span-3 lg:row-end-1">
+                  <section className=" sm:py-16">
+                    <div className="container mx-auto px-4">
+                      <div className="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
+                        <div className="lg:col-span-3 lg:row-end-1">
                           <ImageGallery
                             showPlayButton={false}
                             showNav={true}
@@ -175,7 +175,7 @@ export default function ProductGlance({ product, toggle, show }) {
                           />
                         </div>
 
-                        <div class="lg:col-span-5 lg:row-span-2 lg:row-end-2">
+                        <div className="lg:col-span-5 lg:row-span-2 lg:row-end-2">
                           <h5
                             style={{
                               color: "#0E1B4D",
@@ -190,33 +190,33 @@ export default function ProductGlance({ product, toggle, show }) {
                               {product.availability ? "Stock" : "Sold"}
                             </Tag>
                           </span>
-                          <h1 class="sm: text-2xl font-bold text-gray-900 sm:text-3xl">
+                          <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl">
                             {product.name}
                           </h1>
-                          <h2 class="mt-8 text-base text-gray-900">
+                          <h2 className="mt-8 text-base text-gray-900">
                             Specifications
                           </h2>
-                          <div class="mt-3 flex select-none flex-wrap items-center gap-1">
-                            <label class="">
-                              <p class="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                          <div className="mt-3 flex select-none flex-wrap items-center gap-1">
+                            <label className="">
+                              <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
                                 {product.storage !== "null" && product.storage}{" "}
                                 Storage
                               </p>
                             </label>
-                            <label class="">
-                              <p class="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                            <label className="">
+                              <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
                                 {product.processor !== "null" &&
                                   product.processor}{" "}
                                 Processor
                               </p>
                             </label>
-                            <label class="">
-                              <p class="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                            <label className="">
+                              <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
                                 {product.ram !== "null" && product.ram} RAM
                               </p>
                             </label>
                           </div>
-                          <div class="mt-5 flex select-none flex-wrap items-center gap-1">
+                          <div className="mt-5 flex select-none flex-wrap items-center gap-1">
                             <span
                               style={{
                                 fontSize: 30,
@@ -230,15 +230,15 @@ export default function ProductGlance({ product, toggle, show }) {
                             </span>{" "}
                           </div>
                           {itemInCart.length > 0 && (
-                            <div class="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+                            <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                               <NumberButton />
                             </div>
                           )}
 
-                          <div class="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+                          <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                             <button
                               type="button"
-                              class="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+                              className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
                               onClick={
                                 itemInCart.length === 0
                                   ? () => addToCart(product)
@@ -249,10 +249,10 @@ export default function ProductGlance({ product, toggle, show }) {
                             </button>
                           </div>
 
-                          <div class="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+                          <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                             <button
                               type="button"
-                              class="inline-flex items-center w-full justify-center rounded-md border-2  bg-white bg-none px-12 py-3 text-center text-base font-bold text-black transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-black"
+                              className="inline-flex items-center w-full justify-center rounded-md border-2  bg-white bg-none px-12 py-3 text-center text-base font-bold text-black transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-black"
                             >
                               <a href={`/products/${product.slug}`}>
                                 See Details
