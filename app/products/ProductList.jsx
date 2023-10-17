@@ -48,6 +48,7 @@ export default function ProductList({
 
   const [loading, setLoading] = useState(false);
   const [newLoading, setNewLoading] = useState(false);
+  const [triggeredLoadMore, setTriggeredLoadMore] = useState(false);
 
   const [mobileFilter, setFilter] = useState(false);
   const [filterPosition, setFilterPosition] = useState("left");
@@ -61,13 +62,21 @@ export default function ProductList({
   };
 
   useEffect(() => {
-    if (productSection == "Trending Products" && products.length > 0) {
-      loadMoreProducts();
-    } else {
-      fetchProducts();
-      fetchBrands();
-      fetchCategories();
-    }
+    // if (
+    //   productSection == "Trending Products" &&
+    //   products.length > 0 &&
+    //   triggeredLoadMore
+    // ) {
+    //   loadMoreProducts();
+    //   setTriggeredLoadMore(false);
+    // } else {
+    //   fetchProducts();
+    // }
+
+    fetchProducts();
+
+    fetchBrands();
+    fetchCategories();
   }, [brand, rams, sort, storages, processors, category, rows, page]);
 
   const fetchProducts = async () => {
@@ -142,7 +151,10 @@ export default function ProductList({
   };
 
   const handleLoadMore = () => {
-    setPage(page + 1);
+    // setPage(page + 1);
+    // setTriggeredLoadMore(true);
+
+    window.location.href = "/shop";
   };
 
   const fetchBrands = () => {
@@ -263,78 +275,83 @@ export default function ProductList({
         <h2 className="text-2xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}
         </h2>
-        <div>
-          <div className="grid grid-cols-6 justify-center pt-8 pb-5">
-            <div className="col-start-2 col-span-4">
-              <SearchSelect
-                search_all={search_all}
-                handleSearch={handleSearch}
-                fetchProducts={fetchProducts}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="lg:hidden md:hidden xl:hidden ">
+
+        {loading && <CarouselHolder />}
+        {!loading && products.length > 0 && (
           <>
-            <Space>
-              <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">
-                <div>
-                  <Button
-                    onClick={showFilter}
-                    style={{
-                      backgroundColor: "",
-                      // color: "#0E1B4D",
-                      paddingTop: 0,
-                      // borderColor: "#0E1B4D",
-                    }}
-                  >
-                    {/* <MenuUnfoldOutlined /> */}
-                    <span className="font-medium pt-1 text-small">
-                      Show Product Filter
-                    </span>
-                    <DownOutlined
-                      onClick={showFilter}
-                      style={{ paddingLeft: 5, bottom: 20 }}
-                    />
-                  </Button>
-                </div>
-                <div className="pl-10">
-                  <SortSelect sort={sort} handleSorting={handleSorting} />
-                </div>
-              </div>
-            </Space>
-            <Drawer
-              title="Filter Products"
-              placement={filterPosition}
-              width={330}
-              onClose={onCloseFilter}
-              open={mobileFilter}
-            >
-              <div className="flex flex-col space-y-11">
-                <div>
-                  <PriceSelect
-                    price={price}
-                    handlePrice={handlePrice}
+            <div>
+              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
+                <div className="col-start-2 col-span-4">
+                  <SearchSelect
+                    search_all={search_all}
+                    handleSearch={handleSearch}
                     fetchProducts={fetchProducts}
                   />
                 </div>
-                <AllFilter />
               </div>
-            </Drawer>
+            </div>
+            <div className="lg:hidden md:hidden xl:hidden ">
+              <>
+                <Space>
+                  <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">
+                    <div>
+                      <Button
+                        onClick={showFilter}
+                        style={{
+                          backgroundColor: "",
+                          // color: "#0E1B4D",
+                          paddingTop: 0,
+                          // borderColor: "#0E1B4D",
+                        }}
+                      >
+                        {/* <MenuUnfoldOutlined /> */}
+                        <span className="font-medium pt-1 text-small">
+                          Show Product Filter
+                        </span>
+                        <DownOutlined
+                          onClick={showFilter}
+                          style={{ paddingLeft: 5, bottom: 20 }}
+                        />
+                      </Button>
+                    </div>
+                    <div className="pl-10">
+                      <SortSelect sort={sort} handleSorting={handleSorting} />
+                    </div>
+                  </div>
+                </Space>
+                <Drawer
+                  title="Filter Products"
+                  placement={filterPosition}
+                  width={330}
+                  onClose={onCloseFilter}
+                  open={mobileFilter}
+                >
+                  <div className="flex flex-col space-y-11">
+                    <div>
+                      <PriceSelect
+                        price={price}
+                        handlePrice={handlePrice}
+                        fetchProducts={fetchProducts}
+                      />
+                    </div>
+                    <AllFilter />
+                  </div>
+                </Drawer>
+              </>
+            </div>
+            <div className="hidden lg:grid lg:grid-cols-3 md:grid md:grid-cols-3 xl:grid xl:grid-cols-3 gap-8 pt-5">
+              <div>
+                <PriceSelect
+                  price={price}
+                  handlePrice={handlePrice}
+                  fetchProducts={fetchProducts}
+                />
+              </div>
+              <AllFilter />
+              <SortSelect sort={sort} handleSorting={handleSorting} />
+            </div>
           </>
-        </div>
-        <div className="hidden  lg:grid lg:grid-cols-3 md:grid md:grid-cols-3 xl:grid xl:grid-cols-3 gap-8 pt-5">
-          <div>
-            <PriceSelect
-              price={price}
-              handlePrice={handlePrice}
-              fetchProducts={fetchProducts}
-            />
-          </div>
-          <AllFilter />
-        </div>
-
-        {loading && <CarouselHolder />}
+        )}
 
         <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {!loading &&
@@ -345,13 +362,13 @@ export default function ProductList({
         <div>
           {newLoading && (
             <div style={{ textAlign: "center" }}>
-              <div class="flex justify-center items-center">
-                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500 border-r-2 border-b-2"></div>
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500 border-r-2 border-b-2"></div>
               </div>
             </div>
           )}
           {!loading &&
-            products.length < total &&
+            products.length > 0 &&
             productSection == "Trending Products" && (
               <div
                 style={{
@@ -370,7 +387,7 @@ export default function ProductList({
                 >
                   <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">
                     <svg
-                      class="w-6 h-6"
+                      className="w-6 h-6"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -384,10 +401,10 @@ export default function ProductList({
                       ></path>
                     </svg>
                   </span>
-                  <span class="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
-                    Load More
+                  <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
+                    Shop More
                   </span>
-                  <span class="relative invisible">Load More</span>
+                  <span className="relative invisible">Shop More</span>
                 </button>
               </div>
             )}

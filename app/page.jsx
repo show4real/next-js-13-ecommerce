@@ -26,14 +26,14 @@ export default function Home() {
 
         <ProductSaleType sale_type="flash sales" />
 
-        <CategorySlider brand="brand" />
+        {/* <CategorySlider brand="brand" /> */}
 
         <ProductSaleType sale_type="promo sales" />
 
         <FeaturedServices />
         <ProductSaleType sale_type="black friday" />
         <ProductSaleType sale_type="Mid year sales" />
-        <CategorySlider category={"category"} />
+        {/* <CategorySlider category={"category"} /> */}
       </Suspense>
     </main>
   );
