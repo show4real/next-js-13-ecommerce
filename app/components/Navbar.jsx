@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
-
+import Link from "next/link";
 import {
   Bars3Icon,
   MagnifyingGlassIcon,
@@ -196,12 +196,12 @@ export default function Navbar() {
                             {!loading &&
                               categories.map((category, key) => (
                                 <li className="flow-root" key={key}>
-                                  <a
+                                  <Link
                                     href={`/categories/${category.slug}`}
                                     className="-m-2 block p-2 text-gray-500"
                                   >
                                     {category.name}
-                                  </a>
+                                  </Link>
                                 </li>
                               ))}
                           </ul>
@@ -284,7 +284,7 @@ export default function Navbar() {
 
                 {/* Logo */}
                 <div className="ml-2 flex lg:ml-0">
-                  <a href="/">
+                  <Link href="/">
                     <Image
                       src={Logo}
                       alt="Hayzeeonline Computer resources"
@@ -292,9 +292,8 @@ export default function Navbar() {
                       placeholder="blur"
                       quality={100}
                     />
-                  </a>
+                  </Link>
                 </div>
-
                 {/* Flyout menus */}
                 <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                   <div className="flex h-full space-x-8">
@@ -361,12 +360,12 @@ export default function Navbar() {
                                                 className="flow-root"
                                                 key={key}
                                               >
-                                                <a
+                                                <Link
                                                   href={`/categories/${category.slug}`}
                                                   className="-m-2 block p-2 text-gray-500"
                                                 >
                                                   {category.name}
-                                                </a>
+                                                </Link>
                                               </li>
                                             ))}
                                         </ul>
@@ -386,12 +385,12 @@ export default function Navbar() {
                                         >
                                           {brands.map((brand, key) => (
                                             <li className="flex" key={key}>
-                                              <a
+                                              <Link
                                                 href={`/brands/${brand.slug}`}
                                                 className="hover:text-gray-800"
                                               >
                                                 {brand.name}
-                                              </a>
+                                              </Link>
                                             </li>
                                           ))}
                                         </ul>
@@ -407,7 +406,6 @@ export default function Navbar() {
                     </Popover>
                   </div>
                 </Popover.Group>
-
                 <div className="ml-auto flex items-center">
                   {/* <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <a

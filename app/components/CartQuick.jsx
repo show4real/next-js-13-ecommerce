@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 import useCartStore from "/app/store/zustand";
 
@@ -39,7 +40,9 @@ const CartQuick = () => {
                     <div>
                       <div className="flex justify-between text-sm font-medium text-gray-900">
                         <h3>
-                          <a href={`/products/${cart.slug}`}>{product.name}</a>
+                          <Link href={`/products/${cart.slug}`}>
+                            {product.name}
+                          </Link>
                         </h3>
                         <p className="ml-4">
                           {" "}

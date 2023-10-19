@@ -63,11 +63,11 @@ const ProductCard = ({ product, key }) => {
         </div>
         <Link href={`/products/${product.slug}`}>
           <div className="mt-4 px-5 pb-2">
-            <a href="#">
+            <Link href={`/products/${product.slug}`}>
               <h5 className="text-sm tracking-tight text-slate-900">
                 {limitProductName(product.name)}
               </h5>
-            </a>
+            </Link>
             <div className="mt-2 flex items-center justify-between">
               <p>
                 <span className="text-sm font-bold text-slate-900">

@@ -6,6 +6,7 @@ import settings from "/app/services/settings";
 import { authService } from "../services/response";
 import { notification } from "antd";
 import axios from "axios";
+import Link from "next/link";
 
 const Checkout = () => {
   const { cart, clearCart } = useCartStore();
@@ -335,12 +336,12 @@ const Checkout = () => {
               We cannot find Items in your Cart
             </p>
 
-            <a
+            <Link
               href="/"
               className="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
             >
               Go Back Home
-            </a>
+            </Link>
           </div>
         </div>
       )}

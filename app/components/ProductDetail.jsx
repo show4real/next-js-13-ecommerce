@@ -17,6 +17,7 @@ import {
 } from "/app/services/productService";
 import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
+import Link from "next/link";
 
 const ProductDetail = ({ product }) => {
   const [images, setImages] = useState([]);
@@ -352,17 +353,14 @@ const ProductDetail = ({ product }) => {
                 </div>
               )}
               <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                <button
-                  type="button"
-                  className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
-                  onClick={
-                    itemInCart.length === 0
-                      ? () => addToCart(product)
-                      : handleViewCart
-                  }
-                >
-                  {itemInCart.length > 0 ? "View Cart" : "Add Cart"}
-                </button>
+                <Link href="/checkout">
+                  <button
+                    type="button"
+                    className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+                  >
+                    {itemInCart.length > 0 ? "View Cart" : "Add Cart"}
+                  </button>
+                </Link>
               </div>
 
               <div className="mt-3">

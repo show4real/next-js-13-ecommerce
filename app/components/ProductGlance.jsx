@@ -7,6 +7,7 @@ import { CopyOutlined } from "@ant-design/icons";
 import { getProductImages } from "/app/services/productService";
 import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
+import Link from "next/link";
 
 export default function ProductGlance({ product, toggle, show }) {
   const [images, setImages] = useState([]);
@@ -43,7 +44,7 @@ export default function ProductGlance({ product, toggle, show }) {
   };
 
   const handleViewCart = () => {
-    window.location.href = "/checkout"; // Replace with your desired URL
+    return <Link href="/checkout">View Cart</Link>;
   };
 
   const NumberButton = () => {
@@ -245,7 +246,11 @@ export default function ProductGlance({ product, toggle, show }) {
                                   : handleViewCart
                               }
                             >
-                              {itemInCart.length > 0 ? "Check Out" : "Add Cart"}
+                              {itemInCart.length > 0 ? (
+                                <Link href="/checkout">View Cart</Link>
+                              ) : (
+                                "Add Cart"
+                              )}
                             </button>
                           </div>
 
@@ -254,9 +259,9 @@ export default function ProductGlance({ product, toggle, show }) {
                               type="button"
                               className="inline-flex items-center w-full justify-center rounded-md border-2  bg-white bg-none px-12 py-3 text-center text-base font-bold text-black transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-black"
                             >
-                              <a href={`/products/${product.slug}`}>
+                              <Link href={`/products/${product.slug}`}>
                                 See Details
-                              </a>
+                              </Link>
                             </button>
                           </div>
                           <div className="mt-3">
