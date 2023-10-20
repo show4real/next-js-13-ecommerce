@@ -16,9 +16,9 @@ const SocialIconMenu = () => {
           <span className="social-icon">
             <SocialIcon url="https://www.tiktok.com/@hayzeecomputerresources?_t=8fZAlidBCxq&_r=1" />
           </span>
-          <span className="social-icon">
+          {/* <span className="social-icon">
             <SocialIcon url="https://t.me/HayzeeComputerResources" />
-          </span>
+          </span> */}
           <span className="social-icon">
             <SocialIcon url="https://www.facebook.com/Hayzeeonline?mibextid=cejktS" />
           </span>
@@ -29,7 +29,7 @@ const SocialIconMenu = () => {
         <h3 className="font-semibold text-2xl md:text-4xl text-primary">
           Quick Navigation
         </h3>
-        <p className="pt-2 text-lg text-primary text-center md:text-center">
+        <p className="pt-2 pl-3 text-justify text-sm text-primary md:pl-0 md:text-center md:text-xl">
           Without further ado, let’s help you find a device that fits your
           budget.
           <br />

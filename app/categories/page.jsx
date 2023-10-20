@@ -1,45 +1,19 @@
 import Link from "next/link";
+import CategoryList from "./CategoryList";
+
+export const metadata = {
+  title: "Uk Used Laptops Mobile Phones Categories at Affordable Prices",
+  openGraph: {
+    title: "UK used Gadgets and Appliances at Affordable prices",
+    description:
+      "Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+  },
+};
 
 export default function Categories() {
   return (
     <main>
-      <h2>Dashboard</h2>
-      <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero
-        repellendus tempore, exercitationem odit, quasi doloremque possimus
-        recusandae alias sequi totam soluta natus iure eius, obcaecati sint
-        dolores blanditiis aspernatur quo officia iusto ut. Et, aliquid sed
-        voluptates iste cum totam, facere explicabo, fugit suscipit ratione
-        aspernatur consequuntur ex mollitia quaerat?
-      </p>
-
-      <div className="flex justify-center my-8">
-        <Link href="/tickets">
-          <button className="btn-primary">View Tickets</button>
-        </Link>
-      </div>
-
-      <h2>Company Updates</h2>
-
-      <div className="card">
-        <h3>New member of the web dev team...</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at
-          quam. Dolores omnis possimus quam soluta rerum illo laborum ullam
-          pariatur molestiae, modi beatae corrupti.
-        </p>
-      </div>
-      <div className="card">
-        <h3>New website live!</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt, at
-          quam. Dolores omnis possimus quam soluta rerum illo laborum ullam
-          pariatur molestiae, modi beatae corrupti, assumenda distinctio
-          adipisci, cupiditate minima eum vitae? Similique dicta est facilis
-          debitis, autem temporibus quo repellat illum unde id iste veritatis
-          eveniet, aspernatur enim quas.
-        </p>
-      </div>
+      <CategoryList section={"categories"} />
     </main>
   );
 }

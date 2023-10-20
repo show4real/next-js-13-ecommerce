@@ -4,13 +4,17 @@ const { Option } = Select;
 
 const StorageSelect = ({ storages, handleStorage }) => {
   const storagesList = [
+    "32GB SSD",
+    "64GB SSD",
     "128GB SSD",
     "256GB SSD",
     "512GB SSD",
     "1TB SSD",
-    "128GB HDD",
-    "256GB HDD",
-    "512GB HDD",
+    "60GB HDD",
+    "120GB HDD",
+    "250GB HDD",
+    "320GB HDD",
+    "500GB HDD",
     "1TB HDD",
     "128GB SSHD",
     "256GB SSHD",

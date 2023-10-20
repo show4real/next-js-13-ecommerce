@@ -33,10 +33,7 @@ const ProductCard = ({ product, key }) => {
       )}
 
       <div className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md">
-        <div
-          className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm"
-          href="#"
-        >
+        <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
           <img
             className="peer absolute top-0 right-0 h-full w-full object-contain"
             src={product.image}
@@ -63,11 +60,9 @@ const ProductCard = ({ product, key }) => {
         </div>
         <Link href={`/products/${product.slug}`}>
           <div className="mt-4 px-5 pb-2">
-            <Link href={`/products/${product.slug}`}>
-              <h5 className="text-sm tracking-tight text-slate-900">
-                {limitProductName(product.name)}
-              </h5>
-            </Link>
+            <h5 className="text-sm tracking-tight text-slate-900">
+              {limitProductName(product.name)}
+            </h5>
             <div className="mt-2 flex items-center justify-between">
               <p>
                 <span className="text-sm font-bold text-slate-900">

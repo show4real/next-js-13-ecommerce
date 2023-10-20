@@ -20,6 +20,7 @@ export default function Home() {
           sale_type={null}
           brandslug={""}
           categoryslug={""}
+          shop={false}
         />
 
         <Category />

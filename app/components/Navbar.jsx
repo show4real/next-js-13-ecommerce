@@ -162,7 +162,7 @@ export default function Navbar() {
                     <div className="border-b border-gray-200">
                       <Tab.List className="-mb-px flex space-x-8 px-4">
                         <Tab
-                          // key={category.name}
+                          key="categories"
                           className={({ selected }) =>
                             classNames(
                               selected
@@ -172,26 +172,33 @@ export default function Navbar() {
                             )
                           }
                         >
-                          Sections
+                          Categories
+                        </Tab>
+                        <Tab
+                          key="brands"
+                          className={({ selected }) =>
+                            classNames(
+                              selected
+                                ? "border-indigo-600 text-indigo-600"
+                                : "border-transparent text-gray-900",
+                              "flex-1 whitespace-nowrap border-b-2 px-1 py-4 text-base font-medium"
+                            )
+                          }
+                        >
+                          Brands
                         </Tab>
                       </Tab.List>
                     </div>
                     <Tab.Panels as={Fragment}>
                       <Tab.Panel
-                        // key={category.name}
+                        key="categories"
                         className="space-y-10 px-4 pb-8 pt-10"
                       >
                         <div>
-                          <p
-                            id={`heading-mobile`}
-                            className="font-medium text-gray-900"
-                          >
-                            Categories
-                          </p>
                           <ul
                             role="list"
                             aria-labelledby={`heading-mobile`}
-                            className="mt-6 flex flex-col space-y-6"
+                            className="mt-0 flex flex-col space-y-6"
                           >
                             {!loading &&
                               categories.map((category, key) => (
@@ -207,18 +214,42 @@ export default function Navbar() {
                           </ul>
                         </div>
                       </Tab.Panel>
+                      <Tab.Panel
+                        key="brands"
+                        className="space-y-10 px-4 pb-8 pt-10"
+                      >
+                        <div>
+                          <ul
+                            role="list"
+                            aria-labelledby={`heading-mobile`}
+                            className="mt-0 flex flex-col space-y-6"
+                          >
+                            {!loading &&
+                              brands.map((brand, key) => (
+                                <li className="flow-root" key={key}>
+                                  <Link
+                                    href={`/categories/${brand.slug}`}
+                                    className="-m-2 block p-2 text-gray-500"
+                                  >
+                                    {brand.name}
+                                  </Link>
+                                </li>
+                              ))}
+                          </ul>
+                        </div>
+                      </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
 
                   <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                     {navigation.pages.map((page) => (
                       <div key={page.name} className="flow-root">
-                        <a
+                        <Link
                           href={page.href}
                           className="-m-2 block p-2 font-medium text-gray-900"
                         >
                           {page.name}
-                        </a>
+                        </Link>
                       </div>
                     ))}
                   </div>
@@ -298,13 +329,13 @@ export default function Navbar() {
                 <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                   <div className="flex h-full space-x-8">
                     {navigation.pages.map((page, key) => (
-                      <a
+                      <Link
                         key={page.name}
                         href={page.href}
                         className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                       >
                         {page.name}
-                      </a>
+                      </Link>
                     ))}
                     <Popover className="flex">
                       {({ open }) => (
@@ -450,6 +481,9 @@ export default function Navbar() {
                           className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                           aria-hidden="true"
                         />
+                        <span className="text-xs font-semibold text-gray-400 pl-1">
+                          search
+                        </span>
                       </button>
 
                       <Drawer

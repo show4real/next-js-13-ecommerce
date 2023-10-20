@@ -151,13 +151,6 @@ export default function ProductList({
     );
   };
 
-  const handleLoadMore = () => {
-    // setPage(page + 1);
-    // setTriggeredLoadMore(true);
-
-    window.location.href = "/shop";
-  };
-
   const fetchBrands = () => {
     setLoading(true);
     getBrands().then(
@@ -271,9 +264,9 @@ export default function ProductList({
 
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
         <SocialIconMenu />
-        <h2 className="text-2xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
+        <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}
         </h2>
 
@@ -281,7 +274,7 @@ export default function ProductList({
         {!loading && (
           <>
             <div>
-              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
+              {/* <div className="grid grid-cols-6 justify-center pt-8 pb-5">
                 <div className="col-start-2 col-span-4">
                   <SearchSelect
                     search_all={search_all}
@@ -289,7 +282,7 @@ export default function ProductList({
                     fetchProducts={fetchProducts}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="lg:hidden md:hidden xl:hidden ">
               <>
@@ -381,13 +374,13 @@ export default function ProductList({
                 {/* <button onClick={handleLoadMore} className="load-more-button">
                   Load More
                 </button> */}
-                <Link href="/shop">
+                <Link href="/products">
                   <button
                     // onClick={handleLoadMore}
                     href="#_"
-                    className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-blue-700 rounded-full shadow-md group"
+                    className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-slate-800 rounded-full shadow-md group"
                   >
-                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">
+                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-slate-700 group-hover:translate-x-0 ease">
                       <svg
                         className="w-6 h-6"
                         fill="none"

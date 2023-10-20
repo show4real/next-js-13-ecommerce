@@ -14,9 +14,10 @@ export default function Products() {
   return (
     <div className="container mx-auto pt-0">
       <ProductList
-        productSection={"Trending Products"}
+        productSection={""}
         brandslug={""}
         categoryslug={""}
+        shop={true}
       />
     </div>
   );

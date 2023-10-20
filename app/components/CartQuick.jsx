@@ -29,18 +29,20 @@ const CartQuick = () => {
               {cart.map((product) => (
                 <li key={product.id} className="flex py-6">
                   <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                    <img
-                      src={product.image}
-                      alt={"Product Image"}
-                      className="h-full w-full object-cover object-center"
-                    />
+                    <Link href={`/products/${product.slug}`}>
+                      <img
+                        src={product.image}
+                        alt={"Product Image"}
+                        className="h-full w-full object-cover object-center"
+                      />
+                    </Link>
                   </div>
 
                   <div className="ml-4 flex flex-1 flex-col">
                     <div>
                       <div className="flex justify-between text-sm font-medium text-gray-900">
                         <h3>
-                          <Link href={`/products/${cart.slug}`}>
+                          <Link href={`/products/${product.slug}`}>
                             {product.name}
                           </Link>
                         </h3>
@@ -86,12 +88,12 @@ const CartQuick = () => {
           >
             Clear Shopping Cart
           </button>
-          <a
-            href="#"
+          <Link
+            href="/checkout"
             className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
           >
             Checkout
-          </a>
+          </Link>
         </div>
       </div>
     </div>
