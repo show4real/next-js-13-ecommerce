@@ -22,10 +22,15 @@ import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
 
-export default function SearchList({ search }) {
+export default function ProductList({
+  productSection,
+  sale_type,
+  brandslug,
+  categoryslug,
+}) {
   const [products, setProducts] = useState([]);
 
-  const [rows, setRows] = useState(40);
+  const [rows, setRows] = useState(12);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
 
@@ -34,14 +39,17 @@ export default function SearchList({ search }) {
   const [processors, setProcessors] = useState([]);
   const [rams, setRams] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const [product, setProduct] = useState(null);
   const [sort, setSorting] = useState(null);
   const [price, setPrice] = useState([4000, 1000000]);
-  const [search_all, setSearch] = useState(search.trim());
+  const [search_all, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [newLoading, setNewLoading] = useState(false);
+  const [triggeredLoadMore, setTriggeredLoadMore] = useState(false);
 
   const [mobileFilter, setFilter] = useState(false);
   const [filterPosition, setFilterPosition] = useState("left");
@@ -55,6 +63,17 @@ export default function SearchList({ search }) {
   };
 
   useEffect(() => {
+    // if (
+    //   productSection == "Trending Products" &&
+    //   products.length > 0 &&
+    //   triggeredLoadMore
+    // ) {
+    //   loadMoreProducts();
+    //   setTriggeredLoadMore(false);
+    // } else {
+    //   fetchProducts();
+    // }
+
     fetchProducts();
 
     fetchBrands();
@@ -65,27 +84,71 @@ export default function SearchList({ search }) {
     setLoading(true);
 
     try {
-      const res = await getProducts({
-        page,
-        rows,
-        price,
-        brand,
-        rams,
-        sort,
-        storages,
-        processors,
-        category,
-        search_all,
-      });
-      setProducts(res.products.data);
-      //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
-      setTotal(res.products.total);
+      if (productSection === "Trending Products") {
+        const res = await getProducts({
+          page,
+          rows,
+          price,
+          brand,
+          rams,
+          sort,
+          storages,
+          processors,
+          category,
+          search_all,
+        });
+        setProducts(res.products.data);
+        //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+        setTotal(res.products.total);
+      } else {
+        const res = await getCategoryProducts({
+          page,
+          rows,
+          price,
+          brand,
+          rams,
+          sorting: sort,
+          storages,
+          processors,
+          category,
+          search_all,
+          categoryslug,
+          brandslug,
+        });
+        setProducts(res.products.data);
+        setTotal(res.products.total);
+      }
       setTimeout(() => {
         setLoading(false);
       }, 3000);
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  const loadMoreProducts = async () => {
+    setNewLoading(true);
+    getProducts({
+      page,
+      rows,
+      price,
+      brand,
+      rams,
+      sort,
+      storages,
+      processors,
+      category,
+      search_all,
+    }).then(
+      (res) => {
+        setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+        setTotal(res.products.total);
+        setNewLoading(false);
+      },
+      (error) => {
+        setNewLoading(false);
+      }
+    );
   };
 
   const fetchBrands = () => {
@@ -165,18 +228,23 @@ export default function SearchList({ search }) {
     return (
       <>
         <div>
-          <CategorySelect
-            categories={categories}
-            category={category}
-            handleCategory={handleCategory}
-          />
+          {console.log(categoryslug)}
+          {categoryslug == "" && (
+            <CategorySelect
+              categories={categories}
+              category={category}
+              handleCategory={handleCategory}
+            />
+          )}
         </div>
         <div>
-          <BrandSelect
-            brands={brands}
-            brand={brand}
-            handleBrand={handleBrand}
-          />
+          {brandslug == "" && (
+            <BrandSelect
+              brands={brands}
+              brand={brand}
+              handleBrand={handleBrand}
+            />
+          )}
         </div>
         <div>
           <StorageSelect storages={storages} handleStorage={handleStorage} />
@@ -196,14 +264,17 @@ export default function SearchList({ search }) {
 
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
         <SocialIconMenu />
+        <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
+          {productSection}
+        </h2>
 
         {loading && <CarouselHolder />}
         {!loading && (
           <>
             <div>
-              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
+              {/* <div className="grid grid-cols-6 justify-center pt-8 pb-5">
                 <div className="col-start-2 col-span-4">
                   <SearchSelect
                     search_all={search_all}
@@ -211,7 +282,7 @@ export default function SearchList({ search }) {
                     fetchProducts={fetchProducts}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="lg:hidden md:hidden xl:hidden ">
               <>
@@ -272,16 +343,11 @@ export default function SearchList({ search }) {
               </div>
               <AllFilter />
               <SortSelect sort={sort} handleSorting={handleSorting} />
-              <div>
-                <h2 className="text-sm md:text-lg font-medium tracking-tight text-gray-500 mt-16">
-                  Search Result for {search_all} {total} products
-                </h2>
-              </div>
             </div>
           </>
         )}
 
-        <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {!loading &&
             products.map((product, key) => (
               <ProductCard product={product} key={key} />
@@ -295,21 +361,51 @@ export default function SearchList({ search }) {
               </div>
             </div>
           )}
-          {!loading && products.length > 0 && (
-            <div
-              style={{
-                textAlign: "center",
+          {!loading &&
+            products.length > 0 &&
+            productSection == "Trending Products" && (
+              <div
+                style={{
+                  textAlign: "center",
 
-                alignItems: "center",
-              }}
-            >
-              {/* <button onClick={handleLoadMore} className="load-more-button">
+                  alignItems: "center",
+                }}
+              >
+                {/* <button onClick={handleLoadMore} className="load-more-button">
                   Load More
                 </button> */}
-            </div>
-          )}
+                <Link href="/products">
+                  <button
+                    // onClick={handleLoadMore}
+                    href="#_"
+                    className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-slate-800 rounded-full shadow-md group"
+                  >
+                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-slate-700 group-hover:translate-x-0 ease">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        ></path>
+                      </svg>
+                    </span>
+                    <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
+                      Shop More
+                    </span>
+                    <span className="relative invisible">Shop More</span>
+                  </button>
+                </Link>
+              </div>
+            )}
 
-          {products.length > 0 && (
+          {products.length > 0 && productSection != "Trending Products" && (
             <Pagination
               total={total}
               showTotal={(total) => `Total ${total} Products`}
