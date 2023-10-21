@@ -9,6 +9,11 @@ import CategorySlider from "./categories/CategorySlider";
 export const metadata = {
   title: "#1 UK laptop sales",
   description: "We sell affordable uk used laptops and Iphones",
+
+  other: {
+    "google-site-verification": "4Zkz1j8swUUwJUJrRx2wsqs4YwJy6ru1Xb-9WmFnjek",
+  },
+  applicationName: "Ecommerce Website for Laptops and Mobile phone",
 };
 
 export default function Home() {
