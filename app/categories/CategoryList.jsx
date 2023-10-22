@@ -52,17 +52,20 @@ export default function CategoryList({ section }) {
             {section}
           </h2>
           {section == "categories" && (
-            <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+            <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
               {categories.map((category) => (
-                <div key={category.id} className="group relative">
-                  <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
+                <div
+                  key={category.id}
+                  className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md"
+                >
+                  <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
                     <img
                       src={category.image_url}
                       alt={category.name}
-                      className="h-full w-full"
+                      className="peer absolute top-0 right-0 h-full w-full object-contain"
                     />
                   </div>
-                  <h3 className="mt-6 pb-5 text-sm text-gray-500">
+                  <h3 className="mt-6 pb-5 text-sm text-gray-500 pl-4">
                     <Link href={`categories/${category.slug}`}>
                       <span className="absolute inset-0" />
                       {category.name}
@@ -76,24 +79,28 @@ export default function CategoryList({ section }) {
             </div>
           )}
           {section == "brands" && (
-            <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+            <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
               {brands.map((brand) => (
-                <div key={brand.id} className="group relative">
-                  <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
+                <div
+                  key={brand.id}
+                  className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md"
+                >
+                  <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
                     <img
                       src={brand.image_url}
                       alt={brand.name}
-                      className="h-full w-full"
+                      quality={50}
+                      className="peer absolute top-0 right-0 h-full w-full object-contain"
                     />
                   </div>
-                  <h3 className="mt-6 pb-5 text-sm text-gray-500">
+                  <h3 className="mt-6 pb-5 text-sm text-gray-500 pl-4">
                     <Link href={`categories/${brand.slug}`}>
                       <span className="absolute inset-0" />
                       {brand.name}
                     </Link>
                   </h3>
                   {/* <p className="text-base font-semibold text-gray-900">
-                  {brand.description}
+                  {category.description}
                 </p> */}
                 </div>
               ))}
