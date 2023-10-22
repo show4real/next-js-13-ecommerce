@@ -5,7 +5,7 @@ export const dynamicParams = true; // default val = true
 
 async function getProduct(id) {
   const product = await fetch(
-    `https://www.hayzeeonlineapi.hayzeeonline.com/api/singleproduct/${id}`
+    `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`
   ).then((res) => res.json());
   if (!product) {
     notFound();
