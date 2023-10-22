@@ -4,8 +4,8 @@ import { getAllBrands, getAllCategories } from "app/services/productService";
 import Link from "next/link";
 
 export default function CategoryList({ section }) {
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
+  const [allcategories, setCategories] = useState([]);
+  const [allbrands, setBrands] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(100);
@@ -53,56 +53,54 @@ export default function CategoryList({ section }) {
           </h2>
           {section == "categories" && (
             <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md"
-                >
-                  <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
-                    <img
-                      src={category.image_url}
-                      alt={category.name}
-                      className="peer absolute top-0 right-0 h-full w-full object-contain"
-                    />
-                  </div>
-                  <h3 className="mt-6 pb-5 text-sm text-gray-500 pl-4">
-                    <Link href={`categories/${category.slug}`}>
+              {console.log(allcategories)}
+              {allcategories.map((category) => (
+                <Link href={`/${category.slug}`}>
+                  <div
+                    key={category.id}
+                    className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md"
+                  >
+                    <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
+                      <Link href={`/${category.slug}`}>
+                        {" "}
+                        <img
+                          src={category.image_url}
+                          alt={category.name}
+                          className="peer absolute top-0 right-0 h-full w-full object-contain"
+                        />
+                      </Link>
+                    </div>
+                    <h3 className="mt-6 pb-5 text-sm text-gray-500 pl-4">
                       <span className="absolute inset-0" />
                       {category.name}
-                    </Link>
-                  </h3>
-                  {/* <p className="text-base font-semibold text-gray-900">
-                  {category.description}
-                </p> */}
-                </div>
+                    </h3>
+                  </div>
+                </Link>
               ))}
             </div>
           )}
           {section == "brands" && (
             <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {brands.map((brand) => (
-                <div
-                  key={brand.id}
-                  className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md"
-                >
-                  <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
-                    <img
-                      src={brand.image_url}
-                      alt={brand.name}
-                      quality={50}
-                      className="peer absolute top-0 right-0 h-full w-full object-contain"
-                    />
-                  </div>
-                  <h3 className="mt-6 pb-5 text-sm text-gray-500 pl-4">
-                    <Link href={`categories/${brand.slug}`}>
+              {allbrands.map((brand) => (
+                <Link href={`/${brand.slug}`}>
+                  <div
+                    key={brand.id}
+                    className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md"
+                  >
+                    <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
+                      <img
+                        src={brand.image_url}
+                        alt={brand.name}
+                        quality={50}
+                        className="peer absolute top-0 right-0 h-full w-full object-contain"
+                      />
+                    </div>
+                    <h3 className="mt-6 pb-5 text-sm text-gray-500 pl-4">
                       <span className="absolute inset-0" />
                       {brand.name}
-                    </Link>
-                  </h3>
-                  {/* <p className="text-base font-semibold text-gray-900">
-                  {category.description}
-                </p> */}
-                </div>
+                    </h3>
+                  </div>
+                </Link>
               ))}
             </div>
           )}
