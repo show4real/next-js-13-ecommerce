@@ -134,14 +134,14 @@ const SearchSuggestion = () => {
                         {product.availability && (
                           <div className="absolute top-0 right-0 ">
                             <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-                              Sold
+                              Stock
                             </span>
                           </div>
                         )}
                         {!product.availability && (
                           <div className="absolute top-0 right-0 ">
                             <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-                              Stock
+                              Sold
                             </span>
                           </div>
                         )}
