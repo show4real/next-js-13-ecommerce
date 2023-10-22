@@ -1,6 +1,6 @@
 "use client";
 import {
-  getProducts,
+  getSearchProducts,
   getBrands,
   getCategories,
   getAllCats,
@@ -25,9 +25,9 @@ import Link from "next/link";
 export default function SearchList({ search }) {
   const [products, setProducts] = useState([]);
 
-  const [rows, setRows] = useState(40);
+  const [rows, setRows] = useState(100);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(products.length);
 
   const [brands, setBrands] = useState([]);
   const [storages, setStorages] = useState([]);
@@ -65,7 +65,7 @@ export default function SearchList({ search }) {
     setLoading(true);
 
     try {
-      const res = await getProducts({
+      const res = await getSearchProducts({
         page,
         rows,
         price,
@@ -79,7 +79,7 @@ export default function SearchList({ search }) {
       });
       setProducts(res.products.data);
       //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
-      setTotal(res.products.total);
+      setTotal(products.length);
       setTimeout(() => {
         setLoading(false);
       }, 3000);
@@ -274,7 +274,7 @@ export default function SearchList({ search }) {
               <SortSelect sort={sort} handleSorting={handleSorting} />
               <div>
                 <h2 className="text-sm md:text-lg font-medium tracking-tight text-gray-500 mt-16">
-                  Search Result for {search_all} {total} products
+                  Search Result for {search_all} {products.length} products
                 </h2>
               </div>
             </div>
@@ -309,7 +309,7 @@ export default function SearchList({ search }) {
             </div>
           )}
 
-          {products.length > 0 && (
+          {/* {products.length > 0 && (
             <Pagination
               total={total}
               showTotal={(total) => `Total ${total} Products`}
@@ -317,7 +317,7 @@ export default function SearchList({ search }) {
               pageSize={rows}
               current={page}
             />
-          )}
+          )} */}
           {!loading && products.length < 1 && (
             <div className="text-gray-200 font-md p-16 justify-center">
               <i className="fa fa-ban" style={{ marginRight: 5 }} />

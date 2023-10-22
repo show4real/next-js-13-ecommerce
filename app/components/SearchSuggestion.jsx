@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getProducts } from "../services/productService";
+import { getSearchProducts } from "../services/productService";
 import { Slider, Select, InputNumber, Button } from "antd";
 import Link from "next/link";
 const { Option } = Select;
@@ -8,7 +8,7 @@ const SearchSuggestion = () => {
   const [search_all, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState(12);
+  const [rows, setRows] = useState(5);
   const [page, setPage] = useState(1);
   const [price, setPrice] = useState([4000, 1000000]);
   const [sort, setSort] = useState(null);
@@ -20,7 +20,7 @@ const SearchSuggestion = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await getProducts({
+      const res = await getSearchProducts({
         page,
         rows,
         price,
@@ -78,9 +78,16 @@ const SearchSuggestion = () => {
     window.location.href = `/search/${search_all}`;
   };
 
+  const convertToSlug = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+  };
+
   return (
     <div>
-      {search_all && (
+      {/* {search_all && (
         <div className="col-span-2 mb-5">
           <Select
             placeholder={<span style={{ fontWeight: "bold" }}>Sort By</span>}
@@ -101,7 +108,7 @@ const SearchSuggestion = () => {
             <option value="date-desc">Date, new to old</option>
           </Select>
         </div>
-      )}
+      )} */}
       <input
         type="text"
         placeholder="Search..."
@@ -118,12 +125,26 @@ const SearchSuggestion = () => {
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
                   {products.map((product) => (
                     <li key={product.id} className="flex py-6">
-                      <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                      <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 relative">
                         <img
                           src={product.image}
                           alt={"Product Image"}
                           className="h-full w-full object-cover object-center"
                         />
+                        {product.availability && (
+                          <div className="absolute top-0 right-0 ">
+                            <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                              Sold
+                            </span>
+                          </div>
+                        )}
+                        {!product.availability && (
+                          <div className="absolute top-0 right-0 ">
+                            <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                              Stock
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col">
@@ -151,7 +172,7 @@ const SearchSuggestion = () => {
           <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
             <div className="flex justify-between text-base font-medium text-gray-900">
               <Link
-                href={`../search/${search_all}`}
+                href={`../search/${convertToSlug(search_all)}`}
                 className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-blue-700 rounded-full shadow-md group"
               >
                 <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">

@@ -11,10 +11,14 @@ export async function generateMetadata({ params, searchParams }, parent) {
   };
 }
 
+const removeSlug = (slug) => {
+  return slug.replace(/-/g, " ");
+};
+
 export default async function ProductLists({ params }) {
   return (
     <main style={{ marginTop: 20 }}>
-      <SearchList search={params.id} />
+      <SearchList search={removeSlug(params.id)} />
     </main>
   );
 }

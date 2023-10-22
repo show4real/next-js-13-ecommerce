@@ -13,6 +13,17 @@ export function getProducts(data) {
   );
 }
 
+export function getSearchProducts(data) {
+  const requestOptions = {
+    method: "POST",
+    headers: header(),
+    body: JSON.stringify(data),
+  };
+  return fetch(`${settings.API_URL}search/products`, requestOptions).then(
+    authService.handleResponse
+  );
+}
+
 export function getCategoryProducts(data) {
   const requestOptions = {
     method: "POST",

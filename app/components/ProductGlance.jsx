@@ -255,14 +255,15 @@ export default function ProductGlance({ product, toggle, show }) {
                           </div>
 
                           <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                            <button
-                              type="button"
-                              className="inline-flex items-center w-full justify-center rounded-md border-2  bg-white bg-none px-12 py-3 text-center text-base font-bold text-black transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-black"
-                            >
-                              <Link href={`/products/${product.slug}`}>
+                            <Link href={`/products/${product.slug}`}>
+                              <button
+                                type="button"
+                                className="inline-flex items-center w-full justify-center rounded-md border-2  bg-white bg-none px-12 py-3 text-center text-base font-bold text-black transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-black"
+                              >
+                                {" "}
                                 See Details
-                              </Link>
-                            </button>
+                              </button>
+                            </Link>
                           </div>
                           <div className="mt-3">
                             <BuyNow />
