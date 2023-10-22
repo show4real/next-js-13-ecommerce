@@ -43,8 +43,11 @@ export default function CategoryList({ section }) {
   };
   return (
     <>
-      {allcategories.map((category) => (
-        <div className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md mt-20">
+      {allcategories.map((category, key) => (
+        <div
+          key={key}
+          className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md mt-20"
+        >
           <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
             <Link href={`/categories/${category.slug}`}>
               <img
