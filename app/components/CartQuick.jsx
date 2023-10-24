@@ -80,21 +80,6 @@ const CartQuick = () => {
           <p>Subtotal</p>
           <p> &#8358;{formatNumber(totalPrice)}</p>
         </div>
-
-        <div className="mt-6">
-          <button
-            onClick={handleClearCart}
-            className="flex w-full mb-3 items-center justify-center rounded-md border border-transparent bg-gray-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-800"
-          >
-            Clear Shopping Cart
-          </button>
-          <Link
-            href="/checkout"
-            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-          >
-            Checkout
-          </Link>
-        </div>
       </div>
     </div>
   );

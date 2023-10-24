@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getSearchProducts } from "../services/productService";
+import { getSearchProducts } from "/app/services/productService";
 import { Slider, Select, InputNumber, Button } from "antd";
 import Link from "next/link";
+import SearchSelect from "/app/components/SearchSelect";
 const { Option } = Select;
 
 const SearchSuggestion = () => {
@@ -18,32 +19,8 @@ const SearchSuggestion = () => {
   const [rams, setRams] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const fetchProducts = async () => {
-    try {
-      const res = await getSearchProducts({
-        page,
-        rows,
-        price,
-        rams,
-        storages,
-        processors,
-        search_all,
-        sort,
-      });
-      setProducts(res.products.data);
-    } catch (error) {
-      console.error("Error fetching search suggestions", error);
-    }
-  };
-
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const handleParser = (inputValue) => {
-    // Only accept valid numeric values
-    const numericValue = parseInt(inputValue, 10);
-    return isNaN(numericValue) ? "" : numericValue;
   };
 
   const closeDropdown = () => {
@@ -56,26 +33,37 @@ const SearchSuggestion = () => {
   };
 
   useEffect(() => {
-    if (search_all.trim() === "") {
-      setProducts([]);
+    fetchProducts();
+  }, [rams, sort, storages, processors, rows, page]);
+
+  const fetchProducts = () => {
+    setLoading(true);
+
+    try {
+      const res = getSearchProducts({
+        page,
+        rows,
+        price,
+        brand,
+        rams,
+        sort,
+        storages,
+        processors,
+        category,
+        search_all,
+      });
+      setProducts(res.products.data);
+      //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+      setTotal(products.length);
+    } catch (error) {
       setLoading(false);
     }
-    fetchProducts();
-  }, [search_all, sort]);
-
-  const handlePrice = (newPrice) => {
-    setPrice(newPrice);
   };
 
-  const handleSort = (sort) => {
-    setSort(sort);
-  };
-
-  const handleLoadMore = () => {
-    // setPage(page + 1);
-    // setTriggeredLoadMore(true);
-
-    window.location.href = `/search/${search_all}`;
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    console.log(value);
+    setSearch(value);
   };
 
   const convertToSlug = (text) => {
@@ -87,35 +75,51 @@ const SearchSuggestion = () => {
 
   return (
     <div>
-      {/* {search_all && (
-        <div className="col-span-2 mb-5">
-          <Select
-            placeholder={<span style={{ fontWeight: "bold" }}>Sort By</span>}
-            placement="bottomLeft"
-            style={{ border: "none", boxShadow: "none", height: 35 }}
-            value={sort}
-            onChange={handleSort}
-            dropdownStyle={{ minWidth: 300, textAlign: "center" }}
-            className="w-full"
-          >
-            <option value="">All</option>
-            <option value="availability">Availability</option>
-            <option value="name-asc">Alphabetically, A-Z</option>
-            <option value="name-desc">Alphabetically, Z-A</option>
-            <option value="low-price">Price, low to high</option>
-            <option value="high-price">Price, high to low</option>
-            <option value="date-asc">Date, old to new</option>
-            <option value="date-desc">Date, new to old</option>
-          </Select>
-        </div>
-      )} */}
-      <input
+      {/* <input
         type="text"
         placeholder="Search..."
         value={search_all}
         onChange={handleSearchChange}
         className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500 mb-6"
-      />
+      /> */}
+      <div>
+        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
+          <input
+            type="search"
+            className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="button-addon1"
+            value={search_all}
+            onChange={handleSearch}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                fetchProducts();
+              }
+            }}
+          />
+
+          <button
+            className="relative z-[2] flex items-center rounded-r bg-primary px-1 md:px-3 lg:px-3 xl:px-3 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
+            type="button"
+            id="button-addon1"
+            // onClick={fetchProducts()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
       {loading && <p>Loading suggestions...</p>}
       {!search_all == "" && products.length > 0 && (
         <div className="flex h-full flex-col overflow-y-scroll">

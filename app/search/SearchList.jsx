@@ -21,6 +21,10 @@ import ProcessorSelect from "/app/components/ProcessorSelect";
 import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
+import { sort } from "fast-sort";
+
+import { Select } from "antd";
+const { Option } = Select;
 
 export default function SearchList({ search }) {
   const [products, setProducts] = useState([]);
@@ -34,7 +38,7 @@ export default function SearchList({ search }) {
   const [processors, setProcessors] = useState([]);
   const [rams, setRams] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [sort, setSorting] = useState(null);
+  const [sort_value, setSorting] = useState("availability");
   const [price, setPrice] = useState([4000, 1000000]);
   const [search_all, setSearch] = useState(search.trim());
   const [brand, setBrand] = useState("");
@@ -59,7 +63,7 @@ export default function SearchList({ search }) {
 
     fetchBrands();
     fetchCategories();
-  }, [brand, rams, sort, storages, processors, category, rows, page]);
+  }, [brand, rams, storages, processors, category, rows, page]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -71,7 +75,7 @@ export default function SearchList({ search }) {
         price,
         brand,
         rams,
-        sort,
+
         storages,
         processors,
         category,
@@ -147,8 +151,8 @@ export default function SearchList({ search }) {
     setRams(selectedOptions);
   };
 
-  const handleSorting = (sort) => {
-    setSorting(sort);
+  const handleSorting = (sort_value) => {
+    setSorting(sort_value);
   };
   const onPage = async (page, rows) => {
     setPage(page);
@@ -202,6 +206,9 @@ export default function SearchList({ search }) {
         {loading && <CarouselHolder />}
         {!loading && (
           <>
+            {console.log(
+              sort(products).asc((item) => new Date(item.created_at))
+            )}
             <div>
               <div className="grid grid-cols-6 justify-center pt-8 pb-5">
                 <div className="col-start-2 col-span-4">
@@ -238,7 +245,7 @@ export default function SearchList({ search }) {
                       </Button>
                     </div>
                     <div className="pl-10">
-                      <SortSelect sort={sort} handleSorting={handleSorting} />
+                      {/* <SortSelect sort={sort_value} handleSorting={handleSorting} /> */}
                     </div>
                   </div>
                 </Space>
@@ -271,7 +278,26 @@ export default function SearchList({ search }) {
                 />
               </div>
               <AllFilter />
-              <SortSelect sort={sort} handleSorting={handleSorting} />
+
+              <Select
+                placeholder={
+                  <span style={{ fontWeight: "bold" }}>Sort By</span>
+                }
+                placement="bottomLeft"
+                style={{ border: "none", boxShadow: "none", height: 35 }}
+                value={sort_value}
+                onChange={handleSorting}
+                dropdownStyle={{ minWidth: 300, textAlign: "center" }}
+                className="w-full"
+              >
+                <option value="availability">Availability</option>
+                <option value="name-asc">Alphabetically, A-Z</option>
+                <option value="name-desc">Alphabetically, Z-A</option>
+                <option value="low-price">Price, low to high</option>
+                <option value="high-price">Price, high to low</option>
+                {/* <option value="date-asc">Date, old to new</option>
+                <option value="date-desc">Date, new to old</option> */}
+              </Select>
               <div>
                 <h2 className="text-sm md:text-lg font-medium tracking-tight text-gray-500 mt-16">
                   Search Result for {search_all} {products.length} products
@@ -283,9 +309,40 @@ export default function SearchList({ search }) {
 
         <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {!loading &&
-            products.map((product, key) => (
-              <ProductCard product={product} key={key} />
-            ))}
+            sort_value == "availability" &&
+            sort(products)
+              .desc((item) => item.availability == 1)
+              .map((product, key) => (
+                <ProductCard product={product} key={key} />
+              ))}
+          {!loading &&
+            sort_value == "name-asc" &&
+            sort(products)
+              .asc((item) => item.name)
+              .map((product, key) => (
+                <ProductCard product={product} key={key} />
+              ))}
+          {!loading &&
+            sort_value == "name-desc" &&
+            sort(products)
+              .desc((item) => item.name)
+              .map((product, key) => (
+                <ProductCard product={product} key={key} />
+              ))}
+          {!loading &&
+            sort_value == "low-price" &&
+            sort(products)
+              .asc((item) => item.price)
+              .map((product, key) => (
+                <ProductCard product={product} key={key} />
+              ))}
+          {!loading &&
+            sort_value == "high-price" &&
+            sort(products)
+              .desc((item) => item.price)
+              .map((product, key) => (
+                <ProductCard product={product} key={key} />
+              ))}
         </div>
         <div>
           {newLoading && (

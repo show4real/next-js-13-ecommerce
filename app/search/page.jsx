@@ -12,7 +12,7 @@ export const metadata = {
 export default function Search() {
   return (
     <div className="container mx-auto pt-0">
-      <SearchList search={"laptop"} />
+      <SearchList search={""} />
     </div>
   );
 }

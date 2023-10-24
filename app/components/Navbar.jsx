@@ -62,6 +62,8 @@ export default function Navbar() {
   const { cart } = useCartStore();
   console.log(cart);
 
+  const clearCart = useCartStore((state) => state.clearCart);
+
   const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   useEffect(() => {
@@ -472,19 +474,21 @@ export default function Navbar() {
                   {/* Search */}
                   <div className="flex">
                     <>
-                      <button
-                        type="primary"
-                        onClick={showSearchDrawer}
-                        className="group -m-2 flex items-center p-2"
-                      >
-                        <MagnifyingGlassIcon
-                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                          aria-hidden="true"
-                        />
-                        <span className="text-xs font-semibold text-gray-400 pl-1">
-                          search
-                        </span>
-                      </button>
+                      <Link href="/search">
+                        <button
+                          type="primary"
+                          // onClick={showSearchDrawer}
+                          className="group -m-2 flex items-center p-2"
+                        >
+                          <MagnifyingGlassIcon
+                            className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                          />
+                          <span className="text-xs font-semibold text-gray-400 pl-1">
+                            search
+                          </span>
+                        </button>
+                      </Link>
 
                       <Drawer
                         title="Quick Search"
@@ -504,7 +508,7 @@ export default function Navbar() {
                             </button>
                           </p>
                         </div>
-                        <SearchSuggestion />
+                        <SearchSuggestion onCloseSearch={onCloseSearch} />
                       </Drawer>
                     </>
                   </div>
@@ -540,12 +544,34 @@ export default function Navbar() {
                               className="font-medium text-indigo-600 hover:text-indigo-500"
                               onClick={onCloseCart}
                             >
+                              <span aria-hidden="true"> &larr; &nbsp;</span>
                               Continue Shopping
-                              <span aria-hidden="true"> &rarr;</span>
                             </button>
+                            {totalQuantity > 0 && (
+                              <Link
+                                onClick={() => {
+                                  onCloseCart();
+                                }}
+                                href="/checkout"
+                                className="font-medium text-indigo-600 hover:text-indigo-500 pl-5"
+                              >
+                                Checkout <span aria-hidden="true"> &rarr;</span>
+                              </Link>
+                            )}
                           </p>
                         </div>
                         <CartQuick />
+                        <div className="mt-0">
+                          <Link
+                            onClick={() => {
+                              onCloseCart();
+                            }}
+                            href="/checkout"
+                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          >
+                            Checkout
+                          </Link>
+                        </div>
                       </Drawer>
                     </>
                   </div>
