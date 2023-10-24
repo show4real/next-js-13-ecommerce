@@ -18,6 +18,7 @@ import {
 import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
 import Link from "next/link";
+import CarouselDetailHolder from "./CarouselDetailHolder";
 
 const ProductDetail = ({ product }) => {
   const [images, setImages] = useState([]);
@@ -238,7 +239,7 @@ const ProductDetail = ({ product }) => {
     return (
       <Breadcrumb separator="/">
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item href="/shop">Shop</Breadcrumb.Item>
+        <Breadcrumb.Item href="/products">Shop</Breadcrumb.Item>
         <Breadcrumb.Item>{product.name}</Breadcrumb.Item>
       </Breadcrumb>
     );
@@ -247,165 +248,173 @@ const ProductDetail = ({ product }) => {
   return (
     <section className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
-        <nav className="flex pb-10">
-          <CustomBreadcrumb />
-        </nav>
+        {loading && <CarouselDetailHolder />}
 
-        <div className="container mx-auto px-4">
-          <div className="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
-            <div className="lg:col-span-3 lg:row-end-1">
-              <ImageGallery
-                showPlayButton={false}
-                showNav={true}
-                items={images.map((image) => ({
-                  original: image,
-                  thumbnail: image,
-                }))}
-              />
-              <div style={{ marginTop: 20 }} className="mobile-filter">
-                <h3
-                  style={{
-                    color: "#0E1B4D",
-                    fontWeight: 600,
-                    fontFamily: "Archivo, serif",
-                    fontSize: 30,
-                  }}
-                >
-                  Additional Information
-                </h3>
-                <AdditionalInfo />
-              </div>
-            </div>
+        {!loading && (
+          <>
+            <nav className="flex pb-10">
+              <CustomBreadcrumb />
+            </nav>
 
-            <div class="lg:col-span-5 lg:row-span-2 lg:row-end-2  ">
-              {/* lg:max-h-400 overflow-hidden hover:overflow-y-scroll */}
-              <h5
-                style={{
-                  color: "#0E1B4D",
-                  textTransform: "uppercase",
-                }}
-              >
-                {product.product_type}
-              </h5>
-              <span>
-                {" "}
-                <Tag style={tagStyle}>
-                  {product.availability ? "Stock" : "Sold"}
-                </Tag>
-              </span>
-              <h5
-                className="font-bold text-gray-900 text-sm leading-7 lg:text-3xl"
-                style={{
-                  color: "#0E1B4D",
-
-                  fontFamily: "Archivo, serif",
-                }}
-              >
-                {product.name}
-              </h5>
-              <div
-                style={{
-                  color: "#0E1B4D",
-                  fontFamily: "Archivo, serif",
-                }}
-                className="pt-5 lg:max-h-200 overflow-hidden hover:overflow-y-scroll"
-              >
-                <div
-                  className="description leading-7"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
-                />
-              </div>
-              <h2 className="mt-8 text-base text-gray-900">Specifications</h2>
-              <div className="mt-3 flex select-none flex-wrap items-center gap-1">
-                <label className="">
-                  <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                    {product.storage !== "null" && product.storage} Storage
-                  </p>
-                </label>
-                <label className="">
-                  <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                    {product.processor !== "null" && product.processor}{" "}
-                    Processor
-                  </p>
-                </label>
-                <label className="">
-                  <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                    {product.ram !== "null" && product.ram} RAM
-                  </p>
-                </label>
-              </div>
-              <div className="mt-5 flex select-none flex-wrap items-center gap-1">
-                <span
-                  style={{
-                    fontSize: 30,
-                    paddingLeft: 10,
-                    color: "#0E1B4D",
-                    fontWeight: 800,
-                    fontFamily: "Archivo, serif",
-                  }}
-                >
-                  &#8358;{formatNumber(product.price)}
-                </span>{" "}
-              </div>
-              {itemInCart.length > 0 && (
-                <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                  <NumberButton />
+            <div className="container mx-auto px-4">
+              <div className="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
+                <div className="lg:col-span-3 lg:row-end-1">
+                  <ImageGallery
+                    showPlayButton={false}
+                    showNav={true}
+                    items={images.map((image) => ({
+                      original: image,
+                      thumbnail: image,
+                    }))}
+                  />
+                  <div style={{ marginTop: 20 }} className="mobile-filter">
+                    <h3
+                      style={{
+                        color: "#0E1B4D",
+                        fontWeight: 600,
+                        fontFamily: "Archivo, serif",
+                        fontSize: 30,
+                      }}
+                    >
+                      Additional Information
+                    </h3>
+                    <AdditionalInfo />
+                  </div>
                 </div>
-              )}
-              <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                <button
-                  type="button"
-                  className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
-                  onClick={
-                    itemInCart.length === 0
-                      ? () => addToCart(product)
-                      : handleViewCart
-                  }
-                >
-                  {itemInCart.length > 0 ? (
-                    <Link href="/checkout">View Cart</Link>
-                  ) : (
-                    "Add Cart"
-                  )}
-                </button>
-              </div>
 
-              <div className="mt-3">
-                <BuyNow />
-              </div>
-              <div style={{ marginTop: 30 }}>
-                <PickupLocation />
-                <div
-                  style={{
-                    color: "#0E1B4D",
-                    padding: "20px",
-                    fontSize: 15,
-                  }}
-                >
-                  Usually ready in 24 hours{" "}
-                </div>
-                <div>
-                  <a
+                <div class="lg:col-span-5 lg:row-span-2 lg:row-end-2  ">
+                  {/* lg:max-h-400 overflow-hidden hover:overflow-y-scroll */}
+                  <h5
                     style={{
                       color: "#0E1B4D",
-                      padding: "20px",
-                      fontSize: 15,
-                      fontWeight: 300,
-                      textDecoration: "underlined",
+                      textTransform: "uppercase",
                     }}
-                    href="#"
                   >
-                    View store information
-                  </a>
+                    {product.product_type}
+                  </h5>
+                  <span>
+                    {" "}
+                    <Tag style={tagStyle}>
+                      {product.availability ? "Stock" : "Sold"}
+                    </Tag>
+                  </span>
+                  <h5
+                    className="font-bold text-gray-900 text-sm leading-7 lg:text-3xl"
+                    style={{
+                      color: "#0E1B4D",
+
+                      fontFamily: "Archivo, serif",
+                    }}
+                  >
+                    {product.name}
+                  </h5>
+                  <div
+                    style={{
+                      color: "#0E1B4D",
+                      fontFamily: "Archivo, serif",
+                    }}
+                    className="pt-5 lg:max-h-200 overflow-hidden hover:overflow-y-scroll"
+                  >
+                    <div
+                      className="description leading-7"
+                      dangerouslySetInnerHTML={{ __html: product.description }}
+                    />
+                  </div>
+                  <h2 className="mt-8 text-base text-gray-900">
+                    Specifications
+                  </h2>
+                  <div className="mt-3 flex select-none flex-wrap items-center gap-1">
+                    <label className="">
+                      <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                        {product.storage !== "null" && product.storage} Storage
+                      </p>
+                    </label>
+                    <label className="">
+                      <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                        {product.processor !== "null" && product.processor}{" "}
+                        Processor
+                      </p>
+                    </label>
+                    <label className="">
+                      <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                        {product.ram !== "null" && product.ram} RAM
+                      </p>
+                    </label>
+                  </div>
+                  <div className="mt-5 flex select-none flex-wrap items-center gap-1">
+                    <span
+                      style={{
+                        fontSize: 30,
+                        paddingLeft: 10,
+                        color: "#0E1B4D",
+                        fontWeight: 800,
+                        fontFamily: "Archivo, serif",
+                      }}
+                    >
+                      &#8358;{formatNumber(product.price)}
+                    </span>{" "}
+                  </div>
+                  {itemInCart.length > 0 && (
+                    <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+                      <NumberButton />
+                    </div>
+                  )}
+                  <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+                    <button
+                      type="button"
+                      className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+                      onClick={
+                        itemInCart.length === 0
+                          ? () => addToCart(product)
+                          : handleViewCart
+                      }
+                    >
+                      {itemInCart.length > 0 ? (
+                        <Link href="/checkout">View Cart</Link>
+                      ) : (
+                        "Add Cart"
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="mt-3">
+                    <BuyNow />
+                  </div>
+                  <div style={{ marginTop: 30 }}>
+                    <PickupLocation />
+                    <div
+                      style={{
+                        color: "#0E1B4D",
+                        padding: "20px",
+                        fontSize: 15,
+                      }}
+                    >
+                      Usually ready in 24 hours{" "}
+                    </div>
+                    <div>
+                      <a
+                        style={{
+                          color: "#0E1B4D",
+                          padding: "20px",
+                          fontSize: 15,
+                          fontWeight: 300,
+                          textDecoration: "underlined",
+                        }}
+                        href="#"
+                      >
+                        View store information
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <ShareButton />
+                  </div>
                 </div>
               </div>
-
-              <div>
-                <ShareButton />
-              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </section>
   );

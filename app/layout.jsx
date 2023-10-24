@@ -8,6 +8,7 @@ import { Rubik } from "next/font/google";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Head from "next/head";
+import { Facebook } from "/app/components/Facebook";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({ children }) {
       <body className={rubik.className}>
         <Navbar />
         {children}
+        <Facebook />
         <Footer />
       </body>
     </html>
