@@ -1,7 +1,8 @@
+"use client";
 import ProductDetail from "/app/components/ProductDetail";
 import { notFound } from "next/navigation";
 
-export const dynamicParams = true; // default val = true
+// export const dynamicParams = true; // default val = true
 
 async function getProduct(id) {
   const product = await fetch(
@@ -10,21 +11,21 @@ async function getProduct(id) {
   if (!product) {
     notFound();
   }
-
+  console.log(product);
   return product.product;
 }
 
-export async function generateMetadata({ params, searchParams }, parent) {
-  const product = await getProduct(params.id);
-  console.log(product);
+// export async function generateMetadata({ params, searchParams }, parent) {
+//   const product = await getProduct(params.id);
+//   console.log(product);
 
-  return {
-    title: product.name,
-    openGraph: {
-      description: product.name,
-    },
-  };
-}
+//   return {
+//     title: product.name,
+//     openGraph: {
+//       description: product.name,
+//     },
+//   };
+// }
 
 export default async function ProductDetails({ params }) {
   const product = await getProduct(params.id);
