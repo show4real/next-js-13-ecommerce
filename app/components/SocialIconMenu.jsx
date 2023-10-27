@@ -15,7 +15,7 @@ const SocialIconMenu = () => {
       <div class="container mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div class="flex justify-center text-center"></div>
-          <div class="flex justify-center text-center md:pt-0 lg:pt-0 pt-3">
+          <div class="flex justify-center text-center md:pt-0 lg:pt-0 pt-20">
             <div class="flex">
               <span className="social-icon">
                 <SocialIcon url="https://twitter.com/hayzeeonline?t=CXwigiNkx0AZymf_uUwVwg&s=09" />
