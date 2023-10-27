@@ -31,12 +31,19 @@ const SocialIconMenu = () => {
               </span>
             </div>
           </div>
-          <div class="flex justify-center md:justify-end lg:justify-end md:pt-0 lg:pt-0 pt-3">
+          <div class="flex justify-center sm:justify-center md:justify-center lg:justify-end md:pt-0 lg:pt-0 pt-3">
             <div class="bg-orange-100 border-t border-b border-orange-500 text-orange-700 w-full md:w-64 px-4 py-3">
               <p class="font-bold">Notice</p>
               <p
-                class="text-sm overflow-hidden"
-                style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
+                className="text-sm"
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: showFullText ? "unset" : 2,
+                  WebkitBoxOrient: "vertical",
+                }}
+                class="text-sm "
               >
                 The Exchange Rate volatility has indeed Negatively impact the
                 fluctuation of stock market Price. Which in turn render all
@@ -45,8 +52,8 @@ const SocialIconMenu = () => {
                 the price giving at an instant in time is only valid for that
                 time. THANK YOU Signed Hayzee Computer Resources
               </p>
-              <button onclick="toggleText()" class="text-gray-600 text-sm">
-                Show More
+              <button onClick={toggleText} className="text-gray-600 text-sm">
+                {showFullText ? "Hide" : "Show More"}
               </button>
             </div>
           </div>
