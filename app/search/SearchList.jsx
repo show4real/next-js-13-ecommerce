@@ -84,9 +84,10 @@ export default function SearchList({ search }) {
       setProducts(res.products.data);
       //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
       setTotal(products.length);
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
+      setLoading(false);
+      // setTimeout(() => {
+      //   setLoading(false);
+      // }, 3000);
     } catch (error) {
       setLoading(false);
     }
@@ -97,9 +98,10 @@ export default function SearchList({ search }) {
     getBrands().then(
       (res) => {
         setBrands(res.brands);
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
+        setLoading(false);
+        // setTimeout(() => {
+        //   setLoading(false);
+        // }, 3000);
       },
       (error) => {
         setLoading(false);
@@ -112,9 +114,10 @@ export default function SearchList({ search }) {
     getAllCats().then(
       (res) => {
         setCategories(res.categories);
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
+        setLoading(false);
+        // setTimeout(() => {
+        //   setLoading(false);
+        // }, 3000);
       },
       (error) => {
         setLoading(false);
@@ -245,7 +248,29 @@ export default function SearchList({ search }) {
                       </Button>
                     </div>
                     <div className="pl-10">
-                      {/* <SortSelect sort={sort_value} handleSorting={handleSorting} /> */}
+                      <Select
+                        placeholder={
+                          <span style={{ fontWeight: "bold" }}>Sort By</span>
+                        }
+                        placement="bottomLeft"
+                        style={{
+                          border: "none",
+                          boxShadow: "none",
+                          height: 35,
+                        }}
+                        value={sort_value}
+                        onChange={handleSorting}
+                        dropdownStyle={{ minWidth: 300, textAlign: "center" }}
+                        className="w-full"
+                      >
+                        <option value="availability">Availability</option>
+                        <option value="name-asc">Alphabetically, A-Z</option>
+                        <option value="name-desc">Alphabetically, Z-A</option>
+                        <option value="low-price">Price, low to high</option>
+                        <option value="high-price">Price, high to low</option>
+                        {/* <option value="date-asc">Date, old to new</option>
+                <option value="date-desc">Date, new to old</option> */}
+                      </Select>
                     </div>
                   </div>
                 </Space>
