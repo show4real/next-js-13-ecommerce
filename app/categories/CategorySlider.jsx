@@ -9,7 +9,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { getOtherSales } from "../services/productService";
-import CarouselHolder from "../products/CarouselHolder";
+import "./styles.css";
 
 const CategorySlider = ({ sale_type }) => {
   const [products, setProducts] = useState([]);

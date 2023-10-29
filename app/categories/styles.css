@@ -1,0 +1,14 @@
+/* Add your other styles here */
+.slide-item {
+    padding: 5px;
+    /* Adjust the padding as needed */
+}
+
+@media screen and (max-width: 767px) {
+
+    /* Apply specific styles for mobile devices */
+    .slide-item {
+        padding: 10px;
+        /* Adjust the padding for mobile devices */
+    }
+}
