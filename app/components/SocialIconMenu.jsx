@@ -3,7 +3,7 @@ import { SocialIcon } from "react-social-icons";
 import CategorySlider from "/app/categories/CategorySlider";
 import "./social.css";
 
-const SocialIconMenu = ({ brandslug, categoryslug }) => {
+const SocialIconMenu = ({ brandslug, categoryslug, flash_sale }) => {
   const [showFullText, setShowFullText] = useState(false);
 
   const toggleText = () => {
@@ -60,11 +60,7 @@ const SocialIconMenu = ({ brandslug, categoryslug }) => {
         </div>
       </div>
 
-      <div>
-        {(categoryslug == "" || brandslug == "") && (
-          <CategorySlider sale_type={"flash sales"} />
-        )}
-      </div>
+      <div>{flash_sale && <CategorySlider sale_type={"flash sales"} />}</div>
 
       <div className="col-span-5 md:col-span-12 pt-7 text-center md:pt-0 lg:pt-0">
         <h3 className="font-semibold text-2xl md:text-4xl text-primary">

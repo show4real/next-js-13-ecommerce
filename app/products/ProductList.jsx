@@ -29,6 +29,7 @@ export default function ProductList({
   sale_type,
   brandslug,
   categoryslug,
+  flash_sale,
 }) {
   const [products, setProducts] = useState([]);
 
@@ -280,7 +281,7 @@ export default function ProductList({
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu categoryslug="" brandslug="" />
+        <SocialIconMenu categoryslug="" brandslug="" flash_sale={flash_sale} />
 
         <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}

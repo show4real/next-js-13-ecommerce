@@ -26,6 +26,7 @@ export default function Home() {
           brandslug={""}
           categoryslug={""}
           shop={false}
+          flash_sale={true}
         />
 
         <Category />

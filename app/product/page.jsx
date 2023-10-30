@@ -18,6 +18,7 @@ export default function Products() {
         brandslug={""}
         categoryslug={""}
         shop={true}
+        flash_sale={true}
       />
     </div>
   );
