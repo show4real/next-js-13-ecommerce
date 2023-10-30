@@ -24,6 +24,17 @@ export function getSearchProducts(data) {
   );
 }
 
+export function getQuickSearch(data) {
+  const requestOptions = {
+    method: "POST",
+    headers: header(),
+    body: JSON.stringify(data),
+  };
+  return fetch(`${settings.API_URL}quick_search`, requestOptions).then(
+    authService.handleResponse
+  );
+}
+
 export function getCategoryProducts(data) {
   const requestOptions = {
     method: "POST",

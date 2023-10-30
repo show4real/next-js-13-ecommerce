@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getOtherSales } from "../services/productService";
 import "./styles.css";
+import Loading from "app/loading";
 
 const CategorySlider = ({ sale_type }) => {
   const [products, setProducts] = useState([]);
@@ -123,7 +124,11 @@ const CategorySlider = ({ sale_type }) => {
                 ))}
               </Slider>
             ) : (
-              <>Loading...</>
+              <>
+                <div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
+                  <div class="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-20 w-20"></div>
+                </div>
+              </>
             )}
           </div>
         </div>

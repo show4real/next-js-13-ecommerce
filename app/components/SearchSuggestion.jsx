@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { getSearchProducts } from "/app/services/productService";
+import { getQuickSearch } from "/app/services/productService";
 import { Slider, Select, InputNumber, Button } from "antd";
 import Link from "next/link";
 import SearchSelect from "/app/components/SearchSelect";
+import { sort } from "fast-sort";
 const { Option } = Select;
 
 const SearchSuggestion = () => {
   const [search_all, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState(5);
-  const [page, setPage] = useState(1);
-  const [price, setPrice] = useState([4000, 1000000]);
-  const [sort, setSort] = useState(null);
 
-  const [storages, setStorages] = useState([]);
-  const [processors, setProcessors] = useState([]);
-  const [rams, setRams] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const formatNumber = (number) => {
@@ -29,35 +23,41 @@ const SearchSuggestion = () => {
 
   const handleSearchChange = (e) => {
     const query = e.target.value;
+    console.log(query);
     setSearch(query);
   };
 
   useEffect(() => {
     fetchProducts();
-  }, [rams, sort, storages, processors, rows, page]);
+  }, [search_all]);
+
+  // const fetchProducts = () => {
+  //   setLoading(true);
+
+  //   try {
+  //     const res = getQuickSearch({
+  //       search_all,
+  //     });
+  //     setProducts(res.products);
+  //     console.log(res);
+
+  //     setTotal(res.products.length);
+  //   } catch (error) {
+  //     setLoading(false);
+  //   }
+  // };
 
   const fetchProducts = () => {
     setLoading(true);
-
-    try {
-      const res = getSearchProducts({
-        page,
-        rows,
-        price,
-        brand,
-        rams,
-        sort,
-        storages,
-        processors,
-        category,
-        search_all,
-      });
-      setProducts(res.products.data);
-      //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
-      setTotal(products.length);
-    } catch (error) {
-      setLoading(false);
-    }
+    getQuickSearch({ search_all }).then(
+      (res) => {
+        setProducts(res.products);
+        setLoading(false);
+      },
+      (error) => {
+        setLoading(false);
+      }
+    );
   };
 
   const handleSearch = (event) => {
@@ -75,14 +75,17 @@ const SearchSuggestion = () => {
 
   return (
     <div>
-      {/* <input
+      <input
         type="text"
         placeholder="Search..."
         value={search_all}
         onChange={handleSearchChange}
         className="w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500 mb-6"
-      /> */}
-      <div>
+      />
+      {
+        console.log(products)
+
+        /* <div>
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <input
             type="search"
@@ -119,55 +122,58 @@ const SearchSuggestion = () => {
             </svg>
           </button>
         </div>
-      </div>
+      </div> */
+      }
       {loading && <p>Loading suggestions...</p>}
-      {!search_all == "" && products.length > 0 && (
+      {search_all !== "" && products.length > 0 && (
         <div className="flex h-full flex-col overflow-y-scroll">
           <div className="flex-1 overflow-y-auto px-4 py-0 sm:px-6">
             <div className="mt-2">
               <div className="flow-root">
                 <ul role="list" className="-my-6 divide-y divide-gray-200">
-                  {products.map((product) => (
-                    <li key={product.id} className="flex py-6">
-                      <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 relative">
-                        <img
-                          src={product.image}
-                          alt={"Product Image"}
-                          className="h-full w-full object-cover object-center"
-                        />
-                        {product.availability && (
-                          <div className="absolute top-0 right-0 ">
-                            <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-                              Stock
-                            </span>
-                          </div>
-                        )}
-                        {!product.availability && (
-                          <div className="absolute top-0 right-0 ">
-                            <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-                              Sold
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                  {sort(products)
+                    .desc((item) => item.availability == 1)
+                    .map((product) => (
+                      <li key={product.id} className="flex py-6">
+                        <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 relative">
+                          <img
+                            src={product.image}
+                            alt={"Product Image"}
+                            className="h-full w-full object-cover object-center"
+                          />
+                          {product.availability && (
+                            <div className="absolute top-0 right-0 ">
+                              <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                                Stock
+                              </span>
+                            </div>
+                          )}
+                          {!product.availability && (
+                            <div className="absolute top-0 right-0 ">
+                              <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                                Sold
+                              </span>
+                            </div>
+                          )}
+                        </div>
 
-                      <div className="ml-4 flex flex-1 flex-col">
-                        <div>
-                          <div className="flex justify-between text-sm font-medium text-gray-900">
-                            <h3>
-                              <a href={`/products/${product.slug}`}>
-                                {product.name}
-                              </a>
-                            </h3>
-                            <p className="ml-4">
-                              {" "}
-                              &#8358;{formatNumber(product.price)}
-                            </p>
+                        <div className="ml-4 flex flex-1 flex-col">
+                          <div>
+                            <div className="flex justify-between text-sm font-medium text-gray-900">
+                              <h3>
+                                <a href={`/products/${product.slug}`}>
+                                  {product.name}
+                                </a>
+                              </h3>
+                              <p className="ml-4">
+                                {" "}
+                                &#8358;{formatNumber(product.price)}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>

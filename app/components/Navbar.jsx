@@ -474,21 +474,21 @@ export default function Navbar() {
                   {/* Search */}
                   <div className="flex">
                     <>
-                      <Link href="/search">
-                        <button
-                          type="primary"
-                          // onClick={showSearchDrawer}
-                          className="group -m-2 flex items-center p-2"
-                        >
-                          <MagnifyingGlassIcon
-                            className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                            aria-hidden="true"
-                          />
-                          <span className="text-xs font-semibold text-gray-400 pl-1">
-                            search
-                          </span>
-                        </button>
-                      </Link>
+                      {/* <Link href="/search"> */}
+                      <button
+                        type="primary"
+                        onClick={showSearchDrawer}
+                        className="group -m-2 flex items-center p-2"
+                      >
+                        <MagnifyingGlassIcon
+                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                          aria-hidden="true"
+                        />
+                        <span className="text-xs font-semibold text-gray-400 pl-1">
+                          search
+                        </span>
+                      </button>
+                      {/* </Link> */}
 
                       <Drawer
                         title="Quick Search"

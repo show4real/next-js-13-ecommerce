@@ -45,6 +45,7 @@ export default function RootLayout({ children }) {
       </Head>
       <body className={rubik.className}>
         <Navbar />
+
         {children}
         <Facebook />
         <Footer />

@@ -21,6 +21,7 @@ import ProcessorSelect from "/app/components/ProcessorSelect";
 import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
+import CategorySlider from "app/categories/CategorySlider";
 
 export default function ProductList({
   productSection,
@@ -107,9 +108,10 @@ export default function ProductList({
         setProducts(res.products.data);
         setTotal(res.products.total);
       }
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
+      setLoading(false);
+      // setTimeout(() => {
+      //   setLoading(false);
+      // }, 3000);
     } catch (error) {
       setLoading(false);
     }
@@ -145,9 +147,10 @@ export default function ProductList({
     getBrands().then(
       (res) => {
         setBrands(res.brands);
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
+        setLoading(false);
+        // setTimeout(() => {
+        //   setLoading(false);
+        // }, 3000);
       },
       (error) => {
         setLoading(false);
@@ -160,9 +163,10 @@ export default function ProductList({
     getAllCats().then(
       (res) => {
         setCategories(res.categories);
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
+        setLoading(false);
+        // setTimeout(() => {
+        //   setLoading(false);
+        // }, 3000);
       },
       (error) => {
         setLoading(false);
@@ -251,10 +255,15 @@ export default function ProductList({
     );
   };
 
+  const addSlug = (str) => {
+    return str.toLowerCase().split(" ").join("-");
+  };
+
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu />
+      <div className="mx-auto max-w-2xl px-4 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
+        <SocialIconMenu brandslug={brandslug} categoryslug={categoryslug} />
+
         <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}
         </h2>
@@ -263,35 +272,39 @@ export default function ProductList({
         {!loading && (
           <>
             <div>
-              <div className="mb-3 pt-4">
-                <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-                  <input
-                    type="search"
-                    className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                    placeholder="Search"
-                    aria-label="Search"
-                    aria-describedby="button-addon1"
-                    value={search_all}
-                    onChange={handleSearch}
-                  />
-
-                  <Link
-                    className="relative z-[2] flex items-center rounded-r bg-primary px-1 md:px-3 lg:px-3 xl:px-3 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-                    href={`/search/${search_all}`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="h-5 w-5"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                        clip-rule="evenodd"
+              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
+                <div className="col-start-2 col-span-4">
+                  <div className="mb-3 pt-4">
+                    <div className="relative mb-4 flex w-full flex-wrap items-stretch">
+                      <input
+                        type="search"
+                        className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                        placeholder="Search"
+                        aria-label="Search"
+                        aria-describedby="button-addon1"
+                        value={search_all}
+                        onChange={handleSearch}
                       />
-                    </svg>
-                  </Link>
+
+                      <Link
+                        className="relative z-[2] flex items-center rounded-r bg-primary px-1 md:px-3 lg:px-3 xl:px-3 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
+                        href={`/search/${addSlug(search_all)}`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="h-5 w-5"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
