@@ -49,8 +49,6 @@ const CategorySlider = ({ sale_type }) => {
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
-    autoplay: true, // Turn on auto-scroll
-    autoplaySpeed: 2000,
     prevArrow: (
       <button type="button" className="slick-prev">
         <FontAwesomeIcon icon={faChevronLeft} />
@@ -73,7 +71,6 @@ const CategorySlider = ({ sale_type }) => {
         breakpoint: 768,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1,
           variableWidth: true,
         },
       },
@@ -126,7 +123,7 @@ const CategorySlider = ({ sale_type }) => {
             ) : (
               <>
                 <div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
-                  <div class="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-20 w-20"></div>
+                  <div class="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-7 w-10"></div>
                 </div>
               </>
             )}
