@@ -5,6 +5,7 @@ import {
   getCategories,
   getAllCats,
   getCategoryProducts,
+  getLaptopProducts,
 } from "../services/productService";
 import React, { useState, useEffect } from "react";
 import { Button, Drawer, Space, Row, Pagination } from "antd";
@@ -89,6 +90,23 @@ export default function ProductList({
         });
         setProducts(res.products.data);
         //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+        setTotal(res.products.total);
+      } else if (productSection == "Laptops") {
+        const res = await getLaptopProducts({
+          page,
+          rows,
+          price,
+          brand,
+          rams,
+          sorting: sort,
+          storages,
+          processors,
+          category,
+          search_all,
+          categoryslug,
+          brandslug,
+        });
+        setProducts(res.products.data);
         setTotal(res.products.total);
       } else {
         const res = await getCategoryProducts({
@@ -262,7 +280,7 @@ export default function ProductList({
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu brandslug={brandslug} categoryslug={categoryslug} />
+        <SocialIconMenu categoryslug="" brandslug="" />
 
         <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}

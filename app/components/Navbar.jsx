@@ -23,7 +23,7 @@ import Image from "next/image";
 
 const navigation = {
   pages: [
-    { name: "Laptops and Ultrabook", href: "/categories/laptop-ultrabook" },
+    { name: "Laptops", href: "/laptops" },
     { name: "Apple", href: "/brands/apple-phone" },
     { name: "Android", href: "/brands/android-phone" },
     { name: "Shop", href: "/products" },

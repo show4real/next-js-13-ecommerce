@@ -25,6 +25,14 @@ import { sort } from "fast-sort";
 
 import { Select } from "antd";
 const { Option } = Select;
+const suggestions = [
+  "dell laptop",
+  "dell inspiron",
+  "hp 1030 g4",
+  "hp 1030 g3",
+  "dell latitued",
+  "apple m1",
+];
 
 export default function SearchList({ search }) {
   const [products, setProducts] = useState([]);
@@ -49,6 +57,7 @@ export default function SearchList({ search }) {
 
   const [mobileFilter, setFilter] = useState(false);
   const [filterPosition, setFilterPosition] = useState("left");
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
 
   const showFilter = () => {
     setFilter(true);
@@ -129,9 +138,18 @@ export default function SearchList({ search }) {
     setPrice(newPrice);
   };
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
+  // const handleSearch = (event) => {
+  //   const value = event.target.value;
+  //   setSearch(value);
+  // };
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
     setSearch(value);
+    const filtered = suggestions.filter((suggestion) =>
+      suggestion.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredSuggestions(filtered);
   };
 
   const handleStorage = (selectedOptions) => {
@@ -219,6 +237,7 @@ export default function SearchList({ search }) {
                     search_all={search_all}
                     handleSearch={handleSearch}
                     fetchProducts={fetchProducts}
+                    filteredSuggestions={filteredSuggestions}
                   />
                 </div>
               </div>

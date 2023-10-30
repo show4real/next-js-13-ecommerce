@@ -61,6 +61,13 @@ const CategorySlider = ({ sale_type }) => {
     ),
     responsive: [
       {
+        breakpoint: 1240,
+        settings: {
+          slidesToShow: 3,
+          variableWidth: true,
+        },
+      },
+      {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
@@ -123,7 +130,7 @@ const CategorySlider = ({ sale_type }) => {
             ) : (
               <>
                 <div class="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
-                  <div class="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-7 w-10"></div>
+                  <div class="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-14 w-14"></div>
                 </div>
               </>
             )}

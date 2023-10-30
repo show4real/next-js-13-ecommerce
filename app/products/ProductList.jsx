@@ -5,6 +5,7 @@ import {
   getCategories,
   getAllCats,
   getCategoryProducts,
+  getLaptopProducts,
 } from "../services/productService";
 import React, { useState, useEffect } from "react";
 import { Button, Drawer, Space, Row, Pagination } from "antd";
@@ -89,6 +90,23 @@ export default function ProductList({
         });
         setProducts(res.products.data);
         //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
+        setTotal(res.products.total);
+      } else if (productSection == "Laptops") {
+        const res = await getLaptopProducts({
+          page,
+          rows,
+          price,
+          brand,
+          rams,
+          sorting: sort,
+          storages,
+          processors,
+          category,
+          search_all,
+          categoryslug,
+          brandslug,
+        });
+        setProducts(res.products.data);
         setTotal(res.products.total);
       } else {
         const res = await getCategoryProducts({

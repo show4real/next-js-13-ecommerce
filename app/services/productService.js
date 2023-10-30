@@ -46,6 +46,17 @@ export function getCategoryProducts(data) {
   );
 }
 
+export function getLaptopProducts(data) {
+  const requestOptions = {
+    method: "POST",
+    headers: header(),
+    body: JSON.stringify(data),
+  };
+  return fetch(`${settings.API_URL}laptop_products`, requestOptions).then(
+    authService.handleResponse
+  );
+}
+
 export function getTrendingProducts(data) {
   const requestOptions = {
     method: "POST",

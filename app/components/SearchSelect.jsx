@@ -1,5 +1,17 @@
+import Link from "next/link";
 import React from "react";
-const SearchSelect = ({ search_all, handleSearch, fetchProducts }) => {
+const SearchSelect = ({
+  search_all,
+  handleSearch,
+  fetchProducts,
+  filteredSuggestions,
+}) => {
+  const convertToSlug = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+  };
   return (
     <div className="mb-3 pt-4">
       <div className="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -40,6 +52,18 @@ const SearchSelect = ({ search_all, handleSearch, fetchProducts }) => {
           </svg>
         </button>
       </div>
+      {search_all && (
+        <ul className="absolute z-10 w-64 bg-white rounded-b-lg shadow-lg mt-1">
+          {filteredSuggestions.map((item) => (
+            <li
+              key={item}
+              className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-blue-400"
+            >
+              <Link href={`../search/${convertToSlug(item)}`}>{item}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
