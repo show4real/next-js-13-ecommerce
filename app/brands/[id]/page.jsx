@@ -34,7 +34,7 @@ export default async function ProductDetails({ params }) {
   const brand = await getBrand(params.id);
 
   return (
-    <main style={{ marginTop: 20 }}>
+    <main>
       {brand && (
         <ProductList
           productSection={`${brand.name} Brand`}

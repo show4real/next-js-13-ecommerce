@@ -400,6 +400,9 @@ export default function Navbar() {
                                                 <Link
                                                   href={`/categories/${category.slug}`}
                                                   className="-m-2 block p-2 text-gray-500"
+                                                  onClose={() => {
+                                                    hideNav();
+                                                  }}
                                                 >
                                                   {category.name}
                                                 </Link>

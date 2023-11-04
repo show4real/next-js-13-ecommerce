@@ -49,19 +49,9 @@ const CategorySlider = ({ sale_type }) => {
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
-    prevArrow: (
-      <button type="button" className="slick-prev">
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </button>
-    ),
-    nextArrow: (
-      <button type="button" className="slick-next">
-        <FontAwesomeIcon icon={faChevronRight} />
-      </button>
-    ),
     responsive: [
       {
-        breakpoint: 1240,
+        breakpoint: 1500,
         settings: {
           slidesToShow: 3,
           variableWidth: true,
