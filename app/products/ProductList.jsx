@@ -22,7 +22,11 @@ import ProcessorSelect from "/app/components/ProcessorSelect";
 import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
+import { Select } from "antd";
+
 import CategorySlider from "app/categories/CategorySlider";
+
+const { Option } = Select;
 
 export default function ProductList({
   productSection,
@@ -335,7 +339,7 @@ export default function ProductList({
             <div className="lg:hidden md:hidden xl:hidden ">
               <>
                 <Space>
-                  <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">
+                  <div className="mobile-off-canvas d-block d-lg-none pt-10">
                     <div>
                       <Button
                         onClick={showFilter}
@@ -356,8 +360,34 @@ export default function ProductList({
                         />
                       </Button>
                     </div>
-                    <div className="pl-10">
-                      <SortSelect sort={sort} handleSorting={handleSorting} />
+                    <div className="pt-5">
+                      <Select
+                        placeholder={
+                          <span style={{ fontWeight: "bold", color: "black" }}>
+                            Sort By
+                          </span>
+                        }
+                        placement="bottomLeft"
+                        style={{
+                          border: "none",
+                          boxShadow: "none",
+                          height: 35,
+                          color: "black",
+                        }}
+                        value={sort}
+                        onChange={handleSorting}
+                        dropdownStyle={{ minWidth: 300, textAlign: "center" }}
+                        className="w-full"
+                      >
+                        <option value="">All</option>
+                        <option value="availability">Availability</option>
+                        <option value="name-asc">Alphabetically, A-Z</option>
+                        <option value="name-desc">Alphabetically, Z-A</option>
+                        <option value="low-price">Price, low to high</option>
+                        <option value="high-price">Price, high to low</option>
+                        <option value="date-asc">Date, old to new</option>
+                        <option value="date-desc">Date, new to old</option>
+                      </Select>
                     </div>
                   </div>
                 </Space>

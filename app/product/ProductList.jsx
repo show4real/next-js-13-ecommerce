@@ -22,13 +22,18 @@ import ProcessorSelect from "/app/components/ProcessorSelect";
 import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
+import { Select } from "antd";
+
 import CategorySlider from "app/categories/CategorySlider";
+
+const { Option } = Select;
 
 export default function ProductList({
   productSection,
   sale_type,
   brandslug,
   categoryslug,
+  flash_sale,
 }) {
   const [products, setProducts] = useState([]);
 
@@ -71,7 +76,7 @@ export default function ProductList({
     fetchCategories();
   }, [brand, rams, sort, storages, processors, category, rows, page]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (retryCount = 3) => {
     setLoading(true);
 
     try {
@@ -89,9 +94,8 @@ export default function ProductList({
           search_all,
         });
         setProducts(res.products.data);
-        //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
         setTotal(res.products.total);
-      } else if (productSection == "Laptops") {
+      } else if (productSection === "Laptops") {
         const res = await getLaptopProducts({
           page,
           rows,
@@ -127,11 +131,17 @@ export default function ProductList({
         setTotal(res.products.total);
       }
       setLoading(false);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 3000);
     } catch (error) {
-      setLoading(false);
+      console.error("Error fetching products:", error);
+      if (retryCount > 0) {
+        // Retry the request
+        console.log(`Retrying... attempts left: ${retryCount}`);
+        await fetchProducts(retryCount - 1);
+      } else {
+        setLoading(false);
+        // Handle failure here
+        console.error("Failed to fetch products after multiple attempts");
+      }
     }
   };
 
@@ -245,7 +255,6 @@ export default function ProductList({
               categories={categories}
               category={category}
               handleCategory={handleCategory}
-              onClose={onCloseFilter}
             />
           )}
         </div>
@@ -255,29 +264,19 @@ export default function ProductList({
               brands={brands}
               brand={brand}
               handleBrand={handleBrand}
-              onClose={onCloseFilter}
             />
           )}
         </div>
         <div>
-          <StorageSelect
-            storages={storages}
-            handleStorage={handleStorage}
-            onClose={onCloseFilter}
-          />
+          <StorageSelect storages={storages} handleStorage={handleStorage} />
         </div>
         <div>
-          <RamSelect
-            rams={rams}
-            handleRam={handleRam}
-            onClose={onCloseFilter}
-          />
+          <RamSelect rams={rams} handleRam={handleRam} />
         </div>
         <div>
           <ProcessorSelect
             processors={processors}
             handleProcessor={handleProcessor}
-            onClose={onCloseFilter}
           />
         </div>
       </>
@@ -291,7 +290,7 @@ export default function ProductList({
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu categoryslug="" brandslug="" />
+        <SocialIconMenu categoryslug="" brandslug="" flash_sale={flash_sale} />
 
         <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}
@@ -301,7 +300,7 @@ export default function ProductList({
         {!loading && (
           <>
             <div>
-              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
+              <div className="hidden lg:grid lg:grid-cols-6 md:grid md:grid-cols-6 justify-center pt-8 pb-5">
                 <div className="col-start-2 col-span-4">
                   <div className="mb-3 pt-4">
                     <div className="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -340,7 +339,7 @@ export default function ProductList({
             <div className="lg:hidden md:hidden xl:hidden ">
               <>
                 <Space>
-                  <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">
+                  <div className="mobile-off-canvas d-block d-lg-none pt-10">
                     <div>
                       <Button
                         onClick={showFilter}
@@ -361,8 +360,34 @@ export default function ProductList({
                         />
                       </Button>
                     </div>
-                    <div className="pl-10">
-                      <SortSelect sort={sort} handleSorting={handleSorting} />
+                    <div className="pt-5">
+                      <Select
+                        placeholder={
+                          <span style={{ fontWeight: "bold", color: "black" }}>
+                            Sort By
+                          </span>
+                        }
+                        placement="bottomLeft"
+                        style={{
+                          border: "none",
+                          boxShadow: "none",
+                          height: 35,
+                          color: "black",
+                        }}
+                        value={sort}
+                        onChange={handleSorting}
+                        dropdownStyle={{ minWidth: 300, textAlign: "center" }}
+                        className="w-full"
+                      >
+                        <option value="">All</option>
+                        <option value="availability">Availability</option>
+                        <option value="name-asc">Alphabetically, A-Z</option>
+                        <option value="name-desc">Alphabetically, Z-A</option>
+                        <option value="low-price">Price, low to high</option>
+                        <option value="high-price">Price, high to low</option>
+                        <option value="date-asc">Date, old to new</option>
+                        <option value="date-desc">Date, new to old</option>
+                      </Select>
                     </div>
                   </div>
                 </Space>
@@ -379,7 +404,6 @@ export default function ProductList({
                         price={price}
                         handlePrice={handlePrice}
                         fetchProducts={fetchProducts}
-                        onClose={onCloseFilter}
                       />
                     </div>
                     <AllFilter />
