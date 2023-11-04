@@ -476,20 +476,22 @@ export default function Navbar() {
                   </div> */}
 
                   {/* Search */}
-                  <div className="flex">
+                  <div>
                     <>
                       {/* <Link href="/search"> */}
                       <button
                         type="primary"
-                        onClick={showSearchDrawer}
+                        onClick={() => {
+                          showSearchDrawer();
+                        }}
                         className="group -m-2 flex items-center p-2"
+                        maskClosable={false} // Prevent closing when clicking outside
+                        getContainer={false}
                       >
-                        <div className="icon-container">
-                          <FontAwesomeIcon
-                            icon={faSearch}
-                            className="search-icon bounce text-blue-500 font-thin"
-                          />
-                        </div>
+                        <FontAwesomeIcon
+                          icon={faSearch}
+                          className="search-icon bounce text-blue-500 font-thin"
+                        />
 
                         <span className="text-xs font-semibold text-blue-500 pl-1">
                           search
