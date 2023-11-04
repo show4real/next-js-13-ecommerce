@@ -6,7 +6,7 @@ import SearchSelect from "/app/components/SearchSelect";
 import { sort } from "fast-sort";
 const { Option } = Select;
 
-const SearchSuggestion = () => {
+const SearchSuggestion = ({ onCloseSearch }) => {
   const [search_all, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -184,6 +184,7 @@ const SearchSuggestion = () => {
               <Link
                 href={`../search/${convertToSlug(search_all)}`}
                 className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-blue-700 rounded-full shadow-md group"
+                onClick={onCloseSearch}
               >
                 <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">
                   <svg

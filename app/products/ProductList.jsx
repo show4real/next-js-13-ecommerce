@@ -72,7 +72,7 @@ export default function ProductList({
     fetchCategories();
   }, [brand, rams, sort, storages, processors, category, rows, page]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (retryCount = 3) => {
     setLoading(true);
 
     try {
@@ -90,9 +90,8 @@ export default function ProductList({
           search_all,
         });
         setProducts(res.products.data);
-        //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
         setTotal(res.products.total);
-      } else if (productSection == "Laptops") {
+      } else if (productSection === "Laptops") {
         const res = await getLaptopProducts({
           page,
           rows,
@@ -128,11 +127,17 @@ export default function ProductList({
         setTotal(res.products.total);
       }
       setLoading(false);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 3000);
     } catch (error) {
-      setLoading(false);
+      console.error("Error fetching products:", error);
+      if (retryCount > 0) {
+        // Retry the request
+        console.log(`Retrying... attempts left: ${retryCount}`);
+        await fetchProducts(retryCount - 1);
+      } else {
+        setLoading(false);
+        // Handle failure here
+        console.error("Failed to fetch products after multiple attempts");
+      }
     }
   };
 
@@ -291,7 +296,7 @@ export default function ProductList({
         {!loading && (
           <>
             <div>
-              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
+              <div className="hidden lg:grid lg:grid-cols-6 md:grid md:grid-cols-6 justify-center pt-8 pb-5">
                 <div className="col-start-2 col-span-4">
                   <div className="mb-3 pt-4">
                     <div className="relative mb-4 flex w-full flex-wrap items-stretch">

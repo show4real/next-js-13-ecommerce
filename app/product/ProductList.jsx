@@ -245,6 +245,7 @@ export default function ProductList({
               categories={categories}
               category={category}
               handleCategory={handleCategory}
+              onClose={onCloseFilter}
             />
           )}
         </div>
@@ -254,19 +255,29 @@ export default function ProductList({
               brands={brands}
               brand={brand}
               handleBrand={handleBrand}
+              onClose={onCloseFilter}
             />
           )}
         </div>
         <div>
-          <StorageSelect storages={storages} handleStorage={handleStorage} />
+          <StorageSelect
+            storages={storages}
+            handleStorage={handleStorage}
+            onClose={onCloseFilter}
+          />
         </div>
         <div>
-          <RamSelect rams={rams} handleRam={handleRam} />
+          <RamSelect
+            rams={rams}
+            handleRam={handleRam}
+            onClose={onCloseFilter}
+          />
         </div>
         <div>
           <ProcessorSelect
             processors={processors}
             handleProcessor={handleProcessor}
+            onClose={onCloseFilter}
           />
         </div>
       </>
@@ -368,6 +379,7 @@ export default function ProductList({
                         price={price}
                         handlePrice={handlePrice}
                         fetchProducts={fetchProducts}
+                        onClose={onCloseFilter}
                       />
                     </div>
                     <AllFilter />

@@ -8,18 +8,16 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import {
-  getAllBrands,
-  getAllCats,
-  getBrands,
-} from "/app/services/productService";
+import { getAllCats, getBrands } from "/app/services/productService";
 import { Button, Drawer } from "antd";
 import Logo from "/public/logo5.png";
-
 import CartQuick from "./CartQuick";
 import SearchSuggestion from "/app/components/SearchSuggestion";
 import useCartStore from "/app/store/zustand";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import "./social.css";
 
 const navigation = {
   pages: [
@@ -45,6 +43,10 @@ export default function Navbar() {
 
   const showDrawer = () => {
     setOpenCart(true);
+  };
+
+  const hideNav = () => {
+    setOpen(false);
   };
 
   const onCloseCart = () => {
@@ -160,6 +162,19 @@ export default function Navbar() {
                   </div>
 
                   {/* Links */}
+                  <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                    {navigation.pages.map((page) => (
+                      <div key={page.name} className="flow-root">
+                        <Link
+                          href={page.href}
+                          onClick={() => setOpen(false)}
+                          className="-m-2 block p-2 font-medium text-gray-900"
+                        >
+                          {page.name}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
                   <Tab.Group as="div" className="mt-2">
                     <div className="border-b border-gray-200">
                       <Tab.List className="-mb-px flex space-x-8 px-4">
@@ -208,6 +223,7 @@ export default function Navbar() {
                                   <Link
                                     href={`/categories/${category.slug}`}
                                     className="-m-2 block p-2 text-gray-500"
+                                    onClick={() => setOpen(false)}
                                   >
                                     {category.name}
                                   </Link>
@@ -230,8 +246,9 @@ export default function Navbar() {
                               brands.map((brand, key) => (
                                 <li className="flow-root" key={key}>
                                   <Link
-                                    href={`/categories/${brand.slug}`}
+                                    href={`/brands/${brand.slug}`}
                                     className="-m-2 block p-2 text-gray-500"
+                                    onClick={() => setOpen(false)}
                                   >
                                     {brand.name}
                                   </Link>
@@ -242,19 +259,6 @@ export default function Navbar() {
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
-
-                  <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                    {navigation.pages.map((page) => (
-                      <div key={page.name} className="flow-root">
-                        <Link
-                          href={page.href}
-                          className="-m-2 block p-2 font-medium text-gray-900"
-                        >
-                          {page.name}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
 
                   {/* <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                     <div className="flow-root">
@@ -480,11 +484,14 @@ export default function Navbar() {
                         onClick={showSearchDrawer}
                         className="group -m-2 flex items-center p-2"
                       >
-                        <MagnifyingGlassIcon
-                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                          aria-hidden="true"
-                        />
-                        <span className="text-xs font-semibold text-gray-400 pl-1">
+                        <div className="icon-container">
+                          <FontAwesomeIcon
+                            icon={faSearch}
+                            className="search-icon bounce text-blue-500 font-thin"
+                          />
+                        </div>
+
+                        <span className="text-xs font-semibold text-blue-500 pl-1">
                           search
                         </span>
                       </button>
@@ -522,10 +529,10 @@ export default function Navbar() {
                         className="group -m-2 flex items-center p-2"
                       >
                         <ShoppingBagIcon
-                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                          className="h-6 w-6 flex-shrink-0 text-blue-400 group-hover:text-blue-500"
                           aria-hidden="true"
                         />
-                        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                        <span className="ml-2 text-sm font-medium text-blue-700 group-hover:text-gray-800">
                           {totalQuantity}
                         </span>
                         <span className="sr-only">items in cart, view bag</span>

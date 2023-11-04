@@ -4,9 +4,17 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Button, Popover, Space } from "antd";
 import SearchSelect from "./SearchSelect";
 import SearchSuggestion from "./SearchSuggestion";
+
+const onCloseSearch = () => {
+  setOpenSearch(false);
+};
+
+const showSearchDrawer = () => {
+  setOpenSearch(true);
+};
 const content = (
   <div className="w-80">
-    <SearchSuggestion />
+    <SearchSuggestion onCloseSearch={onCloseSearch} />
   </div>
 );
 const SearchIcon = () => (

@@ -221,7 +221,7 @@ export default function SearchList({ search }) {
 
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <SocialIconMenu />
 
         {loading && <CarouselHolder />}
@@ -243,6 +243,15 @@ export default function SearchList({ search }) {
               </div>
             </div>
             <div className="lg:hidden md:hidden xl:hidden ">
+              <div>
+                <h2 className="text-sm font-medium tracking-tight text-gray-700 pt-3 text-center">
+                  Search Result for{" "}
+                  <span className="text-orange-400 capitalize">
+                    {search_all} {products.length}
+                  </span>{" "}
+                  products
+                </h2>
+              </div>
               <>
                 <Space>
                   <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">

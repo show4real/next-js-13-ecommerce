@@ -6,9 +6,11 @@ const { Option } = Select;
 const SortSelect = ({ sort, handleSorting }) => {
   return (
     <Select
-      placeholder={<span style={{ fontWeight: "bold" }}>Sort By</span>}
+      placeholder={
+        <span style={{ fontWeight: "bold", color: "black" }}>Sort By</span>
+      }
       placement="bottomLeft"
-      style={{ border: "none", boxShadow: "none", height: 35 }}
+      style={{ border: "none", boxShadow: "none", height: 35, color: "black" }}
       value={sort}
       onChange={handleSorting}
       dropdownStyle={{ minWidth: 300, textAlign: "center" }}
