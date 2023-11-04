@@ -24,7 +24,7 @@ import Link from "next/link";
 import { sort } from "fast-sort";
 
 import { Select } from "antd";
-const { Option } = Select;
+
 const suggestions = [
   "dell laptop",
   "dell inspiron",
@@ -244,7 +244,7 @@ export default function SearchList({ search }) {
             </div>
             <div className="lg:hidden md:hidden xl:hidden ">
               <div>
-                <h2 className="text-sm font-medium tracking-tight text-gray-700 pt-3 text-center">
+                <h2 className="text-sm font-medium tracking-tight text-gray-700 pt-3 pb-4 text-center">
                   Search Result for{" "}
                   <span className="text-orange-400 capitalize">
                     {search_all} {products.length}
@@ -252,9 +252,31 @@ export default function SearchList({ search }) {
                   products
                 </h2>
               </div>
+              <div>
+                <Select
+                  placeholder={
+                    <span style={{ fontWeight: "bold" }}>Sort By</span>
+                  }
+                  placement="bottomLeft"
+                  style={{
+                    border: "none",
+                    boxShadow: "none",
+                    height: 35,
+                  }}
+                  value={sort_value}
+                  onChange={handleSorting}
+                  dropdownStyle={{ minWidth: 300, textAlign: "center" }}
+                >
+                  <option value="availability">Availability</option>
+                  <option value="name-asc">Alphabetically, A-Z</option>
+                  <option value="name-desc">Alphabetically, Z-A</option>
+                  <option value="low-price">Price, low to high</option>
+                  <option value="high-price">Price, high to low</option>
+                </Select>
+              </div>
               <>
                 <Space>
-                  <div className="mobile-off-canvas d-block d-lg-none flex justify-evenly pt-10">
+                  <div className="mobile-off-canvas d-block d-lg-none pt-10 ">
                     <div>
                       <Button
                         onClick={showFilter}
@@ -274,31 +296,6 @@ export default function SearchList({ search }) {
                           style={{ paddingLeft: 5, bottom: 20 }}
                         />
                       </Button>
-                    </div>
-                    <div className="pl-10">
-                      <Select
-                        placeholder={
-                          <span style={{ fontWeight: "bold" }}>Sort By</span>
-                        }
-                        placement="bottomLeft"
-                        style={{
-                          border: "none",
-                          boxShadow: "none",
-                          height: 35,
-                        }}
-                        value={sort_value}
-                        onChange={handleSorting}
-                        dropdownStyle={{ minWidth: 300, textAlign: "center" }}
-                        className="w-full"
-                      >
-                        <option value="availability">Availability</option>
-                        <option value="name-asc">Alphabetically, A-Z</option>
-                        <option value="name-desc">Alphabetically, Z-A</option>
-                        <option value="low-price">Price, low to high</option>
-                        <option value="high-price">Price, high to low</option>
-                        {/* <option value="date-asc">Date, old to new</option>
-                <option value="date-desc">Date, new to old</option> */}
-                      </Select>
                     </div>
                   </div>
                 </Space>
