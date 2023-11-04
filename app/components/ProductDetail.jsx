@@ -19,6 +19,7 @@ import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
 import Link from "next/link";
 import CarouselDetailHolder from "./CarouselDetailHolder";
+import ReferralBadge from "./ReferralBadge";
 
 const ProductDetail = ({ product }) => {
   const [images, setImages] = useState([]);
@@ -413,6 +414,7 @@ const ProductDetail = ({ product }) => {
                 </div>
               </div>
             </div>
+            <ReferralBadge />
           </>
         )}
       </div>

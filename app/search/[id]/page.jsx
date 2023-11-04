@@ -8,6 +8,12 @@ export async function generateMetadata({ params, searchParams }, parent) {
     openGraph: {
       description: params.id,
     },
+    alternates: {
+      canonical: `https://hayzeeonline.com`,
+      languages: {
+        "en-US": "/en-US",
+      },
+    },
   };
 }
 

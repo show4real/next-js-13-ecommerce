@@ -19,7 +19,7 @@ export async function generateMetadata({ params, searchParams }, parent) {
   console.log(product);
 
   return {
-    title: product.name,
+    title: "hello world",
     openGraph: {
       description: product.name,
     },
