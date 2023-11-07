@@ -156,9 +156,7 @@ const ProductDetail = ({ product }) => {
 
   const BuyNow = () => {
     const handleCopyLink = () => {
-      navigator.clipboard.writeText(
-        window.location.href + `product/${product.slug}`
-      );
+      navigator.clipboard.writeText(window.location.href);
       message.success("Link copied to clipboard");
     };
 

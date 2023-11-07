@@ -86,7 +86,7 @@ export default function ProductGlance({ product, toggle, show }) {
   const BuyNow = () => {
     const handleCopyLink = () => {
       navigator.clipboard.writeText(
-        window.location.href + `product/${product.slug}`
+        `https://hayzeeonline.com/products/${product.slug}`
       );
       message.success("Link copied to clipboard");
     };
