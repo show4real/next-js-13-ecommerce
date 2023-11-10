@@ -48,12 +48,23 @@ const ReferralBadge = () => {
       case "name":
         return !value ? "Your Name is required" : "";
       case "password":
-        return !value ? "Password is required" : "";
+        return value.length < 4
+          ? "Password must be at least 4 characters long"
+          : "";
       case "email":
-        return !value ? "Email is required" : "";
+        return !value
+          ? "Email is required"
+          : validateEmail(value)
+          ? ""
+          : "Please enter a valid email address";
       default:
         return "";
     }
+  };
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
   };
 
   const handleSubmit = (e) => {
@@ -97,9 +108,9 @@ const ReferralBadge = () => {
           name: "",
         });
         notification.success({
-          message: "Order Sent",
+          message: "Registration Successful",
           description:
-            "Your order has been successfully sent and will be processed.",
+            "You have suucessfully registered. A Verification link has been sent to your email, Please confirm!",
         });
 
         clearCart();
@@ -210,7 +221,7 @@ const ReferralBadge = () => {
 
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md w-full flex items-center justify-center"
-              //   onClick={handleSubmit}
+              onClick={handleSubmit}
             >
               {saving ? (
                 <>

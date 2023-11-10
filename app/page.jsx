@@ -47,15 +47,14 @@ export default function Home() {
           shop={false}
           flash_sale={true}
         />
-
         <Category />
-
         <ProductSaleType sale_type="flash sales" />
+        <ProductSaleType sale_type="PRE-ORDER (24Hours)" />
+        <ProductSaleType sale_type="PRE-ORDER (21DAYS)" />
+        <ProductSaleType sale_type="PRE-ORDER (7DAYS)" />
 
         {/* <CategorySlider brand="brand" /> */}
-
         <ProductSaleType sale_type="promo sales" />
-
         <FeaturedServices />
         <ProductSaleType sale_type="black friday" />
         <ProductSaleType sale_type="Mid year sales" />
