@@ -6,7 +6,7 @@ export async function generateMetadata({ params, searchParams }, parent) {
   return {
     title: "Refer your family and friends and earn on our platform",
     openGraph: {
-      description: "Refer your family and earn 5% of what they bought",
+      description: "Refer your family and earn on our platform",
     },
   };
 }
