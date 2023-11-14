@@ -592,7 +592,7 @@ export default function Navbar() {
                     <>
                       {/* <Link href="/search"> */}
                       <Link
-                        href="https://hayzeeonline-referrer.hayzeeonline.com"
+                        href="https://hayzeeonline-referral.hayzeeonline.com"
                         className="group -m-2 flex items-center p-2 pl-2"
                       >
                         <span className="text-xs font-semibold text-blue-500 pl-1">
