@@ -27,14 +27,10 @@ const VerifyReferrer = ({ referrer_code }) => {
       setSuccess(true);
 
       notification.success({
-        message: "Order Sent",
+        message: "Registration completed",
         description:
-          "Your order has been successfully sent and will be processed.",
+          "Your Registration is successfull, A mail has been sent to you for verification.",
       });
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000); // 2000ms = 2 seconds
     } catch (error) {
       setSaving(false);
       // Handle error appropriately, e.g., show an error notification

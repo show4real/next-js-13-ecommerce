@@ -6,6 +6,7 @@ import {
   Bars3Icon,
   MagnifyingGlassIcon,
   ShoppingBagIcon,
+  UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { getAllCats, getBrands } from "/app/services/productService";
@@ -16,7 +17,7 @@ import SearchSuggestion from "/app/components/SearchSuggestion";
 import useCartStore from "/app/store/zustand";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import "./social.css";
 
 const navigation = {
@@ -585,6 +586,24 @@ export default function Navbar() {
                           </Link>
                         </div>
                       </Drawer>
+                    </>
+                  </div>
+                  <div>
+                    <>
+                      {/* <Link href="/search"> */}
+                      <Link
+                        href="https://hayzeeonline-referrer.hayzeeonline.com"
+                        className="group -m-2 flex items-center p-2 pl-2"
+                      >
+                        <span className="text-xs font-semibold text-blue-500 pl-1">
+                          {"  "}
+                        </span>
+                        <UserIcon
+                          className="h-6 w-6 flex-shrink-0  text-blue-400 group-hover:text-blue-500"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                      {/* </Link> */}
                     </>
                   </div>
                 </div>
