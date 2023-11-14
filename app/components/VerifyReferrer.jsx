@@ -66,7 +66,7 @@ const VerifyReferrer = ({ referrer_code }) => {
         <div>
           <p>Email Verified Sucessfully Please</p>
           <Link
-            href={"https://hayzeeonline-referral.hayzeeonline.com/login"}
+            href={"https://hayzeeonline-referral.hayzeeonline.com/auth/login"}
             className="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring"
           >
             Sign In!
