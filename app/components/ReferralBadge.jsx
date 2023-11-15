@@ -113,18 +113,18 @@ const ReferralBadge = () => {
             "You have suucessfully registered. A Verification link has been sent to your email, Please confirm!",
         });
 
-        clearCart();
-
         setTimeout(() => {
           window.location.reload();
         }, 2000); // 10000ms = 10 seconds
       })
       .catch((err) => {
         setSaving(false);
-        notification.error({
-          message: "Registration Failed",
-          description: "Invalid Email",
-        });
+        if (err) {
+          notification.error({
+            message: "Registration Failed",
+            description: "Invalid Email",
+          });
+        }
       });
   };
 
