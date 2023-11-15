@@ -26,6 +26,10 @@ const navigation = {
     { name: "Apple", href: "/brands/apple-phone" },
     { name: "Android", href: "/brands/android-phone" },
     { name: "Shop", href: "/products" },
+    { name: "Flash Sales", href: "/flash-sales" },
+    { name: "Black Friday", href: "/black-friday" },
+    { name: "Mid Sales", href: "/mid-year-sales" },
+    { name: "Promo Sales", href: "/promo-sales" },
   ],
 };
 

@@ -32,8 +32,8 @@ export default function ProductSaleType({ sale_type }) {
 
   return (
     products.length > 0 && (
-      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-2">
-        <h2 className="text-2xl font-medium capitalize leading-4 tracking-tight text-gray-900 mt-8 ">
+      <div className="mx-auto max-w-2xl px-4 mt-10 lg:mt-0 md:mt-0 py-0 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-2">
+        <h2 className="text-2xl font-medium capitalize leading-4 tracking-tight text-gray-900 mt-10 ">
           {sale_type}
         </h2>
 

@@ -1,9 +1,11 @@
 import { Suspense } from "react";
 import ProductList from "/app/products/ProductList";
+import ProductSaleType from "../product/ProductSalesType";
 
 export const metadata = {
-  title: "#1 UK laptop sales",
-  description: "We sell affordable uk used laptops and Iphones",
+  title: "Black friday laptop computer sales- hayzeeonline",
+  description:
+    "Black friday sales Buy Gadget at 10% discount - Hayzee computer resources ",
   keywords: [
     "HP",
     "Dell",
@@ -36,16 +38,10 @@ export const metadata = {
   applicationName: "Ecommerce Website for Laptops and Mobile phone",
 };
 
-export default function Products() {
+export default function FlashSales() {
   return (
     <div className="container mx-auto pt-0">
-      <ProductList
-        productSection={"Laptops"}
-        brandslug={""}
-        categoryslug={""}
-        shop={true}
-        sale_type={""}
-      />
+      <ProductSaleType sale_type="black friday" />
     </div>
   );
 }

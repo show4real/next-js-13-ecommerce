@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 import ProductList from "/app/products/ProductList";
+import ProductSaleType from "../product/ProductSalesType";
 
 export const metadata = {
-  title: "#1 UK laptop sales",
+  title:
+    "mid year laptops phones gadgets sales at affordable prices - hayzee computer resources",
   description: "We sell affordable uk used laptops and Iphones",
   keywords: [
     "HP",
@@ -36,16 +38,18 @@ export const metadata = {
   applicationName: "Ecommerce Website for Laptops and Mobile phone",
 };
 
-export default function Products() {
+export default function FlashSales() {
   return (
-    <div className="container mx-auto pt-0">
-      <ProductList
-        productSection={"Laptops"}
-        brandslug={""}
-        categoryslug={""}
-        shop={true}
-        sale_type={""}
-      />
+    <div className="container mx-auto pt-2">
+      <ProductSaleType sale_type="Mid year sales" />
+
+      {/* <ProductSaleType sale_type="PRE-ORDER (24Hours)" />
+      <ProductSaleType sale_type="PRE-ORDER (21DAYS)" />
+      <ProductSaleType sale_type="PRE-ORDER (7DAYS)" />
+
+      <FeaturedServices />
+    
+      <ProductSaleType sale_type="Mid year sales" /> */}
     </div>
   );
 }

@@ -18,6 +18,7 @@ export default function Products() {
         brandslug={""}
         categoryslug={""}
         shop={true}
+        sale_type={""}
       />
     </div>
   );

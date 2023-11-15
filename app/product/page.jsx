@@ -39,6 +39,7 @@ export default function Products() {
         categoryslug={""}
         shop={true}
         flash_sale={true}
+        sale_type={""}
       />
     </div>
   );
