@@ -121,6 +121,10 @@ const ReferralBadge = () => {
       })
       .catch((err) => {
         setSaving(false);
+        notification.error({
+          message: "Registration Failed",
+          description: "Invalid Email",
+        });
       });
   };
 
@@ -160,12 +164,13 @@ const ReferralBadge = () => {
               </button>
             </div>
             <p className="text-lg font-semibold my-4">
-              INVITE &amp; GET 5% COMMISSION FROM FRIEND&apos;S ORDERS
+              INVITE &amp; GET A MINIMUM OF 2.5% COMMISSION FROM FRIEND&apos;S
+              ORDERS
             </p>
             <p className="text-sm text-gray-600 mb-4">
               Send us your friends and earn on purchase. Once they make a
-              purchase, you will earn 5% commission for each order as well! This
-              reward can be redeemed for coupons.
+              purchase, you will earn a minimum of 2.5% commission on each order
+              as well!
             </p>
             <input
               className="border-2 border-gray-300 rounded-md p-2 my-4 w-full"
@@ -218,6 +223,16 @@ const ReferralBadge = () => {
                 {errors.password}
               </span>
             </div>
+
+            <p className="text-sm text-gray-600 mb-4">
+              Already have an account?{" "}
+              <a
+                href="https://hayzeeonline-referral.hayzeeonline.com/auth/login"
+                className="text-blue-500 underline"
+              >
+                Sign in here
+              </a>
+            </p>
 
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md w-full flex items-center justify-center"
