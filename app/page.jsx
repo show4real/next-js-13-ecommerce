@@ -7,7 +7,7 @@ import Category from "./categories/Category";
 import CategorySlider from "./categories/CategorySlider";
 
 export const metadata = {
-  title: "#1 UK laptop sales",
+  title: " Uk Used Laptop Computers At Affordable Prices - Hayzeeonline",
   description: "We sell affordable uk used laptops and Iphones",
   keywords: [
     "HP",
@@ -17,6 +17,9 @@ export const metadata = {
     "convertible laptops",
     "uk used laptops",
     "fairly used laptops in ibadan",
+    "uk used laptops at affordable price",
+    "smart phones",
+    "uk used printers",
     "refurbished laptops",
     "cheap laptops",
     "used laptops",

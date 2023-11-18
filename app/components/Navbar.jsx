@@ -304,9 +304,9 @@ export default function Navbar() {
         </Transition.Root>
 
         <header className="relative bg-white">
-          {/* <p className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
-            Get free delivery on orders over $100
-          </p> */}
+          <p className="flex h-10 items-center justify-center bg-blue-500 px-4 text-lg font-medium text-white sm:px-6 lg:px-8">
+            Refer and Earn as high as 5% commission on an order
+          </p>
 
           <nav
             aria-label="Top"

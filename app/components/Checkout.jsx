@@ -272,9 +272,9 @@ const Checkout = () => {
           </div>
           <div className="px-4 pt-8">
             <p className="text-xl font-medium">Summary</p>
-            <p className="text-gray-400">
+            {/* <p className="text-gray-400">
               Check your items. And select a suitable shipping method.
-            </p>
+            </p> */}
             <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
               {cart.map((product, key) => (
                 <div

@@ -22,11 +22,13 @@ const ReferralBadge = () => {
   const [fields, setFields] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
   });
   const [errors, setErrors] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
   });
   const [saving, setSaving] = useState(false);
@@ -57,6 +59,12 @@ const ReferralBadge = () => {
           : validateEmail(value)
           ? ""
           : "Please enter a valid email address";
+      case "phone":
+        return !value
+          ? "Phone is required"
+          : validatePhone(value)
+          ? ""
+          : "Please enter a valid phone Number";
       default:
         return "";
     }
@@ -65,6 +73,12 @@ const ReferralBadge = () => {
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
+  };
+
+  const validatePhone = (phoneNumber) => {
+    // This regex matches a string with exactly 12 digits
+    const re = /^\d{11}$/;
+    return re.test(phoneNumber);
   };
 
   const handleSubmit = (e) => {
@@ -85,6 +99,7 @@ const ReferralBadge = () => {
     const data = new FormData();
 
     data.set("email", fields.email);
+    data.set("phone", fields.phone);
     data.set("password", fields.password);
     data.set("name", fields.name);
     data.set("referrer", 1);
@@ -164,13 +179,18 @@ const ReferralBadge = () => {
               </button>
             </div>
             <p className="text-lg font-semibold my-4">
-              INVITE &amp; GET A MINIMUM OF 2.5% COMMISSION FROM FRIEND&apos;S
-              ORDERS
+              INVITE YOUR FRIENDS AND FAMILY AND EARN HAS HIGH AS 5% OF THEIR
+              PURCHASE
+              {/* INVITE &amp; GET A MINIMUM OF 2.5% COMMISSION FROM FRIEND&apos;S
+              ORDERS You can earn as high as 5% */}
             </p>
             <p className="text-sm text-gray-600 mb-4">
-              Send us your friends and earn on purchase. Once they make a
-              purchase, you will earn a minimum of 2.5% commission on each order
-              as well!
+              {/* Send us your friends and earn on purchase. Once they make a
+              purchase, you will earn has high as 5% commission on each order
+              they make!  */}
+              Unlock the potential of affiliate marketing by inviting your loved
+              ones to join our platform. Earn generous commissions, as high as
+              5%, on every purchase they make.
             </p>
             <input
               className="border-2 border-gray-300 rounded-md p-2 my-4 w-full"
@@ -185,6 +205,21 @@ const ReferralBadge = () => {
                 {errors.name}
               </span>
             </div>
+
+            <input
+              className="border-2 border-gray-300 rounded-md p-2 my-4 w-full"
+              type="text"
+              placeholder="Enter your Phone number"
+              name="phone"
+              value={fields.phone}
+              onChange={handleCartInput}
+            />
+            <div>
+              <span className="text-red-400 font-medium text-sm">
+                {errors.phone}
+              </span>
+            </div>
+
             <input
               className="border-2 border-gray-300 rounded-md p-2 my-4 w-full"
               type="text"
