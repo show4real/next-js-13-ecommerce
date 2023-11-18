@@ -304,8 +304,15 @@ export default function Navbar() {
         </Transition.Root>
 
         <header className="relative bg-white">
-          <p className="flex h-10 items-center justify-center bg-blue-500 px-4 text-lg font-medium text-white sm:px-6 lg:px-8">
-            Refer and Earn as high as 5% commission on an order
+          <p className="text-center bg-blue-500 px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-white">
+            <a
+              href="https://hayzeeonline-referral.hayzeeonline.com/"
+              target="_blank"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              {" "}
+              Refer and Earn as high as 5% commission on an order
+            </a>
           </p>
 
           <nav
