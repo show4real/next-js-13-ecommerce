@@ -304,7 +304,7 @@ export default function Navbar() {
         </Transition.Root>
 
         <header className="relative bg-white">
-          <p className="text-center bg-blue-500 px-4 py-2 text-sm sm:text-base lg:text-lg font-medium text-white">
+          <p className="text-center bg-blue-500 px-4 py-2 text-sm sm:text-sm lg:text-lg font-medium text-white">
             <a
               href="https://hayzeeonline-referral.hayzeeonline.com/"
               target="_blank"

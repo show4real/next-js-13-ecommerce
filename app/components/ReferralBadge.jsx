@@ -15,6 +15,7 @@ const ReferralBadge = () => {
   const [showBadge, setShowBadge] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -126,11 +127,16 @@ const ReferralBadge = () => {
           message: "Registration Successful",
           description:
             "You have suucessfully registered. A Verification link has been sent to your email, Please confirm!",
+          duration: 10,
         });
+
+        setMessage(
+          "You have suucessfully registered. A Verification link has been sent to your email, Please confirm!"
+        );
 
         setTimeout(() => {
           window.location.reload();
-        }, 2000); // 10000ms = 10 seconds
+        }, 7000); // 10000ms = 10 seconds
       })
       .catch((err) => {
         setSaving(false);
@@ -178,6 +184,7 @@ const ReferralBadge = () => {
                 <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
+            <div style={{ color: "green" }}>{message}</div>
             <p className="text-lg font-semibold my-4">
               INVITE YOUR FRIENDS AND FAMILY AND EARN HAS HIGH AS 5% OF THEIR
               PURCHASE
