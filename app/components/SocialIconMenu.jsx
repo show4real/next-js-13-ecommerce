@@ -46,12 +46,13 @@ const SocialIconMenu = ({ brandslug, categoryslug, flash_sale, notice }) => {
                   }}
                   class="text-sm "
                 >
-                  The Exchange Rate volatility has indeed Negatively impact the
+                  {notice}
+                  {/* The Exchange Rate volatility has indeed Negatively impact the
                   fluctuation of stock market Price. Which in turn render all
                   price on our different Platform invalid. Please kindly ask for
                   current price before making a final pick. Also of Note is
                   that, the price giving at an instant in time is only valid for
-                  that time. THANK YOU Signed Hayzee Computer Resources
+                  that time. THANK YOU Signed Hayzee Computer Resources */}
                 </p>
                 <button onClick={toggleText} className="text-gray-600 text-sm">
                   {showFullText ? "Hide" : "Show More"}
