@@ -3,7 +3,7 @@ import { SocialIcon } from "react-social-icons";
 import CategorySlider from "/app/categories/CategorySlider";
 import "./social.css";
 
-const SocialIconMenu = ({ brandslug, categoryslug, flash_sale }) => {
+const SocialIconMenu = ({ brandslug, categoryslug, flash_sale, notice }) => {
   const [showFullText, setShowFullText] = useState(false);
 
   const toggleText = () => {
@@ -31,32 +31,34 @@ const SocialIconMenu = ({ brandslug, categoryslug, flash_sale }) => {
               </span>
             </div>
           </div>
-          <div class="flex justify-center sm:justify-center md:justify-center lg:justify-end md:pt-0 lg:pt-0 pt-3">
-            <div class="bg-orange-100 border-t border-b border-orange-500 text-orange-700 w-full md:w-64 px-4 py-3">
-              <p class="font-bold">Notice</p>
-              <p
-                className="text-sm"
-                style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  display: "-webkit-box",
-                  WebkitLineClamp: showFullText ? "unset" : 2,
-                  WebkitBoxOrient: "vertical",
-                }}
-                class="text-sm "
-              >
-                The Exchange Rate volatility has indeed Negatively impact the
-                fluctuation of stock market Price. Which in turn render all
-                price on our different Platform invalid. Please kindly ask for
-                current price before making a final pick. Also of Note is that,
-                the price giving at an instant in time is only valid for that
-                time. THANK YOU Signed Hayzee Computer Resources
-              </p>
-              <button onClick={toggleText} className="text-gray-600 text-sm">
-                {showFullText ? "Hide" : "Show More"}
-              </button>
+          {notice !== null && (
+            <div class="flex justify-center sm:justify-center md:justify-center lg:justify-end md:pt-0 lg:pt-0 pt-3">
+              <div class="bg-orange-100 border-t border-b border-orange-500 text-orange-700 w-full md:w-64 px-4 py-3">
+                <p class="font-bold">Notice</p>
+                <p
+                  className="text-sm"
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitLineClamp: showFullText ? "unset" : 2,
+                    WebkitBoxOrient: "vertical",
+                  }}
+                  class="text-sm "
+                >
+                  The Exchange Rate volatility has indeed Negatively impact the
+                  fluctuation of stock market Price. Which in turn render all
+                  price on our different Platform invalid. Please kindly ask for
+                  current price before making a final pick. Also of Note is
+                  that, the price giving at an instant in time is only valid for
+                  that time. THANK YOU Signed Hayzee Computer Resources
+                </p>
+                <button onClick={toggleText} className="text-gray-600 text-sm">
+                  {showFullText ? "Hide" : "Show More"}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

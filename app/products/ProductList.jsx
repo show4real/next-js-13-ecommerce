@@ -62,6 +62,7 @@ export default function ProductList({
   const [triggeredLoadMore, setTriggeredLoadMore] = useState(false);
 
   const [mobileFilter, setFilter] = useState(false);
+  const [notice, setNotice] = useState(null);
   const [filterPosition, setFilterPosition] = useState("left");
 
   const showFilter = () => {
@@ -97,6 +98,7 @@ export default function ProductList({
           search_all,
         });
         setProducts(res.products.data);
+        setNotice(res.notice);
         setTotal(res.products.total);
       } else if (productSection === "Laptops") {
         const res = await getLaptopProducts({
@@ -114,6 +116,7 @@ export default function ProductList({
           brandslug,
         });
         setProducts(res.products.data);
+        setNotice(res.notice);
         setTotal(res.products.total);
       } else {
         const res = await getCategoryProducts({
@@ -131,6 +134,7 @@ export default function ProductList({
           brandslug,
         });
         setProducts(res.products.data);
+        setNotice(res.notice);
         setTotal(res.products.total);
       }
       setLoading(false);
@@ -265,7 +269,12 @@ export default function ProductList({
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu categoryslug="" brandslug="" flash_sale={flash_sale} />
+        <SocialIconMenu
+          categoryslug=""
+          brandslug=""
+          flash_sale={flash_sale}
+          notice={notice}
+        />
 
         <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
           {productSection}
