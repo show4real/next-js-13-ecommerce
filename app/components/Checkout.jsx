@@ -4,12 +4,15 @@ import React, { useState } from "react";
 import useCartStore from "/app/store/zustand";
 import settings from "/app/services/settings";
 import { authService } from "../services/response";
-import { notification } from "antd";
+import { notification, Spin } from "antd";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import PaymentImage from "./PaymentImage";
 
 const Checkout = () => {
   const { cart, clearCart } = useCartStore();
+  const router = useRouter();
 
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.quantity * item.price,
@@ -35,6 +38,51 @@ const Checkout = () => {
     description: "",
   });
   const [saving, setSaving] = useState(false);
+  const [payNowSelected, setPayNowSelected] = useState(false);
+  const [sendOrderSelected, setSendOrderSelected] = useState(false);
+  const [amount, setAmount] = useState(5000);
+  const [paymentUrl, setPaymentUrl] = useState("");
+
+  const handlePaymentOptionChange = (option) => {
+    if (option === "payNow") {
+      setPayNowSelected(true);
+      setSendOrderSelected(false);
+    } else if (option === "sendOrder") {
+      setPayNowSelected(false);
+      setSendOrderSelected(true);
+    }
+  };
+
+  const initiatePayment = async (e) => {
+    e.preventDefault();
+
+    let validationErrors = {};
+    Object.keys(fields).forEach((name) => {
+      const error = validate(name, fields[name]);
+      if (error && error.length > 0) {
+        validationErrors[name] = error;
+      }
+    });
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    const { email, name } = fields;
+    setSaving(true);
+
+    try {
+      const response = await axios.post(
+        "https://apiv2.hayzeeonline.com/api/initiate-payment",
+        { amount, email }
+      );
+      // setPaymentUrl(response.data.payment_url);
+      //window.location.href = response.data.payment_url;
+      router.push(response.data.payment_url);
+      setSaving(false);
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+    }
+  };
 
   const validate = (name, value) => {
     switch (name) {
@@ -275,6 +323,7 @@ const Checkout = () => {
             {/* <p className="text-gray-400">
               Check your items. And select a suitable shipping method.
             </p> */}
+
             <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
               {cart.map((product, key) => (
                 <div
@@ -298,7 +347,43 @@ const Checkout = () => {
                 </div>
               ))}
 
-              <div className="mt-6 border-t border-b py-2">
+              <div className="bg-white p-4 shadow-sm rounded-md">
+                <h4 className="text-sm font-semibold mb-4">Payment Options</h4>
+
+                <div className="flex items-center mb-4">
+                  <input
+                    type="radio"
+                    id="payNow"
+                    name="paymentOption"
+                    value="payNow"
+                    checked={payNowSelected}
+                    onChange={() => handlePaymentOptionChange("payNow")}
+                    className="mr-2"
+                  />
+                  <label htmlFor="payNow" className="text-sm">
+                    Pay Now
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="sendOrder"
+                    name="paymentOption"
+                    value="sendOrder"
+                    checked={sendOrderSelected}
+                    onChange={() => handlePaymentOptionChange("sendOrder")}
+                    className="mr-2"
+                  />
+                  <label htmlFor="sendOrder" className="text-sm">
+                    Send Request
+                  </label>
+                </div>
+              </div>
+
+              <div className="pb-10">{payNowSelected && <PaymentImage />}</div>
+
+              <div className="border-t border-b py-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Subtotal</p>
                   <p className="font-semibold text-gray-900">
@@ -314,12 +399,29 @@ const Checkout = () => {
                   &#8358;{formatNumber(totalPrice)}
                 </p>
               </div>
-              <button
-                onClick={handleSubmit}
-                className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-              >
-                {saving ? "Sending Order" : "Send Order"}
-              </button>
+
+              <div className="pt-5">
+                <button
+                  onClick={payNowSelected ? initiatePayment : handleSubmit}
+                  className="mb-8 w-full rounded-md bg-blue-500 px-6 py-3 font-medium text-white"
+                >
+                  {saving ? (
+                    <>
+                      {" "}
+                      <div className="mr-2 border-t-transparent border-solid animate-spin rounded-full border-white border-8 h-5 w-5" />
+                      <span>
+                        <Spin />{" "}
+                        {payNowSelected ? "Initiating payment" : "Sending"}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-lg font-bold">
+                      {" "}
+                      {payNowSelected ? "Pay now" : "Send request"}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
