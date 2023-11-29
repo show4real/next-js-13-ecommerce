@@ -19,8 +19,8 @@ const OrderCheck = () => {
       <div className="space-y-4">
         {/* Product Item */}
         {carts !== null &&
-          carts.map((cart) => (
-            <div className="flex justify-between items-center">
+          carts.map((cart, key) => (
+            <div className="flex justify-between items-center" key={key}>
               <div className="flex items-center">
                 <Image
                   src={cart.image}
