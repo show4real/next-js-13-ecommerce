@@ -1,6 +1,4 @@
-import PaymentSuccess from "../components/PaymentSuccess";
-import OrderSummary from "../components/orderSummary";
-
+import OrderCheck from "../components/OrderCheck";
 export const metadata = {
   title: "Uk Used Laptops Mobile Phones at Affordable Prices",
   description:
@@ -27,10 +25,10 @@ export const metadata = {
   },
 };
 
-export default function Search() {
+export default function Order() {
   return (
     <div className="container mx-auto pt-10">
-      <OrderSummary />
+      <OrderCheck />
     </div>
   );
 }
