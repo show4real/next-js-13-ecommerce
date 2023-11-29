@@ -409,7 +409,7 @@ export default function ProductList({
           </>
         )}
 
-        <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 justify-center">
           {!loading &&
             products.map((product, key) => (
               <ProductCard product={product} key={key} />

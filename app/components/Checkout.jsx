@@ -77,7 +77,12 @@ const Checkout = () => {
       );
       // setPaymentUrl(response.data.payment_url);
       //window.location.href = response.data.payment_url;
+      const checkout =
+        typeof window !== "undefined"
+          ? localStorage.setItem("cart", JSON.stringify(cart))
+          : null;
       router.push(response.data.payment_url);
+
       setSaving(false);
     } catch (error) {
       console.error("Error initiating payment:", error);

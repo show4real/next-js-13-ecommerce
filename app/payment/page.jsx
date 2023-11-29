@@ -28,7 +28,7 @@ export const metadata = {
 
 export default function Search() {
   return (
-    <div className="container mx-auto pt-0">
+    <div className="container mx-auto pt-10">
       <PaymentSuccess />
     </div>
   );
