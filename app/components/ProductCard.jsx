@@ -32,7 +32,7 @@ const ProductCard = ({ product, key }) => {
         <ProductGlance product={productView} toggle={toggle} show={true} />
       )}
 
-      <div className="group my-10 flex w-full max-w-xs flex-col overflow-hidden rounded-lg  border-gray-100 bg-white shadow-md">
+      <div className="group my-10 mx-auto w-full max-w-xs flex flex-col overflow-hidden rounded-lg border-gray-100 bg-white shadow-md">
         <div className="relative mx-3 mt-3 flex h-72 overflow-hidden rounded-sm">
           <img
             className="peer absolute top-0 right-0 h-full w-full object-contain"

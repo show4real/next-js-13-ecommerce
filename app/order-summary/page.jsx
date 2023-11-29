@@ -1,4 +1,5 @@
 import PaymentSuccess from "../components/PaymentSuccess";
+import OrderSummary from "../components/orderSummary";
 
 export const metadata = {
   title: "Uk Used Laptops Mobile Phones at Affordable Prices",
@@ -26,10 +27,10 @@ export const metadata = {
   },
 };
 
-export default function Payment() {
+export default function Search() {
   return (
-    <div className="container mx-auto mt-24">
-      <PaymentSuccess />
+    <div className="container mx-auto pt-10">
+      <OrderSummary />
     </div>
   );
 }
