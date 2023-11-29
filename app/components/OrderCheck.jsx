@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 
 const cartData =
   typeof window !== "undefined" ? localStorage.getItem("cart") : null;
@@ -21,7 +22,7 @@ const OrderCheck = () => {
           carts.map((cart) => (
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <img
+                <Image
                   src={cart.image}
                   alt="Product"
                   className="w-16 h-16 object-cover rounded"
