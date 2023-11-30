@@ -48,7 +48,7 @@ const OrderCheck = () => {
 
     return axios
       .post(
-        `${settings.API_URL}store/order`,
+        `${settings.API_URL}complete/order`,
         data,
         {
           headers: {
