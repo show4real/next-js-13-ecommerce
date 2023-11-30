@@ -81,6 +81,10 @@ const Checkout = () => {
         typeof window !== "undefined"
           ? localStorage.setItem("cart", JSON.stringify(cart))
           : null;
+      const shipping_details =
+        typeof window !== "undefined"
+          ? localStorage.setItem("shipping_details", JSON.stringify(fields))
+          : null;
       router.push(response.data.payment_url);
 
       setSaving(false);
@@ -413,7 +417,6 @@ const Checkout = () => {
                   {saving ? (
                     <>
                       {" "}
-                      <div className="mr-2 border-t-transparent border-solid animate-spin rounded-full border-white border-8 h-5 w-5" />
                       <span>
                         <Spin />{" "}
                         {payNowSelected ? "Initiating payment" : "Sending"}

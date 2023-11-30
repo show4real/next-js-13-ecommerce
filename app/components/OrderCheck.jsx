@@ -1,9 +1,16 @@
 "use client";
 import React from "react";
-import Image from "next/image";
+import { authService } from "../services/response";
+import { notification, Spin } from "antd";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
 const cartData =
   typeof window !== "undefined" ? localStorage.getItem("cart") : null;
+const shipping_details =
+  typeof window !== "undefined"
+    ? localStorage.getItem("shipping_details")
+    : null;
 
 const carts = cartData ? JSON.parse(cartData) : [];
 const totalPrice =
@@ -11,6 +18,63 @@ const totalPrice =
   carts.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
 const OrderCheck = () => {
+  const referenceParams = useSearchParams();
+
+  const reference = referenceParams.get("reference");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSaving(true);
+    const data = new FormData();
+
+    data.set("name", shipping_details.name);
+    data.set("phone", shipping_details.phone);
+    data.set("address", shipping_details.address);
+    data.set("email", shipping_details.email);
+    data.set("description", shipping_details.description);
+    data.set("password", shipping_details.name);
+    for (var i in carts) {
+      data.set(`price[${i}]`, carts[i].price);
+      data.set(`product_id[${i}]`, carts[i].id);
+      data.set(`quantity[${i}]`, carts[i].quantity);
+      data.set(`product_image[${i}]`, carts[i].image);
+      data.set(`product_name[${i}]`, carts[i].name);
+      data.set(`total[${i}]`, carts[i].quantity * cart[i].price);
+    }
+    data.set("total_price", totalPrice);
+
+    return axios
+      .post(
+        `${settings.API_URL}store/order`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Accept: "application/json",
+          },
+        },
+        authService.handleResponse
+      )
+      .then((res) => {
+        setSaving(false);
+
+        notification.success({
+          message: "Order Sent",
+          description:
+            "Your order has been successfully sent and will be processed.",
+        });
+
+        clearCart();
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000); // 10000ms = 10 seconds
+      })
+      .catch((err) => {
+        setSaving(false);
+      });
+  };
+
   return (
     <div className="max-w-lg mx-auto bg-white p-6 rounded shadow-md mt-10">
       <h1 className="text-2xl font-bold mb-6">Order Summary</h1>
@@ -22,14 +86,14 @@ const OrderCheck = () => {
           carts.map((cart, key) => (
             <div className="flex justify-between items-center" key={key}>
               <div className="flex items-center">
-                <Image
+                {/* <Image
                   src={cart.image}
                   alt="Product"
                   className="w-16 h-16 object-cover rounded"
-                />
+                /> */}
                 <div className="ml-4">
-                  <h2 className="text-lg font-semibold">Product Name</h2>
-                  <p className="text-gray-500">Quantity: {cart.name}</p>
+                  <h2 className="text-lg font-semibold">{cart.name}</h2>
+                  <p className="text-gray-500">Quantity: {cart.quantity}</p>
                 </div>
               </div>
               <span className="text-gray-600">&#8358;{cart.price}</span>
@@ -66,7 +130,10 @@ const OrderCheck = () => {
 
       {/* Action Buttons */}
       <div className="mt-8 flex justify-end space-x-4">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
           Complete Order
         </button>
       </div>
