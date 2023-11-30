@@ -19,6 +19,7 @@ const totalPrice =
 
 const OrderCheck = () => {
   const referenceParams = useSearchParams();
+  const [saving, setSaving] = useState(false);
 
   const reference = referenceParams.get("reference");
 
@@ -33,6 +34,8 @@ const OrderCheck = () => {
     data.set("email", shipping_details.email);
     data.set("description", shipping_details.description);
     data.set("password", shipping_details.name);
+    data.set("payment_reference", reference);
+
     for (var i in carts) {
       data.set(`price[${i}]`, carts[i].price);
       data.set(`product_id[${i}]`, carts[i].id);
@@ -64,14 +67,20 @@ const OrderCheck = () => {
             "Your order has been successfully sent and will be processed.",
         });
 
-        clearCart();
+        typeof window !== "undefined" ? localStorage.removeItem("cart") : null;
+        typeof window !== "undefined"
+          ? localStorage.removeItem("shipping_details")
+          : null;
 
         setTimeout(() => {
-          window.location.reload();
-        }, 2000); // 10000ms = 10 seconds
+          window.location.href = "/order-success";
+        }, 2000);
       })
       .catch((err) => {
         setSaving(false);
+        setTimeout(() => {
+          window.location.href = "/order-failed";
+        }, 1000);
       });
   };
 
@@ -112,20 +121,10 @@ const OrderCheck = () => {
       <div className="mt-6">
         <h2 className="text-lg font-bold mb-4">Shipping Information</h2>
         <p className="text-gray-600">
-          John Doe
+          {shipping_details.name}
           <br />
-          123 Street Name
-          <br />
-          City, Country
-          <br />
-          Postal Code
+          {shipping_details.address}
         </p>
-      </div>
-
-      {/* Order Status */}
-      <div className="mt-6">
-        <h2 className="text-lg font-bold mb-4">Order Status</h2>
-        <p className="text-green-600 font-semibold">Shipped</p>
       </div>
 
       {/* Action Buttons */}
@@ -134,7 +133,9 @@ const OrderCheck = () => {
           onClick={handleSubmit}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          Complete Order
+          <span>
+            <Spin /> {saving ? "Completing Order" : "Complete Order"}
+          </span>
         </button>
       </div>
     </div>
