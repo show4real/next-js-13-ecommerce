@@ -40,7 +40,7 @@ const Checkout = () => {
   const [saving, setSaving] = useState(false);
   const [payNowSelected, setPayNowSelected] = useState(true);
   const [sendOrderSelected, setSendOrderSelected] = useState(false);
-  const [amount, setAmount] = useState(5000);
+  const [amount, setAmount] = useState(totalPrice);
   const [paymentUrl, setPaymentUrl] = useState("");
 
   const handlePaymentOptionChange = (option) => {
