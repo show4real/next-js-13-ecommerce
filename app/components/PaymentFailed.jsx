@@ -12,12 +12,10 @@ const PaymentFailed = () => {
 
       <div class="text-center">
         <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
-          Payment Done!
+          Payment Failed
         </h3>
-        <p class="text-gray-600 my-2">
-          Thank you for completing your secure online payment.
-        </p>
-        <p> Have a great day! </p>
+        <p class="text-gray-600 my-2">Please Retry</p>
+        <p> Thanks as you do </p>
         <div class="py-10 text-center">
           <a
             href="#"

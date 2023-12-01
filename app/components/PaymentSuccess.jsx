@@ -11,18 +11,19 @@ const PaymentSuccess = () => {
       </svg>
       <div class="text-center">
         <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
-          Payment Done!
+          Order Sent
         </h3>
         <p class="text-gray-600 my-2">
-          Thank you for completing your secure online payment.
+          Your order will be processed and you will be contacted as soon as it
+          is ready
         </p>
-        <p> Have a great day! </p>
+        <p> Thanks for your patronage! Have a great day! </p>
         <div class="py-10 text-center">
           <a
-            href="#"
-            class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3"
+            href="/"
+            class="px-12 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3"
           >
-            GO BACK
+            Shop more
           </a>
         </div>
       </div>

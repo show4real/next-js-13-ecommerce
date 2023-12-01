@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import settings from "/app/services/settings";
 import { authService } from "../services/response";
 import { notification, Spin } from "antd";
 import axios from "axios";
@@ -21,19 +22,25 @@ const OrderCheck = () => {
   const referenceParams = useSearchParams();
   const [saving, setSaving] = useState(false);
 
-  const reference = referenceParams.get("reference");
+  const reference = Number(referenceParams.get("reference"));
+  console.log(reference);
+
+  const details = shipping_details ? JSON.parse(shipping_details) : {};
+
+  console.log(details.name);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     setSaving(true);
     const data = new FormData();
 
-    data.set("name", shipping_details.name);
-    data.set("phone", shipping_details.phone);
-    data.set("address", shipping_details.address);
-    data.set("email", shipping_details.email);
-    data.set("description", shipping_details.description);
-    data.set("password", shipping_details.name);
+    data.set("name", details.name);
+    data.set("phone", details.phone);
+    data.set("address", details.address);
+    data.set("email", details.email);
+    data.set("description", details.description);
+    data.set("password", details.name);
     data.set("payment_reference", reference);
 
     for (var i in carts) {
@@ -42,7 +49,7 @@ const OrderCheck = () => {
       data.set(`quantity[${i}]`, carts[i].quantity);
       data.set(`product_image[${i}]`, carts[i].image);
       data.set(`product_name[${i}]`, carts[i].name);
-      data.set(`total[${i}]`, carts[i].quantity * cart[i].price);
+      data.set(`total[${i}]`, carts[i].quantity * carts[i].price);
     }
     data.set("total_price", totalPrice);
 
@@ -78,9 +85,9 @@ const OrderCheck = () => {
       })
       .catch((err) => {
         setSaving(false);
-        setTimeout(() => {
-          window.location.href = "/order-failed";
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.href = "/order-failed";
+        // }, 1000);
       });
   };
 
@@ -121,9 +128,9 @@ const OrderCheck = () => {
       <div className="mt-6">
         <h2 className="text-lg font-bold mb-4">Shipping Information</h2>
         <p className="text-gray-600">
-          {shipping_details.name}
+          {details.name}
           <br />
-          {shipping_details.address}
+          {details.address}
         </p>
       </div>
 
