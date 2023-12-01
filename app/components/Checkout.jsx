@@ -33,6 +33,8 @@ const Checkout = () => {
     address: "",
     description: "",
     discount: false,
+    discount_price: 0,
+    referrer_code: "",
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -75,6 +77,7 @@ const Checkout = () => {
     setFields({
       discount: isCodeValid,
       discount_price: discount_price,
+      referrer_code: referrerCode,
     });
   };
 

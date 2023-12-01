@@ -43,6 +43,7 @@ const OrderCheck = () => {
     data.set("password", details.name);
     data.set("payment_reference", reference);
     data.set("discount", details.discount);
+    data.set("referrer_code", details.referrer_code);
 
     for (var i in carts) {
       data.set(`price[${i}]`, carts[i].price);
