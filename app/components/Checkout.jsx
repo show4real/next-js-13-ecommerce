@@ -74,11 +74,13 @@ const Checkout = () => {
 
     setDiscount(isCodeValid);
     setInvalidCode(!isCodeValid);
-    setFields({
+
+    setFields((prevData) => ({
+      ...prevData, // Spread the existing properties
       discount: isCodeValid,
-      discount_price: discount_price,
+      discount_price: discount_price, // Replace with your logic to calculate the discount price
       referrer_code: referrerCode,
-    });
+    }));
   };
 
   const handlePaymentOptionChange = (option) => {
@@ -106,6 +108,7 @@ const Checkout = () => {
       return;
     }
     const { email, name } = fields;
+    console.log(fields);
     setSaving(true);
 
     try {
