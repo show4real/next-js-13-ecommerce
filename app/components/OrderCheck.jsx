@@ -119,7 +119,7 @@ const OrderCheck = () => {
         {/* Add more product items as needed */}
 
         {/* Order Total */}
-        {discount && (
+        {details.discount && (
           <div className="flex justify-between border-t pt-4">
             <span className="font-semibold">Discount:</span>
             <span className="text-xl font-bold">
@@ -127,7 +127,7 @@ const OrderCheck = () => {
             </span>
           </div>
         )}
-        {discount ? (
+        {details.discount ? (
           <div className="flex justify-between border-t pt-4">
             <span className="font-semibold">Order Total:</span>
             <span className="text-xl font-bold">
