@@ -68,6 +68,17 @@ export function getLaptopProducts(data) {
   );
 }
 
+export function getReferrers(data) {
+  const requestOptions = {
+    method: "POST",
+    headers: header(),
+    body: JSON.stringify(data),
+  };
+  return fetch(`${settings.API_URL}referrer/codes`, requestOptions).then(
+    authService.handleResponse
+  );
+}
+
 export function getTrendingProducts(data) {
   const requestOptions = {
     method: "POST",

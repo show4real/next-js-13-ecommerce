@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import useCartStore from "/app/store/zustand";
 import settings from "/app/services/settings";
@@ -9,6 +9,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PaymentImage from "./PaymentImage";
+import { getReferrers } from "../services/productService";
 
 const Checkout = () => {
   const { cart, clearCart } = useCartStore();
@@ -18,6 +19,8 @@ const Checkout = () => {
     (acc, item) => acc + item.quantity * item.price,
     0
   );
+
+  const discount_price = 0.01 * totalPrice;
 
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -29,6 +32,7 @@ const Checkout = () => {
     email: "",
     address: "",
     description: "",
+    discount: false,
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -41,7 +45,38 @@ const Checkout = () => {
   const [payNowSelected, setPayNowSelected] = useState(true);
   const [sendOrderSelected, setSendOrderSelected] = useState(false);
   const [amount, setAmount] = useState(totalPrice);
-  const [paymentUrl, setPaymentUrl] = useState("");
+  const [referrers, setReferrers] = useState("");
+  const [referrerCode, setReferrerCode] = useState("");
+  const [discount, setDiscount] = useState(false);
+  const [invalidCode, setInvalidCode] = useState(false);
+
+  useEffect(() => {
+    fetchReferrers();
+  }, []);
+
+  const fetchReferrers = async () => {
+    //setLoading(true);
+    await getReferrers().then(
+      (res) => {
+        setReferrers(res.referrer_codes);
+      },
+      (error) => {
+        //setLoading(false);
+      }
+    );
+  };
+
+  const handleApplyButtonClick = () => {
+    const isCodeValid = referrers.includes(referrerCode);
+    console.log(isCodeValid);
+
+    setDiscount(isCodeValid);
+    setInvalidCode(!isCodeValid);
+    setFields({
+      discount: isCodeValid,
+      discount_price: discount_price,
+    });
+  };
 
   const handlePaymentOptionChange = (option) => {
     if (option === "payNow") {
@@ -73,10 +108,8 @@ const Checkout = () => {
     try {
       const response = await axios.post(
         "https://apiv2.hayzeeonline.com/api/initiate-payment",
-        { amount, email }
+        { amount, email, discount }
       );
-      // setPaymentUrl(response.data.payment_url);
-      //window.location.href = response.data.payment_url;
       const checkout =
         typeof window !== "undefined"
           ? localStorage.setItem("cart", JSON.stringify(cart))
@@ -129,6 +162,7 @@ const Checkout = () => {
     const data = new FormData();
 
     data.set("name", fields.name);
+    data.set("discount", discount);
     data.set("phone", fields.phone);
     data.set("address", fields.address);
     data.set("email", fields.email);
@@ -390,9 +424,52 @@ const Checkout = () => {
                 </div>
               </div>
 
+              {payNowSelected && (
+                <div className=" bg-white shadow-md rounded-md p-6 pt-10">
+                  <form className="flex space-x-4">
+                    <label className="flex-grow">
+                      <input
+                        type="text"
+                        placeholder="Referrer Code"
+                        value={referrerCode}
+                        onChange={(e) => setReferrerCode(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleApplyButtonClick}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                    >
+                      Apply
+                    </button>
+                  </form>
+                  {invalidCode && (
+                    <p className="text-red-500 mt-2">Invalid Referrer Code</p>
+                  )}
+                  {discount && (
+                    <p className="text-green-500 mt-4">Discount Applied!</p>
+                  )}
+                </div>
+              )}
+
               <div className="pb-10">{payNowSelected && <PaymentImage />}</div>
 
               <div className="border-t border-b py-2">
+                <div className="flex items-center justify-between">
+                  {discount && (
+                    <>
+                      {" "}
+                      <p className="text-sm font-medium text-gray-900">
+                        Discount
+                      </p>
+                      <p className="font-semibold text-gray-900">
+                        {" "}
+                        &#8358;{formatNumber(discount_price)}
+                      </p>
+                    </>
+                  )}
+                </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Subtotal</p>
                   <p className="font-semibold text-gray-900">
@@ -405,7 +482,10 @@ const Checkout = () => {
                 <p className="text-sm font-medium text-gray-900">Total</p>
                 <p className="text-2xl font-semibold text-gray-900">
                   {" "}
-                  &#8358;{formatNumber(totalPrice)}
+                  &#8358;
+                  {discount
+                    ? formatNumber(totalPrice - discount_price)
+                    : formatNumber(totalPrice)}
                 </p>
               </div>
 

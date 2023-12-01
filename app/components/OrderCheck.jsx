@@ -42,6 +42,7 @@ const OrderCheck = () => {
     data.set("description", details.description);
     data.set("password", details.name);
     data.set("payment_reference", reference);
+    data.set("discount", details.discount);
 
     for (var i in carts) {
       data.set(`price[${i}]`, carts[i].price);
@@ -118,10 +119,27 @@ const OrderCheck = () => {
         {/* Add more product items as needed */}
 
         {/* Order Total */}
-        <div className="flex justify-between border-t pt-4">
-          <span className="font-semibold">Order Total:</span>
-          <span className="text-xl font-bold">&#8358;{totalPrice}</span>
-        </div>
+        {discount && (
+          <div className="flex justify-between border-t pt-4">
+            <span className="font-semibold">Discount:</span>
+            <span className="text-xl font-bold">
+              &#8358;{details.discount_price}
+            </span>
+          </div>
+        )}
+        {discount ? (
+          <div className="flex justify-between border-t pt-4">
+            <span className="font-semibold">Order Total:</span>
+            <span className="text-xl font-bold">
+              &#8358;{totalPrice - details.discount_price}
+            </span>
+          </div>
+        ) : (
+          <div className="flex justify-between border-t pt-4">
+            <span className="font-semibold">Order Total:</span>
+            <span className="text-xl font-bold">&#8358;{totalPrice}</span>
+          </div>
+        )}
       </div>
 
       {/* Shipping Information */}
