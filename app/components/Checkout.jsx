@@ -38,7 +38,7 @@ const Checkout = () => {
     description: "",
   });
   const [saving, setSaving] = useState(false);
-  const [payNowSelected, setPayNowSelected] = useState(false);
+  const [payNowSelected, setPayNowSelected] = useState(true);
   const [sendOrderSelected, setSendOrderSelected] = useState(false);
   const [amount, setAmount] = useState(5000);
   const [paymentUrl, setPaymentUrl] = useState("");
