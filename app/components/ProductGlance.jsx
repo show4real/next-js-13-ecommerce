@@ -8,6 +8,7 @@ import { getProductImages } from "/app/services/productService";
 import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ProductGlance({ product, toggle, show }) {
   const [images, setImages] = useState([]);
@@ -16,7 +17,7 @@ export default function ProductGlance({ product, toggle, show }) {
   const itemInCart = cart.filter((item) => item.id === product.id);
   const cartItem = cart.find((cartItem) => cartItem.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
-  console.log(quantity);
+  const router = useRouter();
 
   useEffect(() => {
     if (toggle) {
@@ -83,44 +84,56 @@ export default function ProductGlance({ product, toggle, show }) {
     );
   };
 
-  const BuyNow = () => {
-    const handleCopyLink = () => {
-      navigator.clipboard.writeText(
-        `https://hayzeeonline.com/products/${product.slug}`
-      );
-      message.success("Link copied to clipboard");
-    };
+  const handleAddToCart = () => {
+    addToCart(product);
 
-    const menu = (
-      <Menu>
-        <Menu.Item key="copy" onClick={handleCopyLink}>
-          <CopyOutlined /> {"  "}
-          <span
-            style={{ paddingLeft: 10, fontWeight: "bold", color: "#0E1B4D" }}
-          >
-            Click to Copy Link
-            <br />
-            Then click on the Messenger Button to paste
-          </span>
-        </Menu.Item>
-      </Menu>
-    );
-
-    return (
-      <Dropdown overlay={menu} placement="bottomRight" arrow>
-        <div className="flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-          <button
-            type="button"
-            // style={{ width: "400px" }}
-            className="inline-flex items-center w-full justify-center rounded-md border-2  bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-blue-500"
-          >
-            Buy Now
-          </button>
-        </div>
-      </Dropdown>
-    );
+    router.push("/checkout");
   };
 
+  const BuyNow = () => {
+    return (
+      <button
+        type="button"
+        className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+        onClick={handleAddToCart}
+      >
+        Buy Now
+      </button>
+    );
+    // const handleCopyLink = () => {
+    //   navigator.clipboard.writeText(window.location.href);
+    //   message.success("Link copied to clipboard");
+    // };
+
+    // const menu = (
+    //   <Menu>
+    //     <Menu.Item key="copy" onClick={handleCopyLink}>
+    //       <CopyOutlined /> {"  "}
+    //       <span
+    //         style={{ paddingLeft: 10, fontWeight: "bold", color: "#0E1B4D" }}
+    //       >
+    //         Click to Copy Link
+    //         <br />
+    //         Then click on the Messenger Button to paste
+    //       </span>
+    //     </Menu.Item>
+    //   </Menu>
+    // );
+
+    // return (
+    //   <Dropdown overlay={menu} placement="bottomRight" arrow>
+    //     <div className="flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
+    //       <button
+    //         type="button"
+
+    //         className="inline-flex items-center w-full justify-center rounded-md border-2  bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-blue-500"
+    //       >
+    //         Buy Now
+    //       </button>
+    //     </div>
+    //   </Dropdown>
+    // );
+  };
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };

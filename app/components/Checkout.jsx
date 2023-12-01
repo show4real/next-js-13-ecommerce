@@ -430,7 +430,7 @@ const Checkout = () => {
                     <label className="flex-grow">
                       <input
                         type="text"
-                        placeholder="Referrer Code"
+                        placeholder="Add Referrer Code and get Discount"
                         value={referrerCode}
                         onChange={(e) => setReferrerCode(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"

@@ -17,7 +17,7 @@ const PaymentSuccess = () => {
           Your order will be processed and you will be contacted as soon as it
           is ready.
         </p>
-        <p> If you have any question contact us: 08037586863</p>
+        <p> If you have any question contact us: 08112946602, 08037586863</p>
         <p> Thanks for your patronage! Have a great day! </p>
         <div class="py-10 text-center">
           <a
