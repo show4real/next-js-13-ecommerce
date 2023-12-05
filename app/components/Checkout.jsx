@@ -344,7 +344,7 @@ const Checkout = () => {
                   onChange={handleCartInput}
                   className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                 >
-                  <option ="">Select Pick Up</option>
+                  <option value="">Select Pick Up</option>
                   <option value="7000">Abia -#7,000</option>
                   <option value="10000">Adamawa -#10,000</option>
                   <option value="7000">Akwa Ibom -#7,000</option>
