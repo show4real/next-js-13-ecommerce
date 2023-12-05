@@ -305,14 +305,21 @@ export default function Navbar() {
 
         <header className="relative bg-white">
           <p className="text-center bg-blue-500 px-4 py-2 text-sm sm:text-sm lg:text-lg font-medium text-white">
-            <a
-              href="https://hayzeeonline-referral.hayzeeonline.com/"
-              target="_blank"
-              style={{ textDecoration: "none", color: "white" }}
-            >
+            <span className="text-gray-200">
               {" "}
-              Refer and Earn as high as 5% commission on an order
-            </a>
+              Nationwide Delivery | Free Delivery within Ibadan
+            </span>
+            <div>
+              <a
+                href="https://hayzeeonline-referral.hayzeeonline.com/"
+                target="_blank"
+                style={{ textDecoration: "none", color: "white" }}
+                className="text-sm"
+              >
+                {" "}
+                Refer &amp; Earn as high as 5% commission on an order
+              </a>
+            </div>
           </p>
 
           <nav
