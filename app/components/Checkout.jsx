@@ -13,6 +13,7 @@ import { getReferrers } from "../services/productService";
 
 const Checkout = () => {
   const { cart, clearCart } = useCartStore();
+
   const router = useRouter();
 
   const totalPrice = cart.reduce(
@@ -35,6 +36,7 @@ const Checkout = () => {
     discount: false,
     discount_price: 0,
     referrer_code: "",
+    pickup: "",
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -42,6 +44,7 @@ const Checkout = () => {
     email: "",
     address: "",
     description: "",
+    pickup: "",
   });
   const [saving, setSaving] = useState(false);
   const [payNowSelected, setPayNowSelected] = useState(true);
@@ -107,14 +110,16 @@ const Checkout = () => {
       setErrors(validationErrors);
       return;
     }
-    const { email, name } = fields;
+    const { email, name, pickup } = fields;
     console.log(fields);
     setSaving(true);
+
+    const pickup_charges = Number(pickup);
 
     try {
       const response = await axios.post(
         "https://apiv2.hayzeeonline.com/api/initiate-payment",
-        { amount, email, discount }
+        { amount, email, discount, pickup_charges }
       );
       const checkout =
         typeof window !== "undefined"
@@ -144,7 +149,8 @@ const Checkout = () => {
         return !value ? "Description is required" : "";
       case "address":
         return !value ? "Address is required" : "";
-
+      case "pickup":
+        return !value ? "Pickup is required" : "";
       default:
         return "";
     }
@@ -174,6 +180,7 @@ const Checkout = () => {
     data.set("email", fields.email);
     data.set("description", fields.description);
     data.set("password", fields.name);
+    data.set("pickup", Number(fields.pickup));
     for (var i in cart) {
       data.set(`price[${i}]`, cart[i].price);
       data.set(`product_id[${i}]`, cart[i].id);
@@ -323,6 +330,75 @@ const Checkout = () => {
                   </span>
                 </div>
               </div>
+
+              <label
+                for="card-holder"
+                className="mt-4 mb-2 block text-sm font-medium"
+              >
+                Pick Up States/ Cities
+              </label>
+              <div className="relative">
+                <select
+                  value={fields.pickup}
+                  name="pickup"
+                  onChange={handleCartInput}
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                >
+                  <option ="">Select Pick Up</option>
+                  <option value="7000">Abia -#7,000</option>
+                  <option value="10000">Adamawa -#10,000</option>
+                  <option value="7000">Akwa Ibom -#7,000</option>
+                  <option value="7000">Anambra -#7,000</option>
+                  <option value="10000">Bauchi -#10,000</option>
+                  <option value="7000">Bayelsa -#7,000</option>
+                  <option value="10000">Benue -#10,000</option>
+                  <option value="10000">Borno -#10,000</option>
+                  <option value="7000">Cross River -#7,000</option>
+                  <option value="7000">Delta -#7,000</option>
+                  <option value="7000">Ebonyi -#7,000</option>
+                  <option value="7000">Edo -#7,000</option>
+                  <option value="5000">Ekiti -#5,000</option>
+                  <option value="7000">Enugu -#7,000</option>
+                  <option value="10000">Gombe -#10,000</option>
+                  <option value="7000">Imo -#7,000</option>
+                  <option value="10000">Jigawa -#10,000</option>
+                  <option value="10000">Kaduna -#10,000</option>
+                  <option value="10000">Kano -#10,000</option>
+                  <option value="10000">Katsina -#10,000</option>
+                  <option value="10000">Kebbi -#10,000</option>
+                  <option value="7000">Kogi -#7,000</option>
+                  <option value="5000">Kwara -#5,000</option>
+                  <option value="4000">Lagos -#4,000</option>
+                  <option value="10000">Nasarawa -#10,000</option>
+                  <option value="10000">Niger -#10,000</option>
+                  <option value="4000">Ogun -#4,000</option>
+                  <option value="4000">Ondo -#4,000</option>
+                  <option value="4000">Osun -#4,000</option>
+                  <option value="3000">oyo -#3,000</option>
+                  <option value="7000">Plateau -#7,000</option>
+                  <option value="7000">Rivers -#7,000</option>
+                  <option value="10000">Sokoto -#10,000</option>
+                  <option value="10000">Taraba -#10,000</option>
+                  <option value="10000">Yobe -#10,0000</option>
+                  <option value="10000">Zamfara -#10,000</option>
+                  <option value="0">Ibadan -#0</option>
+                </select>
+                {/* <input
+                  type="text"
+                  id="card-holder"
+                  name="address"
+                  value={fields.pickup}
+                  onChange={handleCartInput}
+                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Your full name here"
+                /> */}
+                <div>
+                  <span className="text-red-400 font-medium text-sm">
+                    {errors.pickup}
+                  </span>
+                </div>
+              </div>
+
               <label
                 for="card-holder"
                 class="mt-4 mb-2 block text-sm font-medium"
@@ -477,10 +553,19 @@ const Checkout = () => {
                   )}
                 </div>
                 <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">
+                    Delivery Charges
+                  </p>
+                  <p className="font-semibold text-gray-900">
+                    {" "}
+                    &#8358;{formatNumber(fields.pickup)}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Subtotal</p>
                   <p className="font-semibold text-gray-900">
                     {" "}
-                    &#8358;{formatNumber(totalPrice)}
+                    &#8358;{formatNumber(totalPrice + Number(fields.pickup))}
                   </p>
                 </div>
               </div>
@@ -490,8 +575,10 @@ const Checkout = () => {
                   {" "}
                   &#8358;
                   {discount
-                    ? formatNumber(totalPrice - discount_price)
-                    : formatNumber(totalPrice)}
+                    ? formatNumber(
+                        totalPrice + Number(fields.pickup) - discount_price
+                      )
+                    : formatNumber(totalPrice + Number(fields.pickup))}
                 </p>
               </div>
 
