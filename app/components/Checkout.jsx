@@ -121,10 +121,10 @@ const Checkout = () => {
         "https://apiv2.hayzeeonline.com/api/initiate-payment",
         { amount, email, discount, pickup_charges }
       );
-      // const checkout =
-      //   typeof window !== "undefined"
-      //     ? localStorage.setItem("cart", JSON.stringify(cart))
-      //     : null;
+      const checkout =
+        typeof window !== "undefined"
+          ? localStorage.setItem("cart", JSON.stringify(cart))
+          : null;
       const shipping_details =
         typeof window !== "undefined"
           ? localStorage.setItem("shipping_details", JSON.stringify(fields))
