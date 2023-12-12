@@ -342,45 +342,26 @@ const Checkout = () => {
                   value={fields.pickup}
                   name="pickup"
                   onChange={handleCartInput}
+                  style={{ width: "100%" }}
                   className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                 >
                   <option value="">Select Pick Up</option>
-                  <option value="7000">Abia -#7,000</option>
-                  <option value="10000">Adamawa -#10,000</option>
-                  <option value="7000">Akwa Ibom -#7,000</option>
-                  <option value="7000">Anambra -#7,000</option>
-                  <option value="10000">Bauchi -#10,000</option>
-                  <option value="7000">Bayelsa -#7,000</option>
-                  <option value="10000">Benue -#10,000</option>
-                  <option value="10000">Borno -#10,000</option>
-                  <option value="7000">Cross River -#7,000</option>
-                  <option value="7000">Delta -#7,000</option>
-                  <option value="7000">Ebonyi -#7,000</option>
-                  <option value="7000">Edo -#7,000</option>
-                  <option value="5000">Ekiti -#5,000</option>
-                  <option value="7000">Enugu -#7,000</option>
-                  <option value="10000">Gombe -#10,000</option>
-                  <option value="7000">Imo -#7,000</option>
-                  <option value="10000">Jigawa -#10,000</option>
-                  <option value="10000">Kaduna -#10,000</option>
-                  <option value="10000">Kano -#10,000</option>
-                  <option value="10000">Katsina -#10,000</option>
-                  <option value="10000">Kebbi -#10,000</option>
-                  <option value="7000">Kogi -#7,000</option>
-                  <option value="5000">Kwara -#5,000</option>
-                  <option value="4000">Lagos -#4,000</option>
-                  <option value="10000">Nasarawa -#10,000</option>
-                  <option value="10000">Niger -#10,000</option>
-                  <option value="4000">Ogun -#4,000</option>
-                  <option value="4000">Ondo -#4,000</option>
-                  <option value="4000">Osun -#4,000</option>
+                  <option value="7000">
+                    Abia, Akwa Ibom, Anambra, Bayelsa, Cross River, Delta
+                    Ebonyi, Edo, Enugu, Imo, Kogi, Rivers, Plateau -7000
+                  </option>
+                  <option value="10000">
+                    Adamawa, Bauchi, Benue, Borno, Jigawa, Kaduna, Kano,
+                    Katsina, Kebbbi, Nassarawa, Niger -#10,000
+                  </option>
+                  <option value="10500">
+                    Sokoto, Taraba, Zamfara, Gombe Yobe -#10,500
+                  </option>
+                  <option value="5000">Ekiti, Kwara -#5,000</option>
+                  <option value="4000">
+                    Ogun, Ondo, Osun, Oyo, Lagos -#4,000
+                  </option>
                   <option value="3000">oyo -#3,000</option>
-                  <option value="7000">Plateau -#7,000</option>
-                  <option value="7000">Rivers -#7,000</option>
-                  <option value="10000">Sokoto -#10,000</option>
-                  <option value="10000">Taraba -#10,000</option>
-                  <option value="10000">Yobe -#10,0000</option>
-                  <option value="10000">Zamfara -#10,000</option>
                   <option value="0">Ibadan -#0</option>
                 </select>
                 {/* <input
