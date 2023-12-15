@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 
 async function getProduct(id) {
   const response = await fetch(
-    `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`
+    `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`,
+    { next: { revalidate: 60 } }
   );
   if (!response.ok) {
     notFound(); // using notFound function from next/router
