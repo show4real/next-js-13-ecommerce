@@ -8,17 +8,14 @@ async function getProduct(id) {
     `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`,
     { next: { revalidate: 60 } }
   );
-  if (!response.ok) {
-    notFound(); // using notFound function from next/router
-  }
+  if (!response.ok) return undefined;
   const product = await response.json();
-  console.log(product);
+
   return product.product;
 }
 
 export async function generateMetadata({ params, searchParams }, parent) {
   const product = await getProduct(params.id);
-  console.log(product);
 
   return {
     title: product.name,
@@ -60,6 +57,10 @@ export async function generateMetadata({ params, searchParams }, parent) {
 
 export default async function ProductDetails({ params }) {
   const product = await getProduct(params.id);
+
+  if (!product) {
+    notFound();
+  }
 
   return (
     <main style={{ marginTop: 50 }}>
