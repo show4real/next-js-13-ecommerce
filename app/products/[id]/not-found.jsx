@@ -1,6 +1,4 @@
 import Link from "next/link";
-import ProductList from "./products/ProductList";
-import SearchList from "/app/search/SearchList";
 export default function NotFound() {
   return (
     <main className="text-center">
