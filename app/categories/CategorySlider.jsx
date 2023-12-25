@@ -47,20 +47,20 @@ const CategorySlider = ({ sale_type }) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: products.length > 2 ? 5 : 1,
     slidesToScroll: 1,
     responsive: [
       {
         breakpoint: 1500,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: products.length > 2 ? 3 : 1,
           variableWidth: true,
         },
       },
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: products.length > 2 ? 3 : 1,
           variableWidth: true,
         },
       },
