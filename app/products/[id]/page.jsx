@@ -6,7 +6,7 @@ import ProductMiss from "/app/components/ProductMiss";
 async function getProduct(id) {
   const response = await fetch(
     `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`,
-    { next: { revalidate: 60 } }
+    { cache: "no-store" }
   );
   if (!response.ok) return null;
   const product = await response.json();
