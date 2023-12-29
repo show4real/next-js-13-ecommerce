@@ -21,7 +21,7 @@ const Checkout = () => {
     0
   );
 
-  const discount_price = 0.01 * totalPrice;
+  const discount_price = 0.005 * totalPrice;
 
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
