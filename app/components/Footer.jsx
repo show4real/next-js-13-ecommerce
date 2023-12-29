@@ -74,7 +74,8 @@ export default function Footer() {
                       href="#"
                       className="text-gray-700 transition hover:opacity-75"
                     >
-                      Contact
+                      Contact us
+                      <div>08112946602 &nbsp;&nbsp; 08037586863</div>
                     </a>
                   </li>
 
@@ -124,18 +125,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <p className="font-medium text-gray-900">Contact</p>
-
                 <ul className="mt-6 space-y-4 text-sm">
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-700 transition hover:opacity-75"
-                    >
-                      Size
-                    </a>
-                  </li>
-
                   <li>
                     <a
                       href="#"

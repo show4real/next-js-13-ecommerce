@@ -317,7 +317,7 @@ export default function Navbar() {
                 className="text-sm"
               >
                 {" "}
-                Refer &amp; Earn as high as 5% commission on an order
+                Refer &amp; Earn as high as 3% commission on an order
               </a>
             </div>
           </p>

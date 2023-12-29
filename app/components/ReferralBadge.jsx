@@ -186,7 +186,7 @@ const ReferralBadge = () => {
             </div>
             <div style={{ color: "green" }}>{message}</div>
             <p className="text-lg font-semibold my-4">
-              INVITE YOUR FRIENDS AND FAMILY AND EARN HAS HIGH AS 5% OF THEIR
+              INVITE YOUR FRIENDS AND FAMILY AND EARN HAS HIGH AS 3% OFF THEIR
               PURCHASE
               {/* INVITE &amp; GET A MINIMUM OF 2.5% COMMISSION FROM FRIEND&apos;S
               ORDERS You can earn as high as 5% */}
@@ -197,7 +197,7 @@ const ReferralBadge = () => {
               they make!  */}
               Unlock the potential of affiliate marketing by inviting your loved
               ones to join our platform. Earn generous commissions, as high as
-              5%, on every purchase they make.
+              3%, on every purchase they make.
             </p>
             <input
               className="border-2 border-gray-300 rounded-md p-2 my-4 w-full"
