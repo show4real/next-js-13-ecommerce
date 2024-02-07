@@ -48,25 +48,18 @@ export default function Footer() {
               </div>
 
               <div className="col-span-2 sm:col-span-1">
-                <p className="font-medium text-gray-900">About Us</p>
+                <p className="font-medium text-gray-900">Contact Us</p>
 
                 <ul className="mt-6 space-y-4 text-sm">
-                  <li>
-                    <a
-                      href="/about-us"
-                      className="text-gray-700 transition hover:opacity-75"
-                    >
-                      About Us
-                    </a>
-                  </li>
-
                   <li>
                     <a
                       href="#"
                       className="text-gray-700 transition hover:opacity-75"
                     >
-                      Contact us
-                      <div>08112946602 &nbsp;&nbsp; 08037586863</div>
+                      <div>
+                        08112946602 &nbsp;&nbsp; 08037586863 &nbsp; &nbsp;
+                        08071024533
+                      </div>
                     </a>
                   </li>
                 </ul>
@@ -110,11 +103,13 @@ export default function Footer() {
                   <li>
                     𝐒𝐚𝐧𝐠𝐨 𝐎𝐟𝐟𝐢𝐜𝐞: The Polytechnic Ibadan Entrance Gate, Sango.
                     Ibadan, Oyo State.
+                    <p>08112946602</p>
                   </li>
 
                   <li>
                     𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Olaiya shopping complex, 27, Fanawole
-                    Street, Alarere, iwo road
+                    Street, Alarere, Iwo Road Ibadan, Oyo State.
+                    <p>08071024533</p>
                   </li>
                 </ul>
               </div>
