@@ -323,7 +323,7 @@ export default function ProductList({
             <div className="lg:hidden md:hidden xl:hidden ">
               <>
                 <Space>
-                  <div className="mobile-off-canvas d-block d-lg-none pt-10">
+                  <div className="mobile-off-canvas d-block d-lg-none flex space-x-5 pt-3">
                     <div>
                       <Button
                         onClick={showFilter}
@@ -344,7 +344,7 @@ export default function ProductList({
                         />
                       </Button>
                     </div>
-                    <div className="pt-5">
+                    <div>
                       <Select
                         placeholder={
                           <span style={{ fontWeight: "bold", color: "black" }}>
@@ -409,7 +409,7 @@ export default function ProductList({
           </>
         )}
 
-        <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 justify-center">
+        <div className="mt-0 grid grid-cols-2 gap-x-6 gap-y-0 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 justify-center">
           {!loading &&
             products.map((product, key) => (
               <ProductCard product={product} key={key} />

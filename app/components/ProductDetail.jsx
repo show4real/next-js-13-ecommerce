@@ -213,9 +213,21 @@ const ProductDetail = ({ product }) => {
   const PickupLocation = () => {
     return (
       <div style={{ display: "flex" }}>
-        <CheckOutlined style={{ color: "#0E1B4D", marginRight: "8px" }} />
         <span style={{ color: "#0E1B4D", fontWeight: "400" }}>
-          Pickup available at Sango, Poly RD, Ibadan, Oyo State Nigeria.
+          <CheckOutlined style={{ color: "#0E1B4D", marginRight: "8px" }} />
+          Pickup available at :{" "}
+          <ul>
+            <li class="pt-2 pl-3">
+              {" "}
+              𝐒𝐚𝐧𝐠𝐨 𝐎𝐟𝐟𝐢𝐜𝐞: The Polytechnic Ibadan Entrance Gate, Sango. Ibadan,
+              Oyo State.
+            </li>
+            <li class="pt-2 pl-3">
+              {" "}
+              𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Olaiya shopping complex, 27, Fanawole Street,
+              Alarere, iwo road
+            </li>
+          </ul>
           <b style={{ display: "block" }}>contact: 08037586863</b>
         </span>
       </div>

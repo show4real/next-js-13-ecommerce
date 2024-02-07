@@ -10,7 +10,7 @@ const callouts = [
     description: "pay on delivery",
   },
   {
-    name: "Top Notch Product",
+    name: "Our Offices",
     description: "You get what you order 100%",
   },
 ];

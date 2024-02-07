@@ -65,31 +65,10 @@ export default function Footer() {
                       href="#"
                       className="text-gray-700 transition hover:opacity-75"
                     >
-                      Store Location
-                    </a>
-                  </li>
-
-                  <li>
-                    <a
-                      href="#"
-                      className="text-gray-700 transition hover:opacity-75"
-                    >
                       Contact us
                       <div>08112946602 &nbsp;&nbsp; 08037586863</div>
                     </a>
                   </li>
-
-                  {/* <li>
-                  <a href="#" className="text-gray-700 transition hover:opacity-75">
-                    HR Consulting
-                  </a>
-                </li>
-
-                <li>
-                  <a href="#" className="text-gray-700 transition hover:opacity-75">
-                    SEO Optimisation
-                  </a>
-                </li> */}
                 </ul>
               </div>
               <div className="col-span-2 sm:col-span-1">
@@ -125,23 +104,17 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="col-span-2 sm:col-span-1">
+                <p className="font-medium text-gray-900">Our Offices</p>
+
                 <ul className="mt-6 space-y-4 text-sm">
                   <li>
-                    <a
-                      href="#"
-                      className="text-gray-700 transition hover:opacity-75"
-                    >
-                      FAQs
-                    </a>
+                    𝐒𝐚𝐧𝐠𝐨 𝐎𝐟𝐟𝐢𝐜𝐞: The Polytechnic Ibadan Entrance Gate, Sango.
+                    Ibadan, Oyo State.
                   </li>
 
                   <li>
-                    <a
-                      href="#"
-                      className="text-gray-700 transition hover:opacity-75"
-                    >
-                      Live Chat
-                    </a>
+                    𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Olaiya shopping complex, 27, Fanawole
+                    Street, Alarere, iwo road
                   </li>
                 </ul>
               </div>

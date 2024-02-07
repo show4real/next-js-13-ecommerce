@@ -46,7 +46,7 @@ const ProductCard = ({ product, key }) => {
           />
 
           <button onClick={() => productQuickView(product)}>
-            <span className="absolute bottom-0 p-2 px-20 left-5 m-2 rounded-sm bg-black text-center text-sm font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="hidden absolute bottom-0 p-2 px-20 left-5 m-2 lg:flex xl:flex rounded-sm bg-black text-center text-sm font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity">
               <EyeOutlined color="white" />
               <span className="">View</span>
             </span>
