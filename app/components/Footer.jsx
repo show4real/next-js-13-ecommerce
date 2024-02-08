@@ -56,10 +56,7 @@ export default function Footer() {
                       href="#"
                       className="text-gray-700 transition hover:opacity-75"
                     >
-                      <div>
-                        08112946602 &nbsp;&nbsp; 08037586863 &nbsp; &nbsp;
-                        08071024533
-                      </div>
+                      <div>08037586863</div>
                     </a>
                   </li>
                 </ul>
