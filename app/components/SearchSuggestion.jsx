@@ -14,7 +14,10 @@ const SearchSuggestion = ({ onCloseSearch }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const formatNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    return 0;
   };
 
   const closeDropdown = () => {
