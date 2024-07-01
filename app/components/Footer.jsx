@@ -104,8 +104,8 @@ export default function Footer() {
                   </li>
 
                   <li>
-                    𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Olaiya shopping complex, 27, Fanawole
-                    Street, Alarere, Iwo Road Ibadan, Oyo State.
+                    𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Omoola Motors, Fanawole Street, Behind
+                    World Oil, Iwo Road.
                     <p>08071024533</p>
                   </li>
                 </ul>
