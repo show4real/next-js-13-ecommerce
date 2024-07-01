@@ -224,11 +224,11 @@ const ProductDetail = ({ product }) => {
             </li>
             <li class="pt-2 pl-3">
               {" "}
-              𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Olaiya shopping complex, 27, Fanawole Street,
-              Alarere, iwo road
+              𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Omoola Motors, Fanawole Street, Behind World Oil,
+              Iwo Road.
             </li>
           </ul>
-          <b style={{ display: "block" }}>contact: 08037586863</b>
+          <b style={{ display: "block" }}>contact: 08071024533</b>
         </span>
       </div>
     );
