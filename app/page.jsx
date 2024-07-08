@@ -33,7 +33,10 @@ export const metadata = {
   },
 
   other: {
-    "google-site-verification": "4Zkz1j8swUUwJUJrRx2wsqs4YwJy6ru1Xb-9WmFnjek",
+    "google-site-verification": [
+      "4Zkz1j8swUUwJUJrRx2wsqs4YwJy6ru1Xb-9WmFnjek",
+      "bV_J8Ba7C_BjvpuElY6jzsTkavuCYVTwhgPpwRA-TMc",
+    ],
   },
   applicationName: "Ecommerce Website for Laptops and Mobile phone",
 };
