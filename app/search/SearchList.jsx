@@ -47,7 +47,7 @@ export default function SearchList({ search }) {
   const [rams, setRams] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sort_value, setSorting] = useState("availability");
-  const [price, setPrice] = useState([4000, 1000000]);
+  const [price, setPrice] = useState([4000, 5000000]);
   const [search_all, setSearch] = useState(search.trim());
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState(null);

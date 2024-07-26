@@ -49,7 +49,7 @@ export default function ProductList({
 
   const [product, setProduct] = useState(null);
   const [sort, setSorting] = useState(null);
-  const [price, setPrice] = useState([4000, 1000000]);
+  const [price, setPrice] = useState([4000, 5000000]);
   const [search_all, setSearch] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState(null);
