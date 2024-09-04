@@ -307,9 +307,10 @@ export default function Navbar() {
           <p className="text-center bg-blue-500 px-4 py-2 text-sm sm:text-sm lg:text-lg font-medium text-white">
             <span className="text-gray-200">
               {" "}
-              Nationwide Delivery | Free Delivery within Ibadan
+              Quality Gadgets | Laptop | Smartphones | Gadgets Payment on
+              Delivery within Nigeria Free Delivery Within Ibadan | (T&C Apply)
             </span>
-            <div>
+            {/* <div>
               <a
                 href="https://hayzeeonline-referral.hayzeeonline.com/"
                 target="_blank"
@@ -319,7 +320,7 @@ export default function Navbar() {
                 {" "}
                 Refer &amp; Earn as high as 3% commission on an order
               </a>
-            </div>
+            </div> */}
           </p>
 
           <nav

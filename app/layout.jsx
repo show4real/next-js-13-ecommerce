@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Head from "next/head";
 import { Facebook } from "/app/components/Facebook";
+import WhatsAppButton from "/app/components/WhatsAppButton";
 import Loading from "./loading";
 
 const rubik = Rubik({ subsets: ["latin"] });
@@ -27,6 +28,11 @@ export default function RootLayout({ children }) {
         <Loading />
         {children}
         <Facebook />
+        <WhatsAppButton
+          phoneNumber="2348092777906"
+          message="Hello! I need a gadget"
+        />
+
         <Footer />
       </body>
     </html>
