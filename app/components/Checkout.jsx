@@ -346,22 +346,22 @@ const Checkout = () => {
                   className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                 >
                   <option value="">Select Pick Up</option>
-                  <option value="7000">
+                  <option value="14000">
                     Abia, Akwa Ibom, Anambra, Bayelsa, Cross River, Delta
-                    Ebonyi, Edo, Enugu, Imo, Kogi, Rivers, Plateau -7000
+                    Ebonyi, Edo, Enugu, Imo, Kogi, Rivers, Plateau -14000
                   </option>
-                  <option value="10000">
+                  <option value="20000">
                     Adamawa, Bauchi, Benue, Borno, Jigawa, Kaduna, Kano,
-                    Katsina, Kebbbi, Nassarawa, Niger -#10,000
+                    Katsina, Kebbbi, Nassarawa, Niger -#20,000
                   </option>
-                  <option value="10500">
-                    Sokoto, Taraba, Zamfara, Gombe Yobe -#10,500
+                  <option value="21000">
+                    Sokoto, Taraba, Zamfara, Gombe Yobe -#21,000
                   </option>
-                  <option value="5000">Ekiti, Kwara -#5,000</option>
-                  <option value="4000">
-                    Ogun, Ondo, Osun, Oyo, Lagos -#4,000
+                  <option value="10000">Ekiti, Kwara -#10,000</option>
+                  <option value="8000">
+                    Ogun, Ondo, Osun, Oyo, Lagos -#8,000
                   </option>
-                  <option value="3000">oyo -#3,000</option>
+                  <option value="6000">oyo -#6,000</option>
                   <option value="0">Ibadan -#0</option>
                 </select>
                 {/* <input
