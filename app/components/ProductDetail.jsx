@@ -220,15 +220,21 @@ const ProductDetail = ({ product }) => {
             <li class="pt-2 pl-3">
               {" "}
               𝐒𝐚𝐧𝐠𝐨 𝐎𝐟𝐟𝐢𝐜𝐞: The Polytechnic Ibadan Entrance Gate, Sango. Ibadan,
-              Oyo State.
+              Oyo State. <b>08112946602</b>
             </li>
             <li class="pt-2 pl-3">
               {" "}
               𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Omoola Motors, Fanawole Street, Behind World Oil,
-              Iwo Road.
+              Iwo Road. <b>08071024533</b>
+            </li>
+            <li class="pt-2 pl-3">
+            <b>Ojoo Office: </b> Shop 3,  Zolo Complex, Olororo Junction (OnileAro), Ojo Road Ibadan  <b>08076420157</b>
+            </li>
+            <li  class="pt-2 pl-3">
+            {" "} Nationwide Delivery is also Available
             </li>
           </ul>
-          <b style={{ display: "block" }}>contact: 08071024533</b>
+          
         </span>
       </div>
     );

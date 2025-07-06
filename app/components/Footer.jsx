@@ -108,6 +108,10 @@ export default function Footer() {
                     World Oil, Iwo Road.
                     <p>08071024533</p>
                   </li>
+                  <li>
+                    Ojoo: Shop 3,  Zolo Complex, Olororo Junction (OnileAro), Ojo Road Ibadan  
+                    <p>08076420157</p>
+                  </li>
                 </ul>
               </div>
               <div className="col-span-2 sm:col-span-1">
