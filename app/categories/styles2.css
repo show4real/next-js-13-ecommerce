@@ -1,0 +1,60 @@
+/* Category Component Styles - Add this to your styles.css file */
+
+.category-tabs .ant-tabs-tab {
+  padding: 16px 24px !important;
+  font-weight: 500 !important;
+  border-radius: 8px 8px 0 0 !important;
+  margin-right: 4px !important;
+}
+
+.category-tabs .ant-tabs-tab-active {
+  background-color: white !important;
+  border-bottom-color: white !important;
+}
+
+.category-tabs .ant-tabs-tab:hover {
+  color: #2563eb !important;
+}
+
+.category-tabs .ant-tabs-ink-bar {
+  background: #2563eb !important;
+  height: 3px !important;
+}
+
+.category-tabs .ant-tabs-content-holder {
+  background: white;
+}
+
+.category-tabs .ant-tabs-tabpane {
+  outline: none !important;
+}
+
+/* Loading animation for skeleton */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive video container */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

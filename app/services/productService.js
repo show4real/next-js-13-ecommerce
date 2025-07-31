@@ -24,6 +24,17 @@ export function getSearchProducts(data) {
   );
 }
 
+export function getAllSearchProducts(data) {
+  const requestOptions = {
+    method: "POST",
+    headers: header(),
+    body: JSON.stringify(data),
+  };
+  return fetch(`${settings.API_URL}searchall/products`, requestOptions).then(
+    authService.handleResponse
+  );
+}
+
 export function verifyUser(data) {
   const requestOptions = {
     method: "POST",
@@ -52,7 +63,7 @@ export function getCategoryProducts(data) {
     headers: header(),
     body: JSON.stringify(data),
   };
-  return fetch(`${settings.API_URL}category/products`, requestOptions).then(
+  return fetch(`${settings.API_URL}shop/products`, requestOptions).then(
     authService.handleResponse
   );
 }

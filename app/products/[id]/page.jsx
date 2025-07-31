@@ -60,17 +60,17 @@ export async function generateMetadata({ params, searchParams }, parent) {
 export default async function ProductDetails({ params }) {
   const product = await getProduct(params.id);
   console.log(product);
-
+  
   if (!product) {
     return (
-      <main style={{ marginTop: 200 }}>
+      <main className="mt-0 md:mt-[150px] md:px-[150px]">
         <ProductMiss product={product} />
       </main>
     );
   }
 
   return (
-    <main style={{ marginTop: 50 }}>
+    <main className="mt-[100px] md:mt-[100px] md:px-[100px]">
       <ProductDetail product={product} />
     </main>
   );

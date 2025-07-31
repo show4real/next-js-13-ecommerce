@@ -40,29 +40,28 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <main className="">
-      <Suspense fallback={<Loading />}>
-        <ProductList
-          productSection="Trending Products"
-          sale_type={null}
-          brandslug={""}
-          categoryslug={""}
-          shop={false}
-          flash_sale={true}
-        />
-        <Category />
-        <ProductSaleType sale_type="flash sales" />
-        <ProductSaleType sale_type="PRE-ORDER (24Hours)" />
-        <ProductSaleType sale_type="PRE-ORDER (21DAYS)" />
-        <ProductSaleType sale_type="PRE-ORDER (7DAYS)" />
+  <main className="w-full px-4 sm:px-6 lg:px-8 mt-[70px] lg:mt-[150px]">
+    
+  <Suspense fallback={<Loading />}>
+    <ProductList
+      productSection="Trending Products"
+      sale_type={null}
+      brandslug={""}
+      categoryslug={""}
+      shop={false}
+      flash_sale={true}
+    />
+    <Category />
+    {/* <ProductSaleType sale_type="flash sales" /> */}
+    {/* <ProductSaleType sale_type="PRE-ORDER (24Hours)" />
+    <ProductSaleType sale_type="PRE-ORDER (21DAYS)" />
+    <ProductSaleType sale_type="PRE-ORDER (7DAYS)" /> */}
+    <ProductSaleType sale_type="promo sales" />
+    <FeaturedServices />
+    <ProductSaleType sale_type="black friday" />
+    <ProductSaleType sale_type="Mid year sales" />
+  </Suspense>
+</main>
 
-        {/* <CategorySlider brand="brand" /> */}
-        <ProductSaleType sale_type="promo sales" />
-        <FeaturedServices />
-        <ProductSaleType sale_type="black friday" />
-        <ProductSaleType sale_type="Mid year sales" />
-        {/* <CategorySlider category={"category"} /> */}
-      </Suspense>
-    </main>
   );
 }

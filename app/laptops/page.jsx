@@ -38,7 +38,7 @@ export const metadata = {
 
 export default function Products() {
   return (
-    <div className="container mx-auto pt-0">
+    <main className="mt-0 md:mt-[150px] md:px-[150px]">
       <ProductList
         productSection={"Laptops"}
         brandslug={""}
@@ -46,6 +46,6 @@ export default function Products() {
         shop={true}
         sale_type={""}
       />
-    </div>
+    </main>
   );
 }

@@ -5,7 +5,7 @@ import { Col, Row, Container } from "reactstrap";
 const CarouselHolder = () => {
   return (
     <section className="bg-white">
-      <div className="container px-6 py-10 mx-auto animate-pulse">
+      <div className="container py-10 mx-auto animate-pulse">
         {/* <h1 className="w-48 h-2 mx-auto bg-gray-200 rounded-lg "></h1>
 
         <p className="w-64 h-2 mx-auto mt-4 bg-gray-200 rounded-lg "></p>

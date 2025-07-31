@@ -7,9 +7,12 @@ import {
   getCategoryProducts,
   getLaptopProducts,
 } from "../services/productService";
-import React, { useState, useEffect } from "react";
-import { Button, Drawer, Space, Row, Pagination } from "antd";
-import { MenuUnfoldOutlined, DownOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { Button, Drawer, Space, Pagination, Slider, Select } from "antd";
+import {
+  FunnelIcon,
+  AdjustmentsHorizontalIcon
+} from "@heroicons/react/24/outline";
 import ProductCard from "/app/components/ProductCard";
 import CarouselHolder from "/app/products/CarouselHolder";
 import PriceSelect from "/app/components/PriceSelect";
@@ -22,70 +25,98 @@ import ProcessorSelect from "/app/components/ProcessorSelect";
 import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
-import { Select } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGift, faTimes } from "@fortawesome/free-solid-svg-icons";
 import ReferralBadge from "/app/components/ReferralBadge";
-
 import CategorySlider from "app/categories/CategorySlider";
+import './styles.css';
 
 const { Option } = Select;
+
+// Simple state persistence using a global object (survives navigation)
+const globalState = {};
+
+const createStateKey = (productSection, categoryslug, brandslug) => 
+  `${productSection || 'default'}_${categoryslug || 'none'}_${brandslug || 'none'}`;
+
+const saveState = (key, value, productSection, categoryslug, brandslug) => {
+  const stateKey = createStateKey(productSection, categoryslug, brandslug);
+  if (!globalState[stateKey]) {
+    globalState[stateKey] = {};
+  }
+  globalState[stateKey][key] = value;
+};
+
+const loadState = (key, defaultValue, productSection, categoryslug, brandslug) => {
+  const stateKey = createStateKey(productSection, categoryslug, brandslug);
+  if (globalState[stateKey] && globalState[stateKey][key] !== undefined) {
+    return globalState[stateKey][key];
+  }
+  return defaultValue;
+};
 
 export default function ProductList({
   productSection,
   sale_type,
-  brandslug,
-  categoryslug,
+  brandslug = "",
+  categoryslug = "",
   flash_sale,
 }) {
+  // Load initial state from global storage
   const [products, setProducts] = useState([]);
-
-  const [rows, setRows] = useState(12);
-  const [page, setPage] = useState(1);
+  const [rows, setRows] = useState(() => loadState('rows', 12, productSection, categoryslug, brandslug));
+  const [page, setPage] = useState(() => loadState('page', 1, productSection, categoryslug, brandslug));
   const [total, setTotal] = useState(1);
 
   const [brands, setBrands] = useState([]);
-  const [storages, setStorages] = useState([]);
-  const [processors, setProcessors] = useState([]);
-  const [rams, setRams] = useState([]);
+  const [storages, setStorages] = useState(() => loadState('storages', [], productSection, categoryslug, brandslug));
+  const [processors, setProcessors] = useState(() => loadState('processors', [], productSection, categoryslug, brandslug));
+  const [rams, setRams] = useState(() => loadState('rams', [], productSection, categoryslug, brandslug));
   const [categories, setCategories] = useState([]);
 
-  const [product, setProduct] = useState(null);
-  const [sort, setSorting] = useState(null);
-  const [price, setPrice] = useState([4000, 5000000]);
-  const [search_all, setSearch] = useState("");
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState(null);
+  const [sort, setSorting] = useState(() => loadState('sort', 'availability', productSection, categoryslug, brandslug));
+  const [price, setPrice] = useState(() => loadState('price', [4000, 5000000], productSection, categoryslug, brandslug));
+  const [search_all, setSearch] = useState(() => loadState('search', "", productSection, categoryslug, brandslug));
+  const [brand, setBrand] = useState(() => loadState('brand', "", productSection, categoryslug, brandslug));
+  const [category, setCategory] = useState(() => loadState('category', null, productSection, categoryslug, brandslug));
 
   const [loading, setLoading] = useState(false);
   const [newLoading, setNewLoading] = useState(false);
-  const [triggeredLoadMore, setTriggeredLoadMore] = useState(false);
-
   const [mobileFilter, setFilter] = useState(false);
   const [notice, setNotice] = useState(null);
-  const [filterPosition, setFilterPosition] = useState("left");
 
-  const showFilter = () => {
-    setFilter(true);
-  };
+  const isInitialMount = useRef(true);
 
-  const onCloseFilter = () => {
-    setFilter(false);
-  };
+  // Effect to save state whenever it changes
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      saveState('rows', rows, productSection, categoryslug, brandslug);
+      saveState('page', page, productSection, categoryslug, brandslug);
+      saveState('storages', storages, productSection, categoryslug, brandslug);
+      saveState('processors', processors, productSection, categoryslug, brandslug);
+      saveState('rams', rams, productSection, categoryslug, brandslug);
+      saveState('sort', sort, productSection, categoryslug, brandslug);
+      saveState('price', price, productSection, categoryslug, brandslug);
+      saveState('search', search_all, productSection, categoryslug, brandslug);
+      saveState('brand', brand, productSection, categoryslug, brandslug);
+      saveState('category', category, productSection, categoryslug, brandslug);
+    }
+  }, [rows, page, storages, processors, rams, sort, price, search_all, brand, category, productSection, categoryslug, brandslug]);
 
   useEffect(() => {
+    isInitialMount.current = false;
     fetchProducts();
-
     fetchBrands();
     fetchCategories();
   }, [brand, rams, sort, storages, processors, category, rows, page]);
 
   const fetchProducts = async (retryCount = 3) => {
     setLoading(true);
-
     try {
+      let res;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
       if (productSection === "Trending Products") {
-        const res = await getProducts({
+        res = await getProducts({
           page,
           rows,
           price,
@@ -97,11 +128,8 @@ export default function ProductList({
           category,
           search_all,
         });
-        setProducts(res.products.data);
-        setNotice(res.notice);
-        setTotal(res.products.total);
       } else if (productSection === "Laptops") {
-        const res = await getLaptopProducts({
+        res = await getLaptopProducts({
           page,
           rows,
           price,
@@ -115,11 +143,8 @@ export default function ProductList({
           categoryslug,
           brandslug,
         });
-        setProducts(res.products.data);
-        setNotice(res.notice);
-        setTotal(res.products.total);
       } else {
-        const res = await getCategoryProducts({
+        res = await getCategoryProducts({
           page,
           rows,
           price,
@@ -133,357 +158,255 @@ export default function ProductList({
           categoryslug,
           brandslug,
         });
-        setProducts(res.products.data);
-        setNotice(res.notice);
-        setTotal(res.products.total);
       }
+
+      clearTimeout(timeoutId);
+
+      if (!res || !res.products || !Array.isArray(res.products.data)) {
+        throw new Error('Invalid response structure');
+      }
+
+      setProducts(res.products.data);
+      setNotice(res.notice);
+      setTotal(res.products.total || 0);
       setLoading(false);
+
     } catch (error) {
       console.error("Error fetching products:", error);
       if (retryCount > 0) {
-        // Retry the request
-        console.log(`Retrying... attempts left: ${retryCount}`);
+        await new Promise(res => setTimeout(res, 1000));
         await fetchProducts(retryCount - 1);
       } else {
         setLoading(false);
-        // Handle failure here
-        console.error("Failed to fetch products after multiple attempts");
+        setProducts([]);
+        setTotal(0);
+        setNotice({
+          type: 'error',
+          message: 'Failed to load products. Please try again later.'
+        });
       }
     }
   };
 
   const fetchBrands = () => {
     setLoading(true);
-    getBrands().then(
-      (res) => {
-        setBrands(res.brands);
-        setLoading(false);
-      },
-      (error) => {
-        setLoading(false);
-      }
-    );
+    getBrands().then((res) => {
+      setBrands(res.brands);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   };
 
   const fetchCategories = () => {
     setLoading(true);
-    getAllCats().then(
-      (res) => {
-        setCategories(res.categories);
-        setLoading(false);
-        // setTimeout(() => {
-        //   setLoading(false);
-        // }, 3000);
-      },
-      (error) => {
-        setLoading(false);
-      }
-    );
+    getAllCats().then((res) => {
+      setCategories(res.categories);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   };
 
   const handlePrice = (newPrice) => {
     setPrice(newPrice);
+    setPage(1);
   };
 
   const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearch(value);
+    setSearch(event.target.value);
+    setPage(1);
   };
 
-  const handleStorage = (selectedOptions) => {
-    setStorages(selectedOptions);
+  const handleStorage = (options) => {
+    setStorages(options);
+    setPage(1);
   };
 
   const handleBrand = (value) => {
     setBrand(value);
+    setPage(1);
   };
 
   const handleCategory = (value) => {
     setCategory(value);
+    setPage(1);
   };
 
-  const handleProcessor = (selectedOptions) => {
-    setProcessors(selectedOptions);
+  const handleProcessor = (options) => {
+    setProcessors(options);
+    setPage(1);
   };
 
-  const handleRam = (selectedOptions) => {
-    setRams(selectedOptions);
+  const handleRam = (options) => {
+    setRams(options);
+    setPage(1);
   };
 
-  const handleSorting = (sort) => {
-    setSorting(sort);
-  };
-  const onPage = async (page, rows) => {
-    setPage(page);
-    setRows(rows);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    await fetchProducts();
+  const handleSorting = (value) => {
+    setSorting(value);
+    setPage(1);
   };
 
-  const AllFilter = () => {
-    return (
-      <>
-        <div>
-          {console.log(categoryslug)}
-          {categoryslug == "" && (
-            <CategorySelect
-              categories={categories}
-              category={category}
-              handleCategory={handleCategory}
-            />
-          )}
-        </div>
-        <div>
-          {brandslug == "" && (
-            <BrandSelect
-              brands={brands}
-              brand={brand}
-              handleBrand={handleBrand}
-            />
-          )}
-        </div>
-        <div>
-          <StorageSelect storages={storages} handleStorage={handleStorage} />
-        </div>
-        <div>
-          <RamSelect rams={rams} handleRam={handleRam} />
-        </div>
-        <div>
-          <ProcessorSelect
-            processors={processors}
-            handleProcessor={handleProcessor}
-          />
-        </div>
-      </>
-    );
+  const onPage = (newPage, newRows) => {
+    console.log('Pagination changed:', { newPage, newRows, currentPage: page, currentRows: rows });
+    setPage(newPage);
+    if (newRows && newRows !== rows) {
+      setRows(newRows);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const addSlug = (str) => {
-    return str.toLowerCase().split(" ").join("-");
-  };
+  const formatPrice = (value) =>
+    new Intl.NumberFormat('en-NG', {
+      style: 'currency',
+      currency: 'NGN',
+      minimumFractionDigits: 0,
+    }).format(value);
+
+  const SimplePriceSlider = () => (
+    <div className="space-y-4">
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>{formatPrice(price[0])}</span>
+        <span>{formatPrice(price[1])}</span>
+      </div>
+      <Slider
+        range
+        min={4000}
+        max={5000000}
+        step={10000}
+        value={price}
+        onChange={handlePrice}
+        onAfterChange={() => fetchProducts()}
+        className="custom-price-slider"
+        trackStyle={[{ backgroundColor: '#3b82f6' }]}
+        handleStyle={[
+          { borderColor: '#3b82f6', backgroundColor: '#3b82f6' },
+          { borderColor: '#3b82f6', backgroundColor: '#3b82f6' }
+        ]}
+      />
+      <div className="flex justify-between text-xs text-gray-500">
+        <span>₦4,000</span>
+        <span>₦5,000,000</span>
+      </div>
+    </div>
+  );
+
+  const FilterSection = ({ title, children }) => (
+    <div className="mb-6">
+      <h3 className="text-sm font-semibold text-gray-900 mb-3">{title}</h3>
+      {children}
+    </div>
+  );
+
+  const SidebarFilters = () => (
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 sticky top-6">
+      <div className="flex items-center mb-6">
+        <AdjustmentsHorizontalIcon className="h-5 w-5 text-gray-600 mr-2" />
+        <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+      </div>
+      <FilterSection title="Price Range">
+        <SimplePriceSlider />
+      </FilterSection>
+      {categoryslug === "" && (
+        <FilterSection title="Category">
+          <CategorySelect categories={categories} category={category} handleCategory={handleCategory} />
+        </FilterSection>
+      )}
+      {brandslug === "" && (
+        <FilterSection title="Brand">
+          <BrandSelect brands={brands} brand={brand} handleBrand={handleBrand} />
+        </FilterSection>
+      )}
+      <FilterSection title="Storage">
+        <StorageSelect storages={storages} handleStorage={handleStorage} />
+      </FilterSection>
+      <FilterSection title="RAM">
+        <RamSelect rams={rams} handleRam={handleRam} />
+      </FilterSection>
+      <FilterSection title="Processor">
+        <ProcessorSelect processors={processors} handleProcessor={handleProcessor} />
+      </FilterSection>
+    </div>
+  );
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu
-          categoryslug=""
-          brandslug=""
-          flash_sale={flash_sale}
-          notice={notice}
-        />
-
-        <h2 className="text-xl font-medium leading-4 tracking-tight text-gray-900 mt-16">
-          {productSection}
-        </h2>
+    <div className="bg-gray-50 min-h-screen">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SocialIconMenu categoryslug="" brandslug="" flash_sale={flash_sale} notice={notice} />
+        <div className="mb-8">
+          <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6">{productSection}</h3>
+          <div className="lg:hidden mb-6">
+            <button onClick={() => setFilter(true)} className="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 shadow-sm">
+              <FunnelIcon className="h-5 w-5 mr-2" />
+              Show Filters
+            </button>
+          </div>
+        </div>
 
         {loading && <CarouselHolder />}
-        {!loading && (
-          <>
-            <div>
-              <div className="hidden lg:grid lg:grid-cols-6 md:grid md:grid-cols-6 justify-center pt-8 pb-5">
-                <div className="col-start-2 col-span-4">
-                  <div className="mb-3 pt-4">
-                    <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-                      <input
-                        type="search"
-                        className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                        placeholder="Search"
-                        aria-label="Search"
-                        aria-describedby="button-addon1"
-                        value={search_all}
-                        onChange={handleSearch}
-                      />
 
-                      <Link
-                        className="relative z-[2] flex items-center rounded-r bg-primary px-1 md:px-3 lg:px-3 xl:px-3 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-                        href={`/search/${addSlug(search_all)}`}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="h-5 w-5"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
+        {!loading && (
+          <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+            <div className="hidden lg:block lg:col-span-1">
+              <SidebarFilters />
+            </div>
+            <div className="lg:col-span-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                <p className="text-gray-600 mb-4 sm:mb-0">
+                  Showing {((page - 1) * rows) + 1}-{Math.min(page * rows, total)} of {total} products (Page {page})
+                </p>
+                <div className="w-full sm:w-64">
+                  <Select placeholder="Sort by" className="w-full" value={sort} onChange={handleSorting} size="large">
+                    <Option value="">Default</Option>
+                    <Option value="availability">Availability</Option>
+                    <Option value="name-asc">Name: A-Z</Option>
+                    <Option value="name-desc">Name: Z-A</Option>
+                    <Option value="low-price">Price: Low to High</Option>
+                    <Option value="high-price">Price: High to Low</Option>
+                    <Option value="date-asc">Date: Old to New</Option>
+                    <Option value="date-desc">Date: New to Old</Option>
+                  </Select>
                 </div>
               </div>
-            </div>
-            <div className="lg:hidden md:hidden xl:hidden ">
-              <>
-                <Space>
-                  <div className="mobile-off-canvas d-block d-lg-none flex space-x-5 pt-3">
-                    <div>
-                      <Button
-                        onClick={showFilter}
-                        style={{
-                          backgroundColor: "",
-                          // color: "#0E1B4D",
-                          paddingTop: 0,
-                          // borderColor: "#0E1B4D",
-                        }}
-                      >
-                        {/* <MenuUnfoldOutlined /> */}
-                        <span className="font-medium pt-1 text-small">
-                          Show Product Filter
-                        </span>
-                        <DownOutlined
-                          onClick={showFilter}
-                          style={{ paddingLeft: 5, bottom: 20 }}
-                        />
-                      </Button>
-                    </div>
-                    <div>
-                      <Select
-                        placeholder={
-                          <span style={{ fontWeight: "bold", color: "black" }}>
-                            Sort By
-                          </span>
-                        }
-                        placement="bottomLeft"
-                        style={{
-                          border: "none",
-                          boxShadow: "none",
-                          height: 35,
-                          color: "black",
-                        }}
-                        value={sort}
-                        onChange={handleSorting}
-                        dropdownStyle={{ minWidth: 300, textAlign: "center" }}
-                        className="w-full"
-                      >
-                        <option value="">All</option>
-                        <option value="availability">Availability</option>
-                        <option value="name-asc">Alphabetically, A-Z</option>
-                        <option value="name-desc">Alphabetically, Z-A</option>
-                        <option value="low-price">Price, low to high</option>
-                        <option value="high-price">Price, high to low</option>
-                        <option value="date-asc">Date, old to new</option>
-                        <option value="date-desc">Date, new to old</option>
-                      </Select>
-                    </div>
-                  </div>
-                </Space>
-                <Drawer
-                  title="Filter Products"
-                  placement={filterPosition}
-                  width={330}
-                  onClose={onCloseFilter}
-                  open={mobileFilter}
-                >
-                  <div className="flex flex-col space-y-11">
-                    <div>
-                      <PriceSelect
-                        price={price}
-                        handlePrice={handlePrice}
-                        fetchProducts={fetchProducts}
-                      />
-                    </div>
-                    <AllFilter />
-                  </div>
-                </Drawer>
-              </>
-            </div>
-            <div className="hidden lg:grid lg:grid-cols-3 md:grid md:grid-cols-3 xl:grid xl:grid-cols-3 gap-8 pt-5">
-              <div>
-                <PriceSelect
-                  price={price}
-                  handlePrice={handlePrice}
-                  fetchProducts={fetchProducts}
-                />
+
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">
+                {products.map((product, key) => (
+                  <ProductCard product={product} key={key} />
+                ))}
               </div>
-              <AllFilter />
-              <SortSelect sort={sort} handleSorting={handleSorting} />
+
+              {products.length > 0 && productSection !== "Trending Products" && (
+                <div className="flex justify-center py-8">
+                  <Pagination
+                    total={total}
+                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} Products`}
+                    onChange={onPage}
+                    pageSize={rows}
+                    current={page}
+                    showSizeChanger={true}
+                    showQuickJumper={true}
+                    pageSizeOptions={['12', '24', '48', '96']}
+                    className="custom-pagination"
+                    key={`pagination-${page}-${rows}-${total}`}
+                  />
+                </div>
+              )}
+
+              {products.length < 1 && (
+                <div className="text-center py-16">
+                  <div className="text-gray-400 text-6xl mb-4">🔍</div>
+                  <h3 className="text-xl font-medium text-gray-900 mb-2">No Products Found</h3>
+                  <p className="text-gray-500">Try adjusting your search terms or filters</p>
+                </div>
+              )}
             </div>
-          </>
+          </div>
         )}
 
-        <div className="mt-0 grid grid-cols-2 gap-x-6 gap-y-0 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 justify-center">
-          {!loading &&
-            products.map((product, key) => (
-              <ProductCard product={product} key={key} />
-            ))}
-        </div>
-        <div>
-          {newLoading && (
-            <div style={{ textAlign: "center" }}>
-              <div className="flex justify-center items-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500 border-r-2 border-b-2"></div>
-              </div>
-            </div>
-          )}
-          {!loading &&
-            products.length > 0 &&
-            productSection == "Trending Products" && (
-              <div
-                style={{
-                  textAlign: "center",
+        <Drawer title="Filter Products" placement="left" width={350} onClose={() => setFilter(false)} open={mobileFilter} className="lg:hidden">
+          <div className="space-y-6">
+            <SidebarFilters />
+          </div>
+        </Drawer>
 
-                  alignItems: "center",
-                }}
-              >
-                {/* <button onClick={handleLoadMore} className="load-more-button">
-                  Load More
-                </button> */}
-                <Link href="/products">
-                  <button
-                    // onClick={handleLoadMore}
-                    href="#_"
-                    className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-blue-600 transition duration-300 ease-out border-2 bg-slate-800 rounded-full shadow-md group"
-                  >
-                    <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-slate-700 group-hover:translate-x-0 ease">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        ></path>
-                      </svg>
-                    </span>
-                    <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
-                      Shop More
-                    </span>
-                    <span className="relative invisible">Shop More</span>
-                  </button>
-                </Link>
-              </div>
-            )}
-
-          {products.length > 0 && productSection != "Trending Products" && (
-            <Pagination
-              total={total}
-              showTotal={(total) => `Total ${total} Products`}
-              onChange={onPage}
-              pageSize={rows}
-              current={page}
-            />
-          )}
-          {!loading && products.length < 1 && (
-            <div className="text-gray-200 font-md p-16 justify-center">
-              <i className="fa fa-ban" style={{ marginRight: 5 }} />
-              No Products found
-            </div>
-          )}
-        </div>
-        <div>
+        <div className="mt-16">
           <ReferralBadge />
         </div>
       </div>

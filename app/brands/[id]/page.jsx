@@ -1,25 +1,29 @@
 import ProductList from "/app/products/ProductList";
 
-import { notFound } from "next/navigation";
-
-export const dynamicParams = true; // default val = true
+import { notFound } from 'next/navigation'; // Ensure this is imported if you're using Next.js
 
 async function getBrand(id) {
-  const response = await fetch(
-    `https://www.hayzeeonlineapi.hayzeeonline.com/api/show/brand/${id}`
-  );
+  console.log(id)
+  try {
+    const response = await fetch(
+      `https://apiv2.hayzeeonline.com/api/show/brand/${id}`
+    );
 
-  if (response.ok) {
-    const brand = await response.json();
-    if (brand) {
-      return brand.brand;
+    if (response.ok) {
+      const brand = await response.json();
+      return brand?.brand ?? null;
+    } else if (response.status === 404) {
+      notFound(); // Next.js 13+ 'app' router 404 handling
+    } else {
+      console.error(`Error fetching brand: ${response.status}`);
+      return null;
     }
-  } else if (response.status === 404) {
-    notFound();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
   }
-
-  // Handle other response statuses or errors here
 }
+
 
 export async function generateMetadata({ params, searchParams }, parent) {
   return {
@@ -34,7 +38,7 @@ export default async function ProductDetails({ params }) {
   const brand = await getBrand(params.id);
 
   return (
-    <main>
+    <main className="mt-0 md:mt-[150px] md:px-[150px]">
       {brand && (
         <ProductList
           productSection={`${brand.name} Brand`}

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 async function getCategory(id) {
   const response = await fetch(
-    `https://www.hayzeeonlineapi.hayzeeonline.com/api/show/category/${id}`
+    `https://apiv2.hayzeeonline.com/api/show/category/${id}`
   );
 
   if (response.ok) {
@@ -32,7 +32,7 @@ export default async function ProductDetails({ params }) {
   const category = await getCategory(params.id);
 
   return (
-    <main>
+    <main className="mt-0 md:mt-[150px] md:px-[150px]">
       {category && (
         <ProductList
           productSection={`${category.name} Category`}

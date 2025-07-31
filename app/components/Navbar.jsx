@@ -122,8 +122,18 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-10">
-      <div className="bg-white">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isSticky ? 'shadow-lg' : ''}`}>
+      {/* Top Banner */}
+      <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600">
+        <p className="text-center px-4 py-3 text-sm sm:text-sm lg:text-base font-medium text-white">
+          <span className="text-blue-100 animate-pulse">
+            ⚡ Quality Gadgets | Laptops | Smartphones | Payment on Delivery within Nigeria 
+            <span className="hidden sm:inline"> | Free Delivery Within Ibadan (T&C Apply)</span>
+          </span>
+        </p>
+      </div>
+
+      <div className="bg-white shadow-md border-b border-gray-100">
         {/* Mobile menu */}
         <Transition.Root show={open} as={Fragment}>
           <Dialog
@@ -140,7 +150,7 @@ export default function Navbar() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-black bg-opacity-25" />
+              <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm" />
             </Transition.Child>
 
             <div className="fixed inset-0 z-40 flex">
@@ -153,11 +163,11 @@ export default function Navbar() {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-xl">
-                  <div className="flex px-4 pb-2 pt-5">
+                <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-2xl">
+                  <div className="flex px-4 pb-2 pt-5 bg-gradient-to-r from-blue-50 to-indigo-50">
                     <button
                       type="button"
-                      className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
+                      className="relative -m-2 inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-gray-700 hover:bg-white transition-colors duration-200"
                       onClick={() => setOpen(false)}
                     >
                       <span className="absolute -inset-0.5" />
@@ -166,31 +176,33 @@ export default function Navbar() {
                     </button>
                   </div>
 
-                  {/* Links */}
-                  <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                  {/* Mobile Navigation Links */}
+                  <div className="space-y-2 border-t border-gray-100 px-4 py-6" style={{marginTop:100}}>
                     {navigation.pages.map((page) => (
                       <div key={page.name} className="flow-root">
                         <Link
                           href={page.href}
                           onClick={() => setOpen(false)}
-                          className="-m-2 block p-2 font-medium text-gray-900"
+                          className="-m-2 block p-3 font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                         >
                           {page.name}
                         </Link>
                       </div>
                     ))}
                   </div>
+
+                  {/* Mobile Tabs */}
                   <Tab.Group as="div" className="mt-2">
-                    <div className="border-b border-gray-200">
+                    <div className="border-b border-gray-100 bg-gray-50">
                       <Tab.List className="-mb-px flex space-x-8 px-4">
                         <Tab
                           key="categories"
                           className={({ selected }) =>
                             classNames(
                               selected
-                                ? "border-indigo-600 text-indigo-600"
-                                : "border-transparent text-gray-900",
-                              "flex-1 whitespace-nowrap border-b-2 px-1 py-4 text-base font-medium"
+                                ? "border-blue-500 text-blue-600 bg-white"
+                                : "border-transparent text-gray-600 hover:text-gray-800",
+                              "flex-1 whitespace-nowrap border-b-2 px-3 py-4 text-sm font-semibold rounded-t-lg transition-all duration-200"
                             )
                           }
                         >
@@ -201,9 +213,9 @@ export default function Navbar() {
                           className={({ selected }) =>
                             classNames(
                               selected
-                                ? "border-indigo-600 text-indigo-600"
-                                : "border-transparent text-gray-900",
-                              "flex-1 whitespace-nowrap border-b-2 px-1 py-4 text-base font-medium"
+                                ? "border-blue-500 text-blue-600 bg-white"
+                                : "border-transparent text-gray-600 hover:text-gray-800",
+                              "flex-1 whitespace-nowrap border-b-2 px-3 py-4 text-sm font-semibold rounded-t-lg transition-all duration-200"
                             )
                           }
                         >
@@ -214,20 +226,20 @@ export default function Navbar() {
                     <Tab.Panels as={Fragment}>
                       <Tab.Panel
                         key="categories"
-                        className="space-y-10 px-4 pb-8 pt-10"
+                        className="space-y-10 px-4 pb-8 pt-6"
                       >
                         <div>
                           <ul
                             role="list"
                             aria-labelledby={`heading-mobile`}
-                            className="mt-0 flex flex-col space-y-6"
+                            className="mt-0 flex flex-col space-y-3"
                           >
                             {!loading &&
                               categories.map((category, key) => (
                                 <li className="flow-root" key={key}>
                                   <Link
                                     href={`/categories/${category.slug}`}
-                                    className="-m-2 block p-2 text-gray-500"
+                                    className="-m-2 block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                                     onClick={() => setOpen(false)}
                                   >
                                     {category.name}
@@ -239,20 +251,20 @@ export default function Navbar() {
                       </Tab.Panel>
                       <Tab.Panel
                         key="brands"
-                        className="space-y-10 px-4 pb-8 pt-10"
+                        className="space-y-10 px-4 pb-8 pt-6"
                       >
                         <div>
                           <ul
                             role="list"
                             aria-labelledby={`heading-mobile`}
-                            className="mt-0 flex flex-col space-y-6"
+                            className="mt-0 flex flex-col space-y-3"
                           >
                             {!loading &&
                               brands.map((brand, key) => (
                                 <li className="flow-root" key={key}>
                                   <Link
                                     href={`/brands/${brand.slug}`}
-                                    className="-m-2 block p-2 text-gray-500"
+                                    className="-m-2 block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                                     onClick={() => setOpen(false)}
                                   >
                                     {brand.name}
@@ -264,39 +276,6 @@ export default function Navbar() {
                       </Tab.Panel>
                     </Tab.Panels>
                   </Tab.Group>
-
-                  {/* <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                    <div className="flow-root">
-                      <a
-                        href="#"
-                        className="-m-2 block p-2 font-medium text-gray-900"
-                      >
-                        Sign in
-                      </a>
-                    </div>
-                    <div className="flow-root">
-                      <a
-                        href="#"
-                        className="-m-2 block p-2 font-medium text-gray-900"
-                      >
-                        Create account
-                      </a>
-                    </div>
-                  </div> */}
-
-                  {/* <div className="border-t border-gray-200 px-4 py-6">
-                    <a href="#" className="-m-2 flex items-center p-2">
-                      <img
-                        src="https://tailwindui.com/img/flags/flag-nigeria.svg"
-                        alt=""
-                        className="block h-auto w-5 flex-shrink-0"
-                      />
-                      <span className="ml-3 block text-base font-medium text-gray-900">
-                        NG
-                      </span>
-                      <span className="sr-only">, change currency</span>
-                    </a>
-                  </div> */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -304,332 +283,288 @@ export default function Navbar() {
         </Transition.Root>
 
         <header className="relative bg-white">
-          <p className="text-center bg-blue-500 px-4 py-2 text-sm sm:text-sm lg:text-lg font-medium text-white">
-            <span className="text-gray-200">
-              {" "}
-              Quality Gadgets | Laptop | Smartphones | Gadgets Payment on
-              Delivery within Nigeria Free Delivery Within Ibadan | (T&C Apply)
-            </span>
-            {/* <div>
-              <a
-                href="https://hayzeeonline-referral.hayzeeonline.com/"
-                target="_blank"
-                style={{ textDecoration: "none", color: "white" }}
-                className="text-sm"
-              >
-                {" "}
-                Refer &amp; Earn as high as 3% commission on an order
-              </a>
-            </div> */}
-          </p>
-
           <nav
             aria-label="Top"
             className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           >
-            <div className="border-b border-gray-200">
-              <div className="flex h-16 items-center">
-                <button
-                  type="button"
-                  className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
-                  onClick={() => setOpen(true)}
-                >
-                  <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open menu</span>
-                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                </button>
+            <div className="flex h-16 items-center justify-between">
+              {/* Mobile menu button */}
+              <button
+                type="button"
+                className="relative rounded-lg bg-white p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 lg:hidden transition-colors duration-200"
+                onClick={() => setOpen(true)}
+              >
+                <span className="absolute -inset-0.5" />
+                <span className="sr-only">Open menu</span>
+                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              </button>
 
-                {/* Logo */}
-                <div className="ml-2 flex lg:ml-0">
-                  <Link href="/">
-                    <Image
-                      src={Logo}
-                      alt="Hayzeeonline Computer resources"
-                      width={50}
-                      placeholder="blur"
-                      quality={100}
-                    />
-                  </Link>
-                </div>
-                {/* Flyout menus */}
-                <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
-                  <div className="flex h-full space-x-8">
-                    {navigation.pages.map((page, key) => (
-                      <Link
-                        key={page.name}
-                        href={page.href}
-                        className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-                      >
-                        {page.name}
-                      </Link>
-                    ))}
-                    <Popover className="flex">
-                      {({ open }) => (
-                        <>
-                          <div key={1} className="relative flex">
-                            <Popover.Button
-                              className={classNames(
-                                open
-                                  ? "border-indigo-600 text-indigo-600"
-                                  : "border-transparent text-gray-700 hover:text-gray-800",
-                                "relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out"
-                              )}
-                            >
-                              Collections
-                            </Popover.Button>
-                          </div>
+              {/* Logo */}
+              <div className="flex lg:ml-0">
+                <Link href="/" className="hover:opacity-80 transition-opacity duration-200">
+                  <Image
+                    src={Logo}
+                    alt="Hayzeeonline Computer resources"
+                    width={50}
+                    height={50}
+                    placeholder="blur"
+                    quality={100}
+                    className="rounded-lg"
+                  />
+                </Link>
+              </div>
 
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="transition ease-in duration-150"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
+              {/* Desktop Navigation */}
+              <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch lg:flex-1">
+                <div className="flex h-full ">
+                  {navigation.pages.map((page, key) => (
+                    <Link
+                      key={page.name}
+                      href={page.href}
+                      className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                    >
+                      {page.name}
+                    </Link>
+                  ))}
+                  
+                  {/* Collections Dropdown */}
+                  <Popover className="flex">
+                    {({ open }) => (
+                      <>
+                        <div key={1} className="relative flex">
+                          <Popover.Button
+                            className={classNames(
+                              open
+                                ? "border-blue-500 text-blue-600 bg-blue-50"
+                                : "border-transparent text-gray-700 hover:text-blue-600 hover:bg-blue-50",
+                              "relative z-10 -mb-px flex items-center border-b-2 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg"
+                            )}
                           >
-                            <Popover.Panel className="absolute inset-x-0 top-full text-sm text-gray-500">
-                              {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
-                              <div
-                                className="absolute inset-0 top-1/2 bg-white shadow"
-                                aria-hidden="true"
-                              />
+                            Collections
+                          </Popover.Button>
+                        </div>
 
-                              <div className="relative bg-white">
-                                <div className="mx-auto max-w-7xl px-8">
-                                  <div className="grid  gap-x-8 gap-y-10 py-16">
-                                    <div className="grid grid-cols-2 gap-x-8 gap-y-10 text-sm">
-                                      <div>
-                                        <p
-                                          id={`clothing-heading`}
-                                          className="font-medium text-gray-900"
-                                        >
-                                          Categories
-                                        </p>
-                                        <ul
-                                          role="list"
-                                          aria-labelledby={`clothing-heading`}
-                                          className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
-                                        >
-                                          {!loading &&
-                                            categories.map((category, key) => (
-                                              <li
-                                                className="flow-root"
-                                                key={key}
-                                              >
-                                                <Link
-                                                  href={`/categories/${category.slug}`}
-                                                  className="-m-2 block p-2 text-gray-500"
-                                                  onClose={() => {
-                                                    hideNav();
-                                                  }}
-                                                >
-                                                  {category.name}
-                                                </Link>
-                                              </li>
-                                            ))}
-                                        </ul>
-                                      </div>
-                                      <div>
-                                        <p
-                                          id={`clothing-heading`}
-                                          className="font-medium text-gray-900"
-                                        >
-                                          Brands
-                                        </p>
-                                        <ul
-                                          key={1}
-                                          role="list"
-                                          aria-labelledby={`clothing-heading`}
-                                          className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
-                                        >
-                                          {brands.map((brand, key) => (
-                                            <li className="flex" key={key}>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-200"
+                          enterFrom="opacity-0 translate-y-1"
+                          enterTo="opacity-100 translate-y-0"
+                          leave="transition ease-in duration-150"
+                          leaveFrom="opacity-100 translate-y-0"
+                          leaveTo="opacity-0 translate-y-1"
+                        >
+                          <Popover.Panel className="absolute inset-x-0 top-full text-sm text-gray-500 z-50">
+                            <div
+                              className="absolute inset-0 top-1/2 bg-white shadow-xl rounded-lg"
+                              aria-hidden="true"
+                            />
+
+                            <div className="relative bg-white rounded-lg shadow-xl border border-gray-100">
+                              <div className="mx-auto max-w-7xl px-8">
+                                <div className="grid gap-x-8 gap-y-10 py-16">
+                                  <div className="grid grid-cols-2 gap-x-8 gap-y-10 text-sm">
+                                    <div>
+                                      <p
+                                        id={`clothing-heading`}
+                                        className="font-semibold text-gray-900 text-base mb-6"
+                                      >
+                                        Categories
+                                      </p>
+                                      <ul
+                                        role="list"
+                                        aria-labelledby={`clothing-heading`}
+                                        className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
+                                      >
+                                        {!loading &&
+                                          categories.map((category, key) => (
+                                            <li
+                                              className="flow-root"
+                                              key={key}
+                                            >
                                               <Link
-                                                href={`/brands/${brand.slug}`}
-                                                className="hover:text-gray-800"
+                                                href={`/categories/${category.slug}`}
+                                                className="-m-2 block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                                                onClose={() => {
+                                                  hideNav();
+                                                }}
                                               >
-                                                {brand.name}
+                                                {category.name}
                                               </Link>
                                             </li>
                                           ))}
-                                        </ul>
-                                      </div>
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <p
+                                        id={`brands-heading`}
+                                        className="font-semibold text-gray-900 text-base mb-6"
+                                      >
+                                        Brands
+                                      </p>
+                                      <ul
+                                        key={1}
+                                        role="list"
+                                        aria-labelledby={`brands-heading`}
+                                        className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
+                                      >
+                                        {brands.map((brand, key) => (
+                                          <li className="flex" key={key}>
+                                            <Link
+                                              href={`/brands/${brand.slug}`}
+                                              className="block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                                            >
+                                              {brand.name}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </Popover.Panel>
-                          </Transition>
-                        </>
-                      )}
-                    </Popover>
-                  </div>
-                </Popover.Group>
-                <div className="ml-auto flex items-center">
-                  {/* <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      Sign in
-                    </a>
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      Create account
-                    </a>
-                  </div>
-
-                  <div className="hidden lg:ml-8 lg:flex">
-                    <a
-                      href="#"
-                      className="flex items-center text-gray-700 hover:text-gray-800"
-                    >
-                      <img
-                        src="https://tailwindui.com/img/flags/flag-canada.svg"
-                        alt=""
-                        className="block h-auto w-5 flex-shrink-0"
-                      />
-                      <span className="ml-3 block text-sm font-medium">NG</span>
-                      <span className="sr-only">, change currency</span>
-                    </a>
-                  </div> */}
-
-                  {/* Search */}
-                  <div>
-                    <>
-                      {/* <Link href="/search"> */}
-                      <button
-                        type="primary"
-                        onClick={() => {
-                          showSearchDrawer();
-                        }}
-                        className="group -m-2 flex items-center p-2"
-                        maskClosable={false} // Prevent closing when clicking outside
-                        getContainer={false}
-                      >
-                        <FontAwesomeIcon
-                          icon={faSearch}
-                          className="search-icon bounce text-blue-500 font-thin"
-                        />
-
-                        <span className="text-xs font-semibold text-blue-500 pl-1">
-                          search
-                        </span>
-                      </button>
-                      {/* </Link> */}
-
-                      <Drawer
-                        title="Quick Search"
-                        placement="right"
-                        onClose={onCloseSearch}
-                        open={openSearch}
-                      >
-                        <div className="mt-0 mb-2 flex justify-center text-center text-sm text-gray-500">
-                          <p>
-                            <button
-                              type="button"
-                              className="font-medium text-indigo-600 hover:text-indigo-500"
-                              onClick={onCloseSearch}
-                            >
-                              Back to Menu
-                              <span aria-hidden="true"> &rarr;</span>
-                            </button>
-                          </p>
-                        </div>
-                        <SearchSuggestion onCloseSearch={onCloseSearch} />
-                      </Drawer>
-                    </>
-                  </div>
-
-                  {/* Cart */}
-                  <div className="ml-4 flow-root lg:ml-6">
-                    <>
-                      <button
-                        type="primary"
-                        onClick={showDrawer}
-                        className="group -m-2 flex items-center p-2"
-                      >
-                        <ShoppingBagIcon
-                          className="h-6 w-6 flex-shrink-0 text-blue-400 group-hover:text-blue-500"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-2 text-sm font-medium text-blue-700 group-hover:text-gray-800">
-                          {totalQuantity}
-                        </span>
-                        <span className="sr-only">items in cart, view bag</span>
-                      </button>
-
-                      <Drawer
-                        title="Shopping Cart"
-                        placement="right"
-                        onClose={onCloseCart}
-                        open={openCart}
-                      >
-                        <div className="mt-0 mb-2 flex justify-center text-center text-sm text-gray-500">
-                          <p>
-                            <button
-                              type="button"
-                              className="font-medium text-indigo-600 hover:text-indigo-500"
-                              onClick={onCloseCart}
-                            >
-                              <span aria-hidden="true"> &larr; &nbsp;</span>
-                              Continue Shopping
-                            </button>
-                            {totalQuantity > 0 && (
-                              <Link
-                                onClick={() => {
-                                  onCloseCart();
-                                }}
-                                href="/checkout"
-                                className="font-medium text-indigo-600 hover:text-indigo-500 pl-5"
-                              >
-                                Checkout <span aria-hidden="true"> &rarr;</span>
-                              </Link>
-                            )}
-                          </p>
-                        </div>
-                        <CartQuick />
-                        <div className="mt-0">
-                          <Link
-                            onClick={() => {
-                              onCloseCart();
-                            }}
-                            href="/checkout"
-                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                          >
-                            Checkout
-                          </Link>
-                        </div>
-                      </Drawer>
-                    </>
-                  </div>
-                  <div>
-                    <>
-                      {/* <Link href="/search"> */}
-                      <Link
-                        href="https://hayzeeonline-referral.hayzeeonline.com"
-                        className="group -m-2 flex items-center p-2 pl-2"
-                      >
-                        <span className="text-xs font-semibold text-blue-500 pl-1">
-                          {"  "}
-                        </span>
-                        <UserIcon
-                          className="h-6 w-6 flex-shrink-0  text-blue-400 group-hover:text-blue-500"
-                          aria-hidden="true"
-                        />
-                      </Link>
-                      {/* </Link> */}
-                    </>
-                  </div>
+                            </div>
+                          </Popover.Panel>
+                        </Transition>
+                      </>
+                    )}
+                  </Popover>
                 </div>
+              </Popover.Group>
+
+              {/* Right Side Actions */}
+              <div className="flex items-center space-x-2">
+                {/* Search Button */}
+                <button
+                  type="button"
+                  onClick={showSearchDrawer}
+                  className="group flex items-center p-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                >
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="text-blue-500 w-5 h-5 group-hover:scale-110 transition-transform duration-200"
+                  />
+                  <span className="text-xs font-semibold text-blue-500 ml-2 hidden sm:block">
+                    Search
+                  </span>
+                </button>
+
+                {/* Cart Button */}
+                <button
+                  type="button"
+                  onClick={showDrawer}
+                  className="group relative flex items-center p-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                >
+                  <ShoppingBagIcon
+                    className="h-6 w-6 flex-shrink-0 text-blue-500 group-hover:scale-110 transition-transform duration-200"
+                    aria-hidden="true"
+                  />
+                  {totalQuantity > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                      {totalQuantity}
+                    </span>
+                  )}
+                  <span className="ml-2 text-sm font-medium text-blue-600 group-hover:text-blue-700 hidden sm:block">
+                    Cart
+                  </span>
+                  <span className="sr-only">items in cart, view bag</span>
+                </button>
+
+                {/* User/Account Button */}
+                <Link
+                  href="https://hayzeeonline-referral.hayzeeonline.com"
+                  className="group flex items-center p-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                >
+                  <UserIcon
+                    className="h-6 w-6 flex-shrink-0 text-blue-500 group-hover:scale-110 transition-transform duration-200"
+                    aria-hidden="true"
+                  />
+                  <span className="ml-2 text-xs font-semibold text-blue-500 hidden sm:block">
+                    Account
+                  </span>
+                </Link>
               </div>
             </div>
           </nav>
         </header>
+
+        {/* Search Drawer */}
+        <Drawer
+          title={
+            <div className="flex items-center space-x-2">
+              <FontAwesomeIcon icon={faSearch} className="text-blue-500" />
+              <span>Quick Search</span>
+            </div>
+          }
+          placement="right"
+          onClose={onCloseSearch}
+          open={openSearch}
+          className="search-drawer"
+          width={400}
+        >
+          <div className="mt-0 mb-4 flex justify-center text-center text-sm text-gray-500">
+            <button
+              type="button"
+              className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+              onClick={onCloseSearch}
+            >
+              ← Back to Menu
+            </button>
+          </div>
+          <SearchSuggestion onCloseSearch={onCloseSearch} />
+        </Drawer>
+
+        {/* Cart Drawer */}
+        <Drawer
+          title={
+            <div className="flex items-center space-x-2">
+              <ShoppingBagIcon className="h-5 w-5 text-blue-500" />
+              <span>Shopping Cart</span>
+              {totalQuantity > 0 && (
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
+                  {totalQuantity} items
+                </span>
+              )}
+            </div>
+          }
+          placement="right"
+          onClose={onCloseCart}
+          open={openCart}
+          className="cart-drawer"
+          width={400}
+        >
+          <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
+            <button
+              type="button"
+              className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
+              onClick={onCloseCart}
+            >
+              ← Continue Shopping
+            </button>
+            {totalQuantity > 0 && (
+              <Link
+                onClick={onCloseCart}
+                href="/checkout"
+                className="font-medium text-green-600 hover:text-green-500 transition-colors duration-200"
+              >
+                Checkout →
+              </Link>
+            )}
+          </div>
+          
+          <CartQuick />
+          
+          {totalQuantity > 0 && (
+            <div className="mt-6 pt-4 border-t border-gray-100">
+              <Link
+                onClick={onCloseCart}
+                href="/checkout"
+                className="flex items-center justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-base font-medium text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
+              >
+                Proceed to Checkout
+              </Link>
+            </div>
+          )}
+        </Drawer>
       </div>
     </nav>
   );

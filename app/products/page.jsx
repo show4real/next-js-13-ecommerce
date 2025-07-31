@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function Products() {
   return (
-    <div className="container mx-auto pt-0">
+    <main className="w-full px-4 sm:px-6 lg:px-8 mt-[70px] lg:mt-[150px]">
       <ProductList
         productSection={""}
         brandslug={""}
@@ -20,6 +20,6 @@ export default function Products() {
         shop={true}
         sale_type={""}
       />
-    </div>
+    </main>
   );
 }

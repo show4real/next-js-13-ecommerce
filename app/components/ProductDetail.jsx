@@ -1,14 +1,13 @@
 "use client";
-import { Fragment, useState, useEffect } from "react";
+import {useState, useEffect } from "react";
 import ImageGallery from "react-image-gallery";
 import { Tag, Button, Dropdown, Menu, message, Breadcrumb, Table } from "antd";
 import {
   CheckOutlined,
-  CheckSquareOutlined,
-  LockOutlined,
-  CarOutlined,
   ShareAltOutlined,
   CopyOutlined,
+  PlusOutlined,
+  MinusOutlined,
 } from "@ant-design/icons";
 import {
   getProductImages,
@@ -40,7 +39,7 @@ const ProductDetail = ({ product }) => {
       fetchRelatedProducts();
       fetchProductInfos();
     }
-  }, []);
+  }, [product]);
 
   const fetchImages = () => {
     setLoading(true);
@@ -50,6 +49,7 @@ const ProductDetail = ({ product }) => {
         setLoading(false);
       })
       .catch((error) => {
+        console.error("Error fetching images:", error);
         setLoading(false);
       });
   };
@@ -62,6 +62,7 @@ const ProductDetail = ({ product }) => {
         setLoading(false);
       })
       .catch((error) => {
+        console.error("Error fetching related products:", error);
         setLoading(false);
         setRelatedProducts([]);
       });
@@ -80,7 +81,8 @@ const ProductDetail = ({ product }) => {
       );
       setLoading(false);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching product infos:", err);
+      setLoading(false);
     }
   };
 
@@ -92,12 +94,11 @@ const ProductDetail = ({ product }) => {
   };
 
   const handleViewCart = () => {
-    // window.location.href = "/cart"; // Replace with your desired URL
+    router.push("/checkout");
   };
 
   const handleAddToCart = () => {
     addToCart(product);
-
     router.push("/checkout");
   };
 
@@ -126,36 +127,98 @@ const ProductDetail = ({ product }) => {
   };
 
   const NumberButton = () => {
+    const buttonStyle = {
+      width: '40px',
+      height: '40px',
+      borderRadius: '8px',
+      border: '1px solid #d9d9d9',
+      backgroundColor: '#fff',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      fontSize: '18px',
+      fontWeight: 'bold',
+      color: '#0E1B4D',
+    };
+
+    const minusButtonStyle = {
+      ...buttonStyle,
+      borderColor: '#ff4d4f',
+      color: '#ff4d4f',
+    };
+
+    const plusButtonStyle = {
+      ...buttonStyle,
+      borderColor: '#52c41a',
+      color: '#52c41a',
+    };
+
+    const quantityStyle = {
+      fontSize: '18px',
+      fontWeight: '600',
+      color: '#0E1B4D',
+      minWidth: '40px',
+      textAlign: 'center',
+      margin: '0 12px',
+    };
+
+    const handleMinusClick = () => {
+      if (quantity > 1) {
+        updateCart(product.id, quantity - 1);
+      } else {
+        removeFromCart(product.id);
+      }
+    };
+
+    const handlePlusClick = () => {
+      updateCart(product.id, quantity + 1);
+    };
+
+    const handleMouseEnter = (e, isPlus = false) => {
+      if (isPlus) {
+        e.target.style.backgroundColor = '#52c41a';
+        e.target.style.color = '#fff';
+      } else {
+        e.target.style.backgroundColor = '#ff4d4f';
+        e.target.style.color = '#fff';
+      }
+    };
+
+    const handleMouseLeave = (e, isPlus = false) => {
+      e.target.style.backgroundColor = '#fff';
+      if (isPlus) {
+        e.target.style.color = '#52c41a';
+      } else {
+        e.target.style.color = '#ff4d4f';
+      }
+    };
+
     return (
-      cartItem !== 0 && (
-        <div className="number-button">
-          <div style={{ marginLeft: 10 }}>
-            <Button
-              className="minus-button"
-              //  onClick={() =>
-              //    updateItemQuantity(cartItem.id, cartItem.quantity - 1)
-              //  }
-              onClick={() => {
-                if (quantity > 1) {
-                  updateCart(product.id, quantity - 1);
-                } else {
-                  removeFromCart(product.id);
-                }
-              }}
-            >
-              <span style={{ fontSize: 20 }}>-</span>
-            </Button>
-            <span style={{ paddingLeft: 10, fontSize: 20 }}>
-              {cartItem.quantity}
-            </span>
-            <Button
-              className="plus-button"
-              onClick={() => updateCart(product.id, quantity + 1)}
-              style={{ paddingLeft: 20 }}
-            >
-              <span style={{ fontSize: 20 }}>+</span>
-            </Button>
-          </div>
+      cartItem && (
+        <div className="flex items-center justify-center bg-gray-50 rounded-lg p-3 border">
+          <button
+            style={minusButtonStyle}
+            onClick={handleMinusClick}
+            onMouseEnter={(e) => handleMouseEnter(e, false)}
+            onMouseLeave={(e) => handleMouseLeave(e, false)}
+          >
+            <MinusOutlined />
+          </button>
+          
+          <span style={quantityStyle}>
+            {cartItem.quantity}
+          </span>
+          
+          <button
+            style={plusButtonStyle}
+            onClick={handlePlusClick}
+            onMouseEnter={(e) => handleMouseEnter(e, true)}
+            onMouseLeave={(e) => handleMouseLeave(e, true)}
+          >
+            <PlusOutlined />
+          </button>
         </div>
       )
     );
@@ -165,45 +228,12 @@ const ProductDetail = ({ product }) => {
     return (
       <button
         type="button"
-        className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+        className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-blue-600"
         onClick={handleAddToCart}
       >
         Buy Now
       </button>
     );
-    // const handleCopyLink = () => {
-    //   navigator.clipboard.writeText(window.location.href);
-    //   message.success("Link copied to clipboard");
-    // };
-
-    // const menu = (
-    //   <Menu>
-    //     <Menu.Item key="copy" onClick={handleCopyLink}>
-    //       <CopyOutlined /> {"  "}
-    //       <span
-    //         style={{ paddingLeft: 10, fontWeight: "bold", color: "#0E1B4D" }}
-    //       >
-    //         Click to Copy Link
-    //         <br />
-    //         Then click on the Messenger Button to paste
-    //       </span>
-    //     </Menu.Item>
-    //   </Menu>
-    // );
-
-    // return (
-    //   <Dropdown overlay={menu} placement="bottomRight" arrow>
-    //     <div className="flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-    //       <button
-    //         type="button"
-
-    //         className="inline-flex items-center w-full justify-center rounded-md border-2  bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-blue-500"
-    //       >
-    //         Buy Now
-    //       </button>
-    //     </div>
-    //   </Dropdown>
-    // );
   };
 
   const formatNumber = (number) => {
@@ -215,32 +245,29 @@ const ProductDetail = ({ product }) => {
       <div style={{ display: "flex" }}>
         <span style={{ color: "#0E1B4D", fontWeight: "400" }}>
           <CheckOutlined style={{ color: "#0E1B4D", marginRight: "8px" }} />
-          Pickup available at :{" "}
+          Pickup available at:{" "}
           <ul>
-            <li class="pt-2 pl-3">
+            <li className="pt-2 pl-3">
               {" "}
               𝐒𝐚𝐧𝐠𝐨 𝐎𝐟𝐟𝐢𝐜𝐞: The Polytechnic Ibadan Entrance Gate, Sango. Ibadan,
               Oyo State. <b>08112946602</b>
             </li>
-            <li class="pt-2 pl-3">
+            <li className="pt-2 pl-3">
               {" "}
               𝐈𝐰𝐨 𝐑𝐨𝐚𝐝 𝐎𝐟𝐟𝐢𝐜𝐞: Omoola Motors, Fanawole Street, Behind World Oil,
               Iwo Road. <b>08071024533</b>
             </li>
-            <li class="pt-2 pl-3">
-            <b>Ojoo Office: </b> Shop 3,  Zolo Complex, Olororo Junction (OnileAro), Ojo Road Ibadan  <b>08076420157</b>
+            <li className="pt-2 pl-3">
+              <b>Ojoo Office: </b> Shop 3, Zolo Complex, Olororo Junction (OnileAro), Ojo Road Ibadan <b>08076420157</b>
             </li>
-            <li  class="pt-2 pl-3">
-            {" "} Nationwide Delivery is also Available
+            <li className="pt-2 pl-3">
+              {" "} Nationwide Delivery is also Available
             </li>
           </ul>
-          
         </span>
       </div>
     );
   };
-
-  const productDescription = () => {};
 
   const AdditionalInfo = () => {
     const columns = [
@@ -278,6 +305,10 @@ const ProductDetail = ({ product }) => {
     );
   };
 
+  if (!product) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <section className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
@@ -290,7 +321,7 @@ const ProductDetail = ({ product }) => {
             </nav>
 
             <div className="container mx-auto px-4">
-              <div className="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
+              <div className="lg:col-gap-12 xl:col-gap-16 grid grid-cols-1 gap-12 lg:grid-cols-5 lg:gap-16">
                 <div className="lg:col-span-3 lg:row-end-1">
                   <ImageGallery
                     showPlayButton={false}
@@ -300,7 +331,8 @@ const ProductDetail = ({ product }) => {
                       thumbnail: image,
                     }))}
                   />
-                  <div style={{ marginTop: 20 }} className="mobile-filter">
+                  {/* Uncomment if you want to show additional info on mobile */}
+                  {/* <div style={{ marginTop: 20 }} className="mobile-filter">
                     <h3
                       style={{
                         color: "#0E1B4D",
@@ -312,11 +344,10 @@ const ProductDetail = ({ product }) => {
                       Additional Information
                     </h3>
                     <AdditionalInfo />
-                  </div>
+                  </div> */}
                 </div>
 
-                <div class="lg:col-span-5 lg:row-span-2 lg:row-end-2  ">
-                  {/* lg:max-h-400 overflow-hidden hover:overflow-y-scroll */}
+                <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2">
                   <h5
                     style={{
                       color: "#0E1B4D",
@@ -328,14 +359,13 @@ const ProductDetail = ({ product }) => {
                   <span>
                     {" "}
                     <Tag style={tagStyle}>
-                      {product.availability ? "Stock" : "Sold"}
+                      {product.availability ? "In Stock" : "Sold Out"}
                     </Tag>
                   </span>
                   <h5
                     className="font-bold text-gray-900 text-sm leading-7 lg:text-3xl"
                     style={{
                       color: "#0E1B4D",
-
                       fontFamily: "Archivo, serif",
                     }}
                   >
@@ -357,22 +387,27 @@ const ProductDetail = ({ product }) => {
                     Specifications
                   </h2>
                   <div className="mt-3 flex select-none flex-wrap items-center gap-1">
-                    <label className="">
-                      <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                        {product.storage !== "null" && product.storage} Storage
-                      </p>
-                    </label>
-                    <label className="">
-                      <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                        {product.processor !== "null" && product.processor}{" "}
-                        Processor
-                      </p>
-                    </label>
-                    <label className="">
-                      <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                        {product.ram !== "null" && product.ram} RAM
-                      </p>
-                    </label>
+                    {product.storage && product.storage !== "null" && (
+                      <label className="">
+                        <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                          {product.storage} Storage
+                        </p>
+                      </label>
+                    )}
+                    {product.processor && product.processor !== "null" && (
+                      <label className="">
+                        <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                          {product.processor} Processor
+                        </p>
+                      </label>
+                    )}
+                    {product.ram && product.ram !== "null" && (
+                      <label className="">
+                        <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
+                          {product.ram} RAM
+                        </p>
+                      </label>
+                    )}
                   </div>
                   <div className="mt-5 flex select-none flex-wrap items-center gap-1">
                     <span
@@ -387,11 +422,13 @@ const ProductDetail = ({ product }) => {
                       &#8358;{formatNumber(product.price)}
                     </span>{" "}
                   </div>
+                  
                   {itemInCart.length > 0 && (
                     <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                       <NumberButton />
                     </div>
                   )}
+                  
                   <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                     <button
                       type="button"
@@ -405,7 +442,7 @@ const ProductDetail = ({ product }) => {
                       {itemInCart.length > 0 ? (
                         <Link href="/checkout">View Cart</Link>
                       ) : (
-                        "Add Cart"
+                        "Add to Cart"
                       )}
                     </button>
                   </div>
@@ -413,6 +450,7 @@ const ProductDetail = ({ product }) => {
                   <div className="mt-3">
                     <BuyNow />
                   </div>
+                  
                   <div style={{ marginTop: 30 }}>
                     <PickupLocation />
                     <div
@@ -431,7 +469,7 @@ const ProductDetail = ({ product }) => {
                           padding: "20px",
                           fontSize: 15,
                           fontWeight: 300,
-                          textDecoration: "underlined",
+                          textDecoration: "underline",
                         }}
                         href="#"
                       >

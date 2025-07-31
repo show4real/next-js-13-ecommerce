@@ -41,7 +41,9 @@ export default function ProductGlance({ product, toggle, show }) {
     backgroundColor: "#dd1d84",
     color: "white",
     borderColor: "#dd1d84",
-    margin: "10px 0px 15px 0px",
+    margin: "8px 0px 12px 0px",
+    fontSize: "12px",
+    padding: "2px 8px"
   };
 
   const handleViewCart = () => {
@@ -51,34 +53,28 @@ export default function ProductGlance({ product, toggle, show }) {
   const NumberButton = () => {
     return (
       cartItem !== 0 && (
-        <div className="number-button">
-          <div style={{ marginLeft: 10 }}>
-            <Button
-              className="minus-button"
-              //  onClick={() =>
-              //    updateItemQuantity(cartItem.id, cartItem.quantity - 1)
-              //  }
-              onClick={() => {
-                if (quantity > 1) {
-                  updateCart(product.id, quantity - 1);
-                } else {
-                  removeFromCart(product.id);
-                }
-              }}
-            >
-              <span style={{ fontSize: 20 }}>-</span>
-            </Button>
-            <span style={{ paddingLeft: 10, fontSize: 20 }}>
-              {cartItem.quantity}
-            </span>
-            <Button
-              className="plus-button"
-              onClick={() => updateCart(product.id, quantity + 1)}
-              style={{ paddingLeft: 20 }}
-            >
-              <span style={{ fontSize: 20 }}>+</span>
-            </Button>
-          </div>
+        <div className="flex items-center justify-center bg-gray-50 rounded-lg p-2">
+          <Button
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 border-0"
+            onClick={() => {
+              if (quantity > 1) {
+                updateCart(product.id, quantity - 1);
+              } else {
+                removeFromCart(product.id);
+              }
+            }}
+          >
+            <span className="text-lg font-bold">-</span>
+          </Button>
+          <span className="mx-4 text-lg font-semibold min-w-[24px] text-center">
+            {cartItem.quantity}
+          </span>
+          <Button
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 border-0"
+            onClick={() => updateCart(product.id, quantity + 1)}
+          >
+            <span className="text-lg font-bold">+</span>
+          </Button>
         </div>
       )
     );
@@ -86,7 +82,6 @@ export default function ProductGlance({ product, toggle, show }) {
 
   const handleAddToCart = () => {
     addToCart(product);
-
     router.push("/checkout");
   };
 
@@ -94,53 +89,21 @@ export default function ProductGlance({ product, toggle, show }) {
     return (
       <button
         type="button"
-        className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+        className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         onClick={handleAddToCart}
       >
         Buy Now
       </button>
     );
-    // const handleCopyLink = () => {
-    //   navigator.clipboard.writeText(window.location.href);
-    //   message.success("Link copied to clipboard");
-    // };
-
-    // const menu = (
-    //   <Menu>
-    //     <Menu.Item key="copy" onClick={handleCopyLink}>
-    //       <CopyOutlined /> {"  "}
-    //       <span
-    //         style={{ paddingLeft: 10, fontWeight: "bold", color: "#0E1B4D" }}
-    //       >
-    //         Click to Copy Link
-    //         <br />
-    //         Then click on the Messenger Button to paste
-    //       </span>
-    //     </Menu.Item>
-    //   </Menu>
-    // );
-
-    // return (
-    //   <Dropdown overlay={menu} placement="bottomRight" arrow>
-    //     <div className="flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-    //       <button
-    //         type="button"
-
-    //         className="inline-flex items-center w-full justify-center rounded-md border-2  bg-blue-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-blue-500"
-    //       >
-    //         Buy Now
-    //       </button>
-    //     </div>
-    //   </Dropdown>
-    // );
   };
+
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   return (
     <Transition.Root show={show} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={toggle}>
+      <Dialog as="div" className="relative z-50" onClose={toggle}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -150,141 +113,134 @@ export default function ProductGlance({ product, toggle, show }) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 hidden bg-gray-500 bg-opacity-75 transition-opacity md:block" />
+          <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
-              enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-              enterTo="opacity-100 translate-y-0 md:scale-100"
+              enterFrom="opacity-0 translate-y-4 scale-95"
+              enterTo="opacity-100 translate-y-0 scale-100"
               leave="ease-in duration-200"
-              leaveFrom="opacity-100 translate-y-0 md:scale-100"
-              leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+              leaveFrom="opacity-100 translate-y-0 scale-100"
+              leaveTo="opacity-0 translate-y-4 scale-95"
             >
-              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-4xl">
-                <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
-                  <button
-                    type="button"
-                    className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 sm:right-6 sm:top-8 md:right-6 md:top-6 lg:right-8 lg:top-8"
-                    onClick={toggle}
-                  >
-                    <span className="sr-only">Close</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                  </button>
-                  <section className=" sm:py-16">
-                    <div className="container mx-auto px-4">
-                      <div className="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
-                        <div className="lg:col-span-3 lg:row-end-1">
-                          <ImageGallery
-                            showPlayButton={false}
-                            showNav={true}
-                            items={images.map((image) => ({
-                              original: image,
-                              thumbnail: image,
-                            }))}
-                            originalHeight={"800px"}
-                          />
-                        </div>
+              <Dialog.Panel className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-xl bg-white shadow-2xl">
+                {/* Close Button */}
+                <button
+                  type="button"
+                  className="absolute right-4 top-4 z-10 rounded-full bg-white/80 p-2 text-gray-400 hover:text-gray-600 hover:bg-white transition-colors"
+                  onClick={toggle}
+                >
+                  <span className="sr-only">Close</span>
+                  <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
 
-                        <div className="lg:col-span-5 lg:row-span-2 lg:row-end-2">
-                          <h5
-                            style={{
-                              color: "#0E1B4D",
-                              textTransform: "uppercase",
-                            }}
-                          >
-                            {product.product_type}
-                          </h5>
-                          <span>
-                            {" "}
-                            <Tag style={tagStyle}>
-                              {product.availability ? "Stock" : "Sold"}
-                            </Tag>
+                <div className="grid grid-cols-1 lg:grid-cols-2 max-h-[90vh] overflow-y-auto">
+                  {/* Image Gallery */}
+                  <div className="bg-gray-50 p-6">
+                    <div className="aspect-square">
+                      <ImageGallery
+                        showPlayButton={false}
+                        showNav={true}
+                        showThumbnails={images.length > 1}
+                        items={images.map((image) => ({
+                          original: image,
+                          thumbnail: image,
+                        }))}
+                        additionalClass="rounded-lg overflow-hidden"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Product Details */}
+                  <div className="p-6 flex flex-col">
+                    {/* Product Type */}
+                    <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
+                      {product.product_type}
+                    </div>
+
+                    {/* Availability Tag */}
+                    <Tag style={tagStyle}>
+                      {product.availability ? "In Stock" : "Sold Out"}
+                    </Tag>
+
+                    {/* Product Name */}
+                    <h1 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
+                      {product.name}
+                    </h1>
+
+                    {/* Price */}
+                    <div className="mb-6">
+                      <span className="text-3xl font-bold text-gray-900">
+                        &#8358;{formatNumber(product.price)}
+                      </span>
+                    </div>
+
+                    {/* Specifications */}
+                    <div className="mb-6">
+                      <h3 className="text-sm font-semibold text-gray-900 mb-3">Specifications</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {product.storage && product.storage !== "null" && (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {product.storage} Storage
                           </span>
-                          <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl">
-                            {product.name}
-                          </h1>
-                          <h2 className="mt-8 text-base text-gray-900">
-                            Specifications
-                          </h2>
-                          <div className="mt-3 flex select-none flex-wrap items-center gap-1">
-                            <label className="">
-                              <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                                {product.storage !== "null" && product.storage}{" "}
-                                Storage
-                              </p>
-                            </label>
-                            <label className="">
-                              <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                                {product.processor !== "null" &&
-                                  product.processor}{" "}
-                                Processor
-                              </p>
-                            </label>
-                            <label className="">
-                              <p className="bg-white text-black rounded-lg border border-black px-3 py-2 font-medium">
-                                {product.ram !== "null" && product.ram} RAM
-                              </p>
-                            </label>
-                          </div>
-                          <div className="mt-5 flex select-none flex-wrap items-center gap-1">
-                            <span
-                              style={{
-                                fontSize: 30,
-                                paddingLeft: 10,
-                                color: "#0E1B4D",
-                                fontWeight: 800,
-                                fontFamily: "Archivo, serif",
-                              }}
-                            >
-                              &#8358;{formatNumber(product.price)}
-                            </span>{" "}
-                          </div>
-                          {itemInCart.length > 0 && (
-                            <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                              <NumberButton />
-                            </div>
-                          )}
-
-                          <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                            <button
-                              type="button"
-                              className="inline-flex w-full items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
-                              onClick={
-                                itemInCart.length === 0
-                                  ? () => addToCart(product)
-                                  : handleViewCart
-                              }
-                            >
-                              {itemInCart.length > 0 ? (
-                                <Link href="/checkout">View Cart</Link>
-                              ) : (
-                                "Add Cart"
-                              )}
-                            </button>
-                          </div>
-
-                          <div className="mt-3 flex flex-col justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
-                            <Link href={`/products/${product.slug}`}>
-                              <button
-                                type="button"
-                                className="inline-flex items-center w-full justify-center rounded-md border-2  bg-white bg-none px-12 py-3 text-center text-base font-bold text-black transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 hover:text-white border-black"
-                              >
-                                {" "}
-                                See Details
-                              </button>
-                            </Link>
-                          </div>
-                          <div className="mt-3">
-                            <BuyNow />
-                          </div>
-                        </div>
+                        )}
+                        {product.processor && product.processor !== "null" && (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {product.processor} Processor
+                          </span>
+                        )}
+                        {product.ram && product.ram !== "null" && (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {product.ram} RAM
+                          </span>
+                        )}
                       </div>
                     </div>
-                  </section>
+
+                    {/* Quantity Controls (if item is in cart) */}
+                    {itemInCart.length > 0 && (
+                      <div className="mb-4">
+                        <NumberButton />
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="space-y-3 mt-auto">
+                      {/* Add to Cart / View Cart */}
+                      <button
+                        type="button"
+                        className="w-full rounded-lg bg-gray-900 hover:bg-gray-800 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        onClick={
+                          itemInCart.length === 0
+                            ? () => addToCart(product)
+                            : handleViewCart
+                        }
+                      >
+                        {itemInCart.length > 0 ? (
+                          <Link href="/checkout" className="block">View Cart</Link>
+                        ) : (
+                          "Add to Cart"
+                        )}
+                      </button>
+
+                      {/* Buy Now */}
+                      <BuyNow />
+
+                      {/* See Details */}
+                      <Link href={`/products/${product.slug}`} className="block">
+                        <button
+                          type="button"
+                          className="w-full rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-900 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        >
+                          See Details
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

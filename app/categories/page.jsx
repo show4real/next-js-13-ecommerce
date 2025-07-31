@@ -3,7 +3,7 @@ import CategoryList from "/app/components/CategoryList";
 
 export default function Categories() {
   return (
-    <main className="mx-auto max-w-2xl px-4 py-16 sm:px-7 sm:py-24 lg:max-w-7xl lg:px-8">
+    <main className="mt-[120px] md:mt-[120px] md:px-[120px]">
       <h2 className="text-2xl font-bold text-gray-900 capitalize mt-5 md:mt-0 lg:mt-0 xl:mt-0">
         Categories
       </h2>

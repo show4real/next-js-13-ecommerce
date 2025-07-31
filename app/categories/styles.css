@@ -1,14 +1,192 @@
-/* Add your other styles here */
-.slide-item {
-    padding: 5px;
-    /* Adjust the padding as needed */
+/* CategorySlider Custom Styles */
+
+/* Custom Dots Styling */
+.custom-dots {
+  bottom: -50px !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-@media screen and (max-width: 767px) {
+.custom-dots li {
+  margin: 0 !important;
+  padding: 4px;
+  cursor: pointer;
+}
 
-    /* Apply specific styles for mobile devices */
-    .slide-item {
-        padding: 10px;
-        /* Adjust the padding for mobile devices */
-    }
+.custom-dots li button {
+  display: none;
+}
+
+/* Slider Container Improvements */
+.slick-slider {
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.slick-list {
+  overflow: hidden;
+  margin: 0 -8px;
+}
+
+.slick-track {
+  display: flex;
+  align-items: flex-start;
+}
+
+.slick-slide {
+  height: auto;
+  outline: none;
+}
+
+.slick-slide > div {
+  height: 100%;
+}
+
+/* Arrow positioning adjustments */
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+/* Flash Sale Animation */
+@keyframes flash-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.flash-badge {
+  animation: flash-pulse 2s infinite;
+}
+
+/* Card hover effects */
+.flash-sale-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flash-sale-card:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+/* Gradient text effect */
+.gradient-text {
+  /*background: linear-gradient(135deg, #ef4444, #ec4899);*/
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Loading animation improvements */
+@keyframes spin-glow {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 0 rgba(239, 68, 68, 0.5);
+  }
+}
+
+.loading-spinner {
+  animation: spin-glow 1s linear infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .custom-dots {
+    bottom: -40px !important;
+    gap: 6px;
+  }
+  
+  .slick-slider {
+    margin-bottom: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-dots {
+    bottom: -35px !important;
+    gap: 4px;
+  }
+  
+  .slick-slider {
+    margin-bottom: 45px;
+  }
+}
+
+/* Background pattern */
+.flash-sale-bg {
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(251, 146, 60, 0.1) 0%, transparent 50%);
+}
+
+/* Smooth scroll behavior for mobile */
+.slick-list {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for touch devices */
+.slick-track::-webkit-scrollbar {
+  display: none;
+}
+
+.slick-track {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Stock indicator animation */
+@keyframes stock-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.stock-indicator {
+  animation: stock-pulse 2s infinite;
+}
+
+/* Quick view button animation */
+.quick-view-btn {
+  transform: translateY(10px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.group:hover .quick-view-btn {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Discount badge rotation */
+@keyframes badge-wiggle {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.discount-badge:hover {
+  animation: badge-wiggle 0.5s ease-in-out;
 }

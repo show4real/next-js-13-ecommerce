@@ -5,10 +5,11 @@ import {
   getCategories,
   getAllCats,
   getCategoryProducts,
+  getAllSearchProducts,
 } from "../services/productService";
-import React, { useState, useEffect } from "react";
-import { Button, Drawer, Space, Row, Pagination } from "antd";
-import { MenuUnfoldOutlined, DownOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useMemo } from "react";
+import { Button, Drawer, Space, Row, Pagination, Slider, Checkbox, Radio, Card } from "antd";
+import { MenuUnfoldOutlined, DownOutlined, FilterOutlined, CloseOutlined } from "@ant-design/icons";
 import ProductCard from "/app/components/ProductCard";
 import CarouselHolder from "/app/products/CarouselHolder";
 import PriceSelect from "/app/components/PriceSelect";
@@ -22,24 +23,17 @@ import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
 import { sort } from "fast-sort";
-
 import { Select } from "antd";
 
-const suggestions = [
-  "dell laptop",
-  "dell inspiron",
-  "hp 1030 g4",
-  "hp 1030 g3",
-  "dell latitued",
-  "apple m1",
-];
+const { Option } = Select;
 
 export default function SearchList({ search }) {
   const [products, setProducts] = useState([]);
-
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  
   const [rows, setRows] = useState(100);
   const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(products.length);
+  const [total, setTotal] = useState(0);
 
   const [brands, setBrands] = useState([]);
   const [storages, setStorages] = useState([]);
@@ -49,54 +43,68 @@ export default function SearchList({ search }) {
   const [sort_value, setSorting] = useState("availability");
   const [price, setPrice] = useState([4000, 5000000]);
   const [search_all, setSearch] = useState(search.trim());
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [newLoading, setNewLoading] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const [mobileFilter, setFilter] = useState(false);
-  const [filterPosition, setFilterPosition] = useState("left");
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  // Filter states
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedRam, setSelectedRam] = useState([]);
+  const [selectedProcessors, setSelectedProcessors] = useState([]);
+  const [priceRange, setPriceRange] = useState([4000, 5000000]);
+  const [sortBy, setSortBy] = useState("name");
 
-  const showFilter = () => {
-    setFilter(true);
-  };
+  // Mock data for filters (since we're not connecting to backend)
+  const mockCategories = [
+    { id: 1, name: "Laptop UltraBook", count: 45 },
+    { id: 2, name: "Laptop GAMING", count: 23 },
+    { id: 3, name: "Laptop Convertible / Detachable", count: 18 },
+    { id: 4, name: "Desktop", count: 67 },
+    { id: 5, name: "Phone Iphone", count: 67 },
+    { id: 6, name: "Phone Global", count: 67 },
+    { id: 7, name: "Phone Samsung", count: 67 },
+    { id: 8, name: "Accessories", count: 34 }
+  ];
 
-  const onCloseFilter = () => {
-    setFilter(false);
-  };
+  const mockRamOptions = [
+    { value: "4GB", count: 12 },
+    { value: "8GB", count: 28 },
+    { value: "16GB", count: 35 },
+    { value: "32GB", count: 18 },
+    { value: "64GB", count: 7 }
+  ];
+
+  const mockProcessors = [
+    { value: "Intel Core i3", count: 15 },
+    { value: "Intel Core i5", count: 32 },
+    { value: "Intel Core i7", count: 28 },
+    { value: "Intel Core i9", count: 12 },
+    { value: "AMD Ryzen 5", count: 22 },
+    { value: "AMD Ryzen 7", count: 18 },
+    { value: "AMD Ryzen 9", count: 8 },
+    { value:"Apple Chip M1", count:0},
+    { value:"Apple Chip M2", count:0},
+  ];
 
   useEffect(() => {
     fetchProducts();
-
     fetchBrands();
     fetchCategories();
-  }, [brand, rams, storages, processors, category, rows, page]);
+  }, []);
+
+  useEffect(() => {
+    applyFilters();
+  }, [products, selectedCategories, selectedRam, selectedProcessors, priceRange, sortBy]);
 
   const fetchProducts = async () => {
     setLoading(true);
-
     try {
-      const res = await getSearchProducts({
-        page,
-        rows,
-        price,
-        brand,
-        rams,
-
-        storages,
-        processors,
-        category,
+      const res = await getAllSearchProducts({
         search_all,
       });
-      setProducts(res.products.data);
-      //setProducts((prevProducts) => [...prevProducts, ...res.products.data]);
-      setTotal(products.length);
+      setProducts(res.products);
       setLoading(false);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 3000);
     } catch (error) {
       setLoading(false);
     }
@@ -108,9 +116,6 @@ export default function SearchList({ search }) {
       (res) => {
         setBrands(res.brands);
         setLoading(false);
-        // setTimeout(() => {
-        //   setLoading(false);
-        // }, 3000);
       },
       (error) => {
         setLoading(false);
@@ -124,9 +129,6 @@ export default function SearchList({ search }) {
       (res) => {
         setCategories(res.categories);
         setLoading(false);
-        // setTimeout(() => {
-        //   setLoading(false);
-        // }, 3000);
       },
       (error) => {
         setLoading(false);
@@ -134,304 +136,311 @@ export default function SearchList({ search }) {
     );
   };
 
-  const handlePrice = (newPrice) => {
-    setPrice(newPrice);
-  };
+  const applyFilters = () => {
+    let filtered = [...products];
 
-  // const handleSearch = (event) => {
-  //   const value = event.target.value;
-  //   setSearch(value);
-  // };
+    // Apply category filter
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(product => 
+        selectedCategories.includes(product.category)
+      );
+    }
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    const filtered = suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(value.toLowerCase())
+    // Apply RAM filter
+    if (selectedRam.length > 0) {
+      filtered = filtered.filter(product => 
+        selectedRam.includes(product.ram)
+      );
+    }
+
+    // Apply processor filter
+    if (selectedProcessors.length > 0) {
+      filtered = filtered.filter(product => 
+        selectedProcessors.includes(product.processor)
+      );
+    }
+
+    // Apply price filter
+    filtered = filtered.filter(product => 
+      product.price >= priceRange[0] && product.price <= priceRange[1]
     );
-    setFilteredSuggestions(filtered);
+
+    // Apply sorting
+    switch (sortBy) {
+      case "price-low":
+        filtered = sort(filtered).asc(p => p.price);
+        break;
+      case "price-high":
+        filtered = sort(filtered).desc(p => p.price);
+        break;
+      case "name":
+        filtered = sort(filtered).asc(p => p.name);
+        break;
+      case "newest":
+        filtered = sort(filtered).desc(p => new Date(p.created_at));
+        break;
+      default:
+        break;
+    }
+
+    setFilteredProducts(filtered);
+    setTotal(filtered.length);
   };
 
-  const handleStorage = (selectedOptions) => {
-    setStorages(selectedOptions);
+  const clearAllFilters = () => {
+    setSelectedCategories([]);
+    setSelectedRam([]);
+    setSelectedProcessors([]);
+    setPriceRange([4000, 5000000]);
+    setSortBy("name");
   };
 
-  const handleBrand = (value) => {
-    setBrand(value);
-  };
+  const FilterSidebar = () => (
+    <div className="w-full">
+      {/* Filter Header */}
+      <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+        <Button 
+          type="text" 
+          size="small" 
+          onClick={clearAllFilters}
+          className="text-blue-600 hover:text-blue-800"
+        >
+          Clear All
+        </Button>
+      </div>
 
-  const handleCategory = (value) => {
-    setCategory(value);
-  };
+      {/* Categories Filter */}
+      <div className="mb-8">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Categories</h4>
+        <div className="space-y-2">
+          {mockCategories.map((category) => (
+            <label key={category.id} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+              <Checkbox
+                checked={selectedCategories.includes(category.name)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedCategories([...selectedCategories, category.name]);
+                  } else {
+                    setSelectedCategories(selectedCategories.filter(c => c !== category.name));
+                  }
+                }}
+                className="mr-3"
+              />
+              <span className="text-sm text-gray-700 flex-1">{category.name}</span>
+              {/* <span className="text-xs text-gray-500">({category.count})</span> */}
+            </label>
+          ))}
+        </div>
+      </div>
 
-  const handleProcessor = (selectedOptions) => {
-    setProcessors(selectedOptions);
-  };
+      {/* RAM Filter */}
+      <div className="mb-8">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">RAM</h4>
+        <div className="space-y-2">
+          {mockRamOptions.map((ram) => (
+            <label key={ram.value} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+              <Checkbox
+                checked={selectedRam.includes(ram.value)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedRam([...selectedRam, ram.value]);
+                  } else {
+                    setSelectedRam(selectedRam.filter(r => r !== ram.value));
+                  }
+                }}
+                className="mr-3"
+              />
+              <span className="text-sm text-gray-700 flex-1">{ram.value}</span>
+              {/* <span className="text-xs text-gray-500">({ram.count})</span> */}
+            </label>
+          ))}
+        </div>
+      </div>
 
-  const handleRam = (selectedOptions) => {
-    setRams(selectedOptions);
-  };
+      {/* Processor Filter */}
+      <div className="mb-8">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Processor</h4>
+        <div className="space-y-2">
+          {mockProcessors.map((processor) => (
+            <label key={processor.value} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+              <Checkbox
+                checked={selectedProcessors.includes(processor.value)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedProcessors([...selectedProcessors, processor.value]);
+                  } else {
+                    setSelectedProcessors(selectedProcessors.filter(p => p !== processor.value));
+                  }
+                }}
+                className="mr-3"
+              />
+              <span className="text-sm text-gray-700 flex-1">{processor.value}</span>
+              {/* <span className="text-xs text-gray-500">({processor.count})</span> */}
+            </label>
+          ))}
+        </div>
+      </div>
 
-  const handleSorting = (sort_value) => {
-    setSorting(sort_value);
-  };
-  const onPage = async (page, rows) => {
-    setPage(page);
-    setRows(rows);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    await fetchProducts();
-  };
-
-  const AllFilter = () => {
-    return (
-      <>
-        <div>
-          <CategorySelect
-            categories={categories}
-            category={category}
-            handleCategory={handleCategory}
+      {/* Price Filter */}
+      <div className="mb-8">
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
+        <div className="px-2">
+          <Slider
+            range
+            min={0}
+            max={10000000}
+            step={1000}
+            value={priceRange}
+            onChange={setPriceRange}
+            className="mb-4"
           />
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>₦{priceRange[0].toLocaleString()}</span>
+            <span>₦{priceRange[1].toLocaleString()}</span>
+          </div>
         </div>
-        <div>
-          <BrandSelect
-            brands={brands}
-            brand={brand}
-            handleBrand={handleBrand}
-          />
-        </div>
-        <div>
-          <StorageSelect storages={storages} handleStorage={handleStorage} />
-        </div>
-        <div>
-          <RamSelect rams={rams} handleRam={handleRam} />
-        </div>
-        <div>
-          <ProcessorSelect
-            processors={processors}
-            handleProcessor={handleProcessor}
-          />
-        </div>
-      </>
-    );
-  };
+      </div>
+    </div>
+  );
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-0 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <SocialIconMenu />
+    <div className="bg-gray-50 min-h-screen" style={{marginTop:100}}>
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Search Results for {search}
+          </h1>
+          <p className="text-gray-600">
+            {loading ? "Loading..." : `${total} products found`}
+          </p>
+        </div>
 
-        {loading && <CarouselHolder />}
-        {!loading && (
-          <>
-            {console.log(
-              sort(products).asc((item) => new Date(item.created_at))
-            )}
-            <div>
-              <div className="grid grid-cols-6 justify-center pt-8 pb-5">
-                <div className="col-start-2 col-span-4">
-                  <SearchSelect
-                    search_all={search_all}
-                    handleSearch={handleSearch}
-                    fetchProducts={fetchProducts}
-                    filteredSuggestions={filteredSuggestions}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="lg:hidden md:hidden xl:hidden ">
-              <div>
-                <h2 className="text-sm font-medium tracking-tight text-gray-700 pt-3 pb-4 text-center">
-                  Search Result for{" "}
-                  <span className="text-orange-400 capitalize">
-                    {search_all} {products.length}
-                  </span>{" "}
-                  products
-                </h2>
-              </div>
-              <div>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Desktop Sidebar */}
+          <div className="hidden lg:block w-80 flex-shrink-0">
+            <Card className="sticky top-6 shadow-sm">
+              <FilterSidebar />
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Mobile Filter Button & Sort */}
+            <div className="flex items-center justify-between mb-6 lg:justify-end">
+              <Button
+                type="primary"
+                icon={<FilterOutlined />}
+                onClick={() => setMobileFiltersOpen(true)}
+                className="lg:hidden"
+              >
+                Filters
+              </Button>
+              
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-600">Sort by:</span>
                 <Select
-                  placeholder={
-                    <span style={{ fontWeight: "bold" }}>Sort By</span>
-                  }
-                  placement="bottomLeft"
-                  style={{
-                    border: "none",
-                    boxShadow: "none",
-                    height: 35,
-                  }}
-                  value={sort_value}
-                  onChange={handleSorting}
-                  dropdownStyle={{ minWidth: 300, textAlign: "center" }}
+                  value={sortBy}
+                  onChange={setSortBy}
+                  className="w-40"
+                  size="large"
                 >
-                  <option value="availability">Availability</option>
-                  <option value="name-asc">Alphabetically, A-Z</option>
-                  <option value="name-desc">Alphabetically, Z-A</option>
-                  <option value="low-price">Price, low to high</option>
-                  <option value="high-price">Price, high to low</option>
+                  <Option value="name">Name A-Z</Option>
+                  <Option value="price-low">Price: Low to High</Option>
+                  <Option value="price-high">Price: High to Low</Option>
+                  <Option value="newest">Newest First</Option>
                 </Select>
               </div>
-              <>
-                <Space>
-                  <div className="mobile-off-canvas d-block d-lg-none pt-10 ">
-                    <div>
-                      <Button
-                        onClick={showFilter}
-                        style={{
-                          backgroundColor: "",
-                          // color: "#0E1B4D",
-                          paddingTop: 0,
-                          // borderColor: "#0E1B4D",
-                        }}
-                      >
-                        {/* <MenuUnfoldOutlined /> */}
-                        <span className="font-medium pt-1 text-small">
-                          Show Product Filter
-                        </span>
-                        <DownOutlined
-                          onClick={showFilter}
-                          style={{ paddingLeft: 5, bottom: 20 }}
-                        />
-                      </Button>
-                    </div>
-                  </div>
-                </Space>
-                <Drawer
-                  title="Filter Products"
-                  placement={filterPosition}
-                  width={330}
-                  onClose={onCloseFilter}
-                  open={mobileFilter}
-                >
-                  <div className="flex flex-col space-y-11">
-                    <div>
-                      <PriceSelect
-                        price={price}
-                        handlePrice={handlePrice}
-                        fetchProducts={fetchProducts}
+            </div>
+
+            {/* Active Filters Display */}
+            {(selectedCategories.length > 0 || selectedRam.length > 0 || selectedProcessors.length > 0) && (
+              <div className="mb-6 p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-center flex-wrap gap-2">
+                  <span className="text-sm font-medium text-gray-700 mr-2">Active filters:</span>
+                  
+                  {selectedCategories.map(category => (
+                    <span key={category} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {category}
+                      <CloseOutlined 
+                        className="ml-1 cursor-pointer" 
+                        onClick={() => setSelectedCategories(selectedCategories.filter(c => c !== category))}
                       />
-                    </div>
-                    <AllFilter />
+                    </span>
+                  ))}
+                  
+                  {selectedRam.map(ram => (
+                    <span key={ram} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {ram}
+                      <CloseOutlined 
+                        className="ml-1 cursor-pointer" 
+                        onClick={() => setSelectedRam(selectedRam.filter(r => r !== ram))}
+                      />
+                    </span>
+                  ))}
+                  
+                  {selectedProcessors.map(processor => (
+                    <span key={processor} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                      {processor}
+                      <CloseOutlined 
+                        className="ml-1 cursor-pointer" 
+                        onClick={() => setSelectedProcessors(selectedProcessors.filter(p => p !== processor))}
+                      />
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Products Grid - Updated for mobile two columns */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+              {!loading &&
+                filteredProducts.map((product, key) => (
+                  <div key={key} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <ProductCard product={product} />
                   </div>
-                </Drawer>
-              </>
+                ))}
             </div>
-            <div className="hidden lg:grid lg:grid-cols-3 md:grid md:grid-cols-3 xl:grid xl:grid-cols-3 gap-8 pt-5">
-              <div>
-                <PriceSelect
-                  price={price}
-                  handlePrice={handlePrice}
-                  fetchProducts={fetchProducts}
-                />
-              </div>
-              <AllFilter />
 
-              <Select
-                placeholder={
-                  <span style={{ fontWeight: "bold" }}>Sort By</span>
-                }
-                placement="bottomLeft"
-                style={{ border: "none", boxShadow: "none", height: 35 }}
-                value={sort_value}
-                onChange={handleSorting}
-                dropdownStyle={{ minWidth: 300, textAlign: "center" }}
-                className="w-full"
-              >
-                <option value="availability">Availability</option>
-                <option value="name-asc">Alphabetically, A-Z</option>
-                <option value="name-desc">Alphabetically, Z-A</option>
-                <option value="low-price">Price, low to high</option>
-                <option value="high-price">Price, high to low</option>
-                {/* <option value="date-asc">Date, old to new</option>
-                <option value="date-desc">Date, new to old</option> */}
-              </Select>
-              <div>
-                <h2 className="text-sm md:text-lg font-medium tracking-tight text-gray-500 mt-16">
-                  Search Result for {search_all} {products.length} products
-                </h2>
-              </div>
-            </div>
-          </>
-        )}
-
-        <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {!loading &&
-            sort_value == "availability" &&
-            sort(products)
-              .desc((item) => item.availability == 1)
-              .map((product, key) => (
-                <ProductCard product={product} key={key} />
-              ))}
-          {!loading &&
-            sort_value == "name-asc" &&
-            sort(products)
-              .asc((item) => item.name)
-              .map((product, key) => (
-                <ProductCard product={product} key={key} />
-              ))}
-          {!loading &&
-            sort_value == "name-desc" &&
-            sort(products)
-              .desc((item) => item.name)
-              .map((product, key) => (
-                <ProductCard product={product} key={key} />
-              ))}
-          {!loading &&
-            sort_value == "low-price" &&
-            sort(products)
-              .asc((item) => item.price)
-              .map((product, key) => (
-                <ProductCard product={product} key={key} />
-              ))}
-          {!loading &&
-            sort_value == "high-price" &&
-            sort(products)
-              .desc((item) => item.price)
-              .map((product, key) => (
-                <ProductCard product={product} key={key} />
-              ))}
-        </div>
-        <div>
-          {newLoading && (
-            <div style={{ textAlign: "center" }}>
-              <div className="flex justify-center items-center">
+            {/* Loading State */}
+            {loading && (
+              <div className="flex justify-center items-center py-20">
                 <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500 border-r-2 border-b-2"></div>
               </div>
-            </div>
-          )}
-          {!loading && products.length > 0 && (
-            <div
-              style={{
-                textAlign: "center",
+            )}
 
-                alignItems: "center",
-              }}
-            >
-              {/* <button onClick={handleLoadMore} className="load-more-button">
-                  Load More
-                </button> */}
-            </div>
-          )}
+            {/* No Results */}
+            {!loading && filteredProducts.length === 0 && (
+              <div className="text-center py-20">
+                <div className="text-gray-400 text-6xl mb-4">
+                  <i className="fa fa-search" />
+                </div>
+                <h3 className="text-xl font-medium text-gray-900 mb-2">No products found</h3>
+                <p className="text-gray-600 mb-4">
+                  Try adjusting your filters or search terms
+                </p>
+                <Button type="primary" onClick={clearAllFilters}>
+                  Clear All Filters
+                </Button>
+              </div>
+            )}
 
-          {/* {products.length > 0 && (
-            <Pagination
-              total={total}
-              showTotal={(total) => `Total ${total} Products`}
-              onChange={onPage}
-              pageSize={rows}
-              current={page}
-            />
-          )} */}
-          {!loading && products.length < 1 && (
-            <div className="text-gray-200 font-md p-16 justify-center">
-              <i className="fa fa-ban" style={{ marginRight: 5 }} />
-              No Products found
-            </div>
-          )}
+           
+          </div>
         </div>
+
+        {/* Mobile Filter Drawer */}
+        <Drawer
+          title="Filters"
+          placement="left"
+          onClose={() => setMobileFiltersOpen(false)}
+          open={mobileFiltersOpen}
+          width={300}
+          className="lg:hidden"
+        >
+          <FilterSidebar />
+        </Drawer>
       </div>
     </div>
   );

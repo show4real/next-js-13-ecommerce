@@ -1,0 +1,130 @@
+/* styles/filters.css */
+
+/* Custom Pagination Styles */
+.custom-pagination .ant-pagination-item {
+  @apply border-gray-300 rounded-lg;
+}
+
+.custom-pagination .ant-pagination-item-active {
+  @apply bg-blue-600 border-blue-600;
+}
+
+.custom-pagination .ant-pagination-item-active a {
+  @apply text-white;
+}
+
+.custom-pagination .ant-pagination-item:hover {
+  @apply border-blue-500;
+}
+
+.custom-pagination .ant-pagination-item:hover a {
+  @apply text-blue-600;
+}
+
+.custom-pagination .ant-pagination-prev,
+.custom-pagination .ant-pagination-next {
+  @apply rounded-lg;
+}
+
+.custom-pagination .ant-pagination-prev:hover,
+.custom-pagination .ant-pagination-next:hover {
+  @apply border-blue-500;
+}
+
+.custom-pagination .ant-pagination-prev:hover .ant-pagination-item-link,
+.custom-pagination .ant-pagination-next:hover .ant-pagination-item-link {
+  @apply text-blue-600;
+}
+
+/* Custom Drawer Styles */
+.ant-drawer-header {
+  @apply bg-gray-50 border-b border-gray-200;
+}
+
+.ant-drawer-body {
+  @apply bg-white;
+}
+
+/* Custom scrollbar for dropdowns */
+.max-h-60::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-60::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+.max-h-60::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+.max-h-60::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Smooth animations */
+.filter-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.filter-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.filter-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.filter-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 200ms, transform 200ms;
+}
+
+/* Tag animations */
+.tag-enter {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.tag-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 150ms, transform 150ms;
+}
+
+.tag-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tag-exit-active {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 150ms, transform 150ms;
+}
+
+/* Loading skeleton animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive grid improvements */
+@media (max-width: 640px) {
+  .grid-cols-2 {
+    gap: 0.75rem;
+  }
+}
