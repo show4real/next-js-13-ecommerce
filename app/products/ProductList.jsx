@@ -331,7 +331,7 @@ export default function ProductList({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SocialIconMenu categoryslug="" brandslug="" flash_sale={flash_sale} notice={notice} />
         <div className="mb-8">
-          <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6">{productSection}</h3>
+          <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 pt-5">{productSection}</h3>
           <div className="lg:hidden mb-6">
             <button onClick={() => setFilter(true)} className="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 shadow-sm">
               <FunnelIcon className="h-5 w-5 mr-2" />
