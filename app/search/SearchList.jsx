@@ -53,7 +53,7 @@ export default function SearchList({ search }) {
   const [selectedRam, setSelectedRam] = useState([]);
   const [selectedProcessors, setSelectedProcessors] = useState([]);
   const [priceRange, setPriceRange] = useState([4000, 5000000]);
-  const [sortBy, setSortBy] = useState("name");
+  const [sortBy, setSortBy] = useState(null);
 
   // Mock data for filters (since we're not connecting to backend)
   const mockCategories = [
@@ -346,10 +346,11 @@ export default function SearchList({ search }) {
                   className="w-40"
                   size="large"
                 >
+                  <Option value="newest">Newest First</Option>
                   <Option value="name">Name A-Z</Option>
                   <Option value="price-low">Price: Low to High</Option>
                   <Option value="price-high">Price: High to Low</Option>
-                  <Option value="newest">Newest First</Option>
+                  
                 </Select>
               </div>
             </div>

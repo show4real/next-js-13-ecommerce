@@ -171,7 +171,7 @@ const SearchSuggestion = ({ onCloseSearch }) => {
                           <div className="ml-4 flex-1 min-w-0">
                             <div className="flex items-start justify-between">
                               <div className="flex-1 min-w-0">
-                                <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+                                <h3 className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
                                   {product.name}
                                 </h3>
                                 <p className="text-xs text-gray-500 mt-1">
