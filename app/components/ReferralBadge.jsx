@@ -181,13 +181,10 @@ const ReferralBadge = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="mr-2 hover:underline"
-            onClick={handleOpenModal}
           >
             Chat Telegram
           </a>
-          <div className="cursor-pointer" onClick={handleCloseBadge}>
-            <FontAwesomeIcon icon={faTimes} />
-          </div>
+          
         </div>
       )}
       {showModal && (

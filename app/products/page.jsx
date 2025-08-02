@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import ProductList from "./ProductList";
 
 export const metadata = {
-  title: "Uk Used Laptops Mobile Phones at Affordable Prices",
+  title: "US used / Uk used Laptops Mobile Phones at Affordable Prices",
   openGraph: {
-    title: "UK used Gadgets and Appliances at Affordable prices",
+    title: "US used / Uk used Gadgets and Appliances at Affordable prices",
     description:
-      "Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+      "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
   },
 };
 

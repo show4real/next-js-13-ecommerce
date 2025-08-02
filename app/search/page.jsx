@@ -1,16 +1,16 @@
 import SearchList from "./SearchList";
 
 export const metadata = {
-  title: "Uk Used Laptops Mobile Phones at Affordable Prices",
+  title: "US used / Uk used Laptops Mobile Phones at Affordable Prices",
   description:
-    "Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+    "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
   keywords: [
     "HP",
     "Dell",
     "lenovo",
     "gaming laptops",
     "convertible laptops",
-    "uk used laptops",
+    "US used / Uk used laptops",
     "fairly used laptops in ibadan",
     "refurbished laptops",
     "cheap laptops",
@@ -20,9 +20,9 @@ export const metadata = {
     "search your preferred gadgets",
   ],
   openGraph: {
-    title: "UK used Gadgets and Appliances at Affordable prices",
+    title: "US used / Uk used Gadgets and Appliances at Affordable prices",
     description:
-      "Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+      "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
   },
 };
 

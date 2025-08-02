@@ -2,11 +2,11 @@ import Link from "next/link";
 import BrandList from "/app/components/BrandList";
 
 export const metadata = {
-  title: "Uk Used Laptops Mobile Phones Categories at Affordable Prices",
+  title: "US used / Uk used Laptops Mobile Phones Categories at Affordable Prices",
   openGraph: {
-    title: "UK used Gadgets and Appliances at Affordable prices",
+    title: "US used / Uk used Gadgets and Appliances at Affordable prices",
     description:
-      "Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+      "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
   },
 };
 

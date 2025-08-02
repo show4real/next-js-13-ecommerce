@@ -30,7 +30,7 @@ export async function generateMetadata({ params, searchParams }, parent) {
         "lenovo",
         "gaming laptops",
         "convertible laptops",
-        "uk used laptops",
+        "US used / Uk used laptops",
         "fairly used laptops in ibadan",
         "refurbished laptops",
         "cheap laptops",

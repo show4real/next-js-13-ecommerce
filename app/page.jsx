@@ -7,19 +7,19 @@ import Category from "./categories/Category";
 import CategorySlider from "./categories/CategorySlider";
 
 export const metadata = {
-  title: " Uk Used Laptop Computers At Affordable Prices - Hayzeeonline",
-  description: "We sell affordable uk used laptops and Iphones",
+  title: " US used / Uk used Laptop Computers At Affordable Prices - Hayzeeonline",
+  description: "We sell affordable US used / Uk used laptops and Iphones",
   keywords: [
     "HP",
     "Dell",
     "lenovo",
     "gaming laptops",
     "convertible laptops",
-    "uk used laptops",
+    "US used / Uk used laptops",
     "fairly used laptops in ibadan",
-    "uk used laptops at affordable price",
+    "US used / Uk used laptops at affordable price",
     "smart phones",
-    "uk used printers",
+    "US used / Uk used printers",
     "refurbished laptops",
     "cheap laptops",
     "used laptops",
@@ -27,9 +27,9 @@ export const metadata = {
     "used samsung phones",
   ],
   openGraph: {
-    title: "UK used Gadgets and Appliances at Affordable prices",
+    title: "US used / Uk used Gadgets and Appliances at Affordable prices",
     description:
-      "Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+      "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
   },
 
   other: {

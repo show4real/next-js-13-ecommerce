@@ -15,9 +15,9 @@ import Loading from "./loading";
 const rubik = Rubik({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "#1 UK used Laptops and mobile phones",
+  title: "#1 US used / Uk used Laptops and mobile phones",
   description:
-    "We sell affordable uk used laptops | Iphones | samsungs | Apple",
+    "We sell affordable US used / Uk used laptops | Iphones | samsungs | Apple",
 };
 
 export default function RootLayout({ children }) {
