@@ -421,6 +421,14 @@ const ProductDetail = ({ product }) => {
                     >
                       &#8358;{formatNumber(product.price)}
                     </span>{" "}
+                    <div style={{ marginLeft: 10 }}>
+                      <div className="text-sm text-gray-800 font-semibold">
+                        VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))}  (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
+                      </div>
+                      <div className="text-base text-gray-900 font-semibold">
+                       
+                      </div>
+                    </div>
                   </div>
                   
                   {itemInCart.length > 0 && (

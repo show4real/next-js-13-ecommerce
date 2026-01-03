@@ -112,7 +112,11 @@ const FlashSaleCard = ({ product }) => {
                     &#8358;{formatNumber(product.old_price)}
                   </span>
                 )}
+                
               </div>
+               <span className="text-xs text-gray-800 mt-1">
+                    VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))}  (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
+                </span>
               
               {/* Stock status */}
               <div className="flex items-center space-x-2">

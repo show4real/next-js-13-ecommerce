@@ -22,6 +22,8 @@ const Checkout = () => {
   );
 
   const discount_price = 0.005 * totalPrice;
+  // VAT rate (assumed 7.5%). Change this value if a different VAT is required.
+  const VAT_RATE = 0.075;
 
   const formatNumber = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -57,7 +59,25 @@ const Checkout = () => {
 
   useEffect(() => {
     fetchReferrers();
+    // update amount whenever cart, pickup or discount changes
+    // compute initial amount including pickup and VAT if any
+  const pickup_charges = Number(fields.pickup || 0);
+  // new formula: total = VAT + SUBTOTAL + DELIVERY (discount not subtracted)
+  const subtotal = totalPrice; // pre-discount subtotal
+  const vatAmount = Math.round(subtotal * VAT_RATE); // VAT on pre-discount subtotal
+  const finalAmount = Math.round(vatAmount + subtotal + pickup_charges);
+    setAmount(finalAmount);
   }, []);
+
+  // keep amount updated when relevant values change
+  useEffect(() => {
+  const pickup_charges = Number(fields.pickup || 0);
+  // new formula: total = VAT + SUBTOTAL + DELIVERY (discount not subtracted)
+  const subtotal = totalPrice; // pre-discount subtotal
+  const vatAmount = Math.round(subtotal * VAT_RATE);
+  const finalAmount = Math.round(vatAmount + subtotal + pickup_charges);
+    setAmount(finalAmount);
+  }, [totalPrice, fields.pickup, discount, discount_price]);
 
   const fetchReferrers = async () => {
     //setLoading(true);
@@ -114,12 +134,16 @@ const Checkout = () => {
     console.log(fields);
     setSaving(true);
 
-    const pickup_charges = Number(pickup);
+  const pickup_charges = Number(pickup);
+  // new formula: total = VAT + SUBTOTAL + DELIVERY (discount not subtracted)
+  const subtotal = totalPrice; // pre-discount subtotal
+  const vatAmount = Math.round(subtotal * VAT_RATE); // VAT on pre-discount subtotal
+  const finalAmount = Math.round(vatAmount + subtotal + pickup_charges);
 
     try {
       const response = await axios.post(
         "https://apiv2.hayzeeonline.com/api/initiate-payment",
-        { amount, email, discount, pickup_charges }
+  { amount: finalAmount-pickup_charges, email, discount, pickup_charges, vat: vatAmount, subtotal }
       );
       const checkout =
         typeof window !== "undefined"
@@ -543,23 +567,35 @@ const Checkout = () => {
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">VAT</p>
+                  <p className="font-semibold text-gray-900">
+                    {" "}
+                    &#8358;
+                    {formatNumber(Math.round(totalPrice * VAT_RATE))}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Subtotal</p>
                   <p className="font-semibold text-gray-900">
                     {" "}
                     &#8358;{formatNumber(totalPrice)}
                   </p>
                 </div>
+                {discount && (
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-900">Discount</p>
+                    <p className="font-semibold text-red-600">
+                      - &#8358;{formatNumber(discount_price)}
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="mt-6 flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Total</p>
                 <p className="text-2xl font-semibold text-gray-900">
                   {" "}
                   &#8358;
-                  {discount
-                    ? formatNumber(
-                        totalPrice + Number(fields.pickup) - discount_price
-                      )
-                    : formatNumber(totalPrice + Number(fields.pickup))}
+                  {formatNumber(amount)}
                 </p>
               </div>
 
