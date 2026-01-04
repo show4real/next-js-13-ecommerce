@@ -376,14 +376,10 @@ const Checkout = () => {
                   </option>
                   <option value="20000">
                     Adamawa, Bauchi, Benue, Borno, Jigawa, Kaduna, Kano,
-                    Katsina, Kebbbi, Nassarawa, Niger -#20,000
+                    Katsina, Kebbbi, Nassarawa, Niger, Sokoto, Taraba, Zamfara, Gombe Yobe -#20,000
                   </option>
-                  <option value="21000">
-                    Sokoto, Taraba, Zamfara, Gombe Yobe -#21,000
-                  </option>
-                  <option value="10000">Ekiti, Kwara -#10,000</option>
                   <option value="8000">
-                    Ogun, Ondo, Osun, Oyo, Lagos -#8,000
+                    Ekiti, Kwara, Ogun, Ondo, Osun, Oyo, Lagos -#8,000
                   </option>
                   <option value="6000">oyo -#6,000</option>
                   <option value="0">Ibadan -#0</option>
