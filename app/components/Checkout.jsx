@@ -382,7 +382,7 @@ const Checkout = () => {
                     Ekiti, Kwara, Ogun, Ondo, Osun, Oyo, Lagos -#8,000
                   </option>
                   <option value="6000">oyo -#6,000</option>
-                  <option value="0">Ibadan -#0</option>
+                  <option value="3000">Ibadan -#3000</option>
                 </select>
                 {/* <input
                   type="text"
