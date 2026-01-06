@@ -178,9 +178,9 @@ export default function ProductGlance({ product, toggle, show }) {
                         &#8358;{formatNumber(product.price)}
                       </span>
                       <div className="mt-2">
-                        {/* <div className="text-sm text-gray-800 font-semibold">
+                        <div className="text-sm text-gray-800 font-semibold">
                         VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))}  (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
-                      </div> */}
+                      </div>
                       </div>
                     </div>
 

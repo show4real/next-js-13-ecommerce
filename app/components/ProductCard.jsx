@@ -105,9 +105,9 @@ const ProductCard = ({ product, key }) => {
                 <span className="text-lg font-bold text-gray-900">
                   &#8358;{formatNumber(product.price)}
                 </span>
-                    {/* <span className="text-xs text-gray-800 mt-1">
+                    <span className="text-xs text-gray-800 mt-1">
                        VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))} (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
-                    </span> */}
+                    </span>
                    
               </div>
               
