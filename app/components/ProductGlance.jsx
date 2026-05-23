@@ -206,6 +206,17 @@ export default function ProductGlance({ product, toggle, show }) {
                       </div>
                     </div>
 
+                    {/* Description */}
+                    {product.description && (
+                      <div className="mb-6">
+                        <h3 className="text-sm font-semibold text-gray-900 mb-2">Description</h3>
+                        <div
+                          className="description leading-7 text-sm text-gray-600 max-h-32 overflow-y-auto"
+                          dangerouslySetInnerHTML={{ __html: product.description }}
+                        />
+                      </div>
+                    )}
+
                     {/* Quantity Controls (if item is in cart) */}
                     {itemInCart.length > 0 && (
                       <div className="mb-4">

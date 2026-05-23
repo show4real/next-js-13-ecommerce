@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
         {children}
         <Facebook />
         <WhatsAppButton
-          phoneNumber="2348092777906"
+          phoneNumber="2349161401307"
           message="Hello! I need a gadget"
         />
 

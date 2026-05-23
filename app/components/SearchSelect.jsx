@@ -1,65 +1,90 @@
 import Link from "next/link";
-import React from "react";
-const SearchSelect = ({
-  search_all,
-  handleSearch,
-  fetchProducts,
-  filteredSuggestions,
-}) => {
-  const convertToSlug = (text) => {
-    return text
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/[^\w-]+/g, "");
-  };
-  return (
-    <div className="mb-3 pt-4">
-      <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-        <input
-          type="search"
-          className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-          placeholder="Search"
-          aria-label="Search"
-          aria-describedby="button-addon1"
-          value={search_all}
-          onChange={handleSearch}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              fetchProducts();
-            }
-          }}
-        />
+import React, { useRef, useEffect, useState } from "react";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-        <button
-          className="relative z-[2] flex items-center rounded-r bg-primary px-1 md:px-3 lg:px-3 xl:px-3 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-          type="button"
-          id="button-addon1"
-          data-te-ripple-init
-          data-te-ripple-color="light"
-          onClick={fetchProducts}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="h-5 w-5"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
-      {search_all && (
-        <ul className="absolute z-10 w-64 bg-white rounded-b-lg shadow-lg mt-1">
-          {filteredSuggestions.map((item) => (
-            <li
-              key={item}
-              className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-blue-400"
+const SearchSelect = ({ search_all, handleSearch, fetchProducts, filteredSuggestions }) => {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef(null);
+  const containerRef = useRef(null);
+
+  const convertToSlug = (text) =>
+    text.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setShowSuggestions(false);
+      fetchProducts();
+    }
+    if (e.key === "Escape") {
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleClear = () => {
+    handleSearch({ target: { value: "" } });
+    inputRef.current?.focus();
+  };
+
+  return (
+    <div className="relative w-full mb-3 pt-4" ref={containerRef}>
+      <div className="relative flex items-center">
+        <MagnifyingGlassIcon className="absolute left-3 h-5 w-5 text-gray-400 pointer-events-none" />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Search products…"
+          value={search_all}
+          onChange={(e) => {
+            handleSearch(e);
+            setShowSuggestions(true);
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          onKeyDown={handleKeyDown}
+          className="w-full pl-10 pr-20 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-all duration-200"
+        />
+        <div className="absolute right-2 flex items-center gap-1">
+          {search_all && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
             >
-              <Link href={`../search/${convertToSlug(item)}`}>{item}</Link>
+              <XMarkIcon className="h-4 w-4" />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => { setShowSuggestions(false); fetchProducts(); }}
+            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition-colors duration-150"
+          >
+            Go
+          </button>
+        </div>
+      </div>
+
+      {/* Suggestions dropdown */}
+      {showSuggestions && search_all && filteredSuggestions?.length > 0 && (
+        <ul className="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-64 overflow-y-auto">
+          {filteredSuggestions.map((item) => (
+            <li key={item}>
+              <Link
+                href={`../search/${convertToSlug(item)}`}
+                onClick={() => setShowSuggestions(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-100"
+              >
+                <MagnifyingGlassIcon className="h-4 w-4 text-gray-400 shrink-0" />
+                {item}
+              </Link>
             </li>
           ))}
         </ul>
@@ -67,4 +92,5 @@ const SearchSelect = ({
     </div>
   );
 };
+
 export default SearchSelect;

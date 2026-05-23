@@ -8,7 +8,7 @@ import {
   getLaptopProducts,
 } from "../services/productService";
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Drawer, Space, Pagination, Slider, Select } from "antd";
+import { Button, Drawer, Space, Pagination, Select } from "antd";
 import {
   FunnelIcon,
   AdjustmentsHorizontalIcon
@@ -261,31 +261,7 @@ export default function ProductList({
     }).format(value);
 
   const SimplePriceSlider = () => (
-    <div className="space-y-4">
-      <div className="flex justify-between text-sm text-gray-600">
-        <span>{formatPrice(price[0])}</span>
-        <span>{formatPrice(price[1])}</span>
-      </div>
-      <Slider
-        range
-        min={4000}
-        max={5000000}
-        step={10000}
-        value={price}
-        onChange={handlePrice}
-        onAfterChange={() => fetchProducts()}
-        className="custom-price-slider"
-        trackStyle={[{ backgroundColor: '#3b82f6' }]}
-        handleStyle={[
-          { borderColor: '#3b82f6', backgroundColor: '#3b82f6' },
-          { borderColor: '#3b82f6', backgroundColor: '#3b82f6' }
-        ]}
-      />
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>₦4,000</span>
-        <span>₦5,000,000</span>
-      </div>
-    </div>
+    <PriceSelect price={price} handlePrice={handlePrice} fetchProducts={fetchProducts} />
   );
 
   const FilterSection = ({ title, children }) => (
