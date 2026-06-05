@@ -10,9 +10,12 @@ import {
   UserIcon,
   XMarkIcon,
   ChevronDownIcon,
+  ChevronRightIcon,
   Squares2X2Icon,
+  TagIcon,
   TruckIcon,
   MapPinIcon,
+  ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import { getAllCats, getBrands, getQuickSearch } from "/app/services/productService";
 import { socials } from "./socials";
@@ -30,7 +33,7 @@ const navigation = {
     { name: "Shop All", href: "/products" },
     { name: "Flash Sales", href: "/flash-sales", hot: true },
     { name: "Black Friday", href: "/black-friday" },
-    { name: "Mid Sales", href: "/mid-year-sales" },
+    { name: "Mid Year Sales", href: "/mid-year-sales" },
     { name: "Promo Sales", href: "/promo-sales" },
   ],
 };
@@ -260,7 +263,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" aria-label="Hayzee Computer Resources — Home" className="flex-shrink-0 transition hover:opacity-90">
-            <Logo className="h-11 w-11" />
+            <Logo className="h-10 w-auto" />
           </Link>
 
           {/* Desktop search */}
@@ -362,44 +365,84 @@ export default function Navbar() {
                   leaveFrom="opacity-100 translate-y-0"
                   leaveTo="opacity-0 translate-y-1"
                 >
-                  <Popover.Panel className="absolute left-0 top-full z-50 mt-0 w-[640px] rounded-b-2xl border border-gray-100 bg-white p-6 shadow-2xl">
-                    <div className="grid grid-cols-2 gap-8">
-                      <div>
-                        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-accent">
-                          Categories
-                        </p>
+                  <Popover.Panel className="absolute left-0 top-full z-50 mt-0 w-[680px] overflow-hidden rounded-b-2xl border border-gray-100 bg-white shadow-2xl ring-1 ring-black/5">
+                    <div className="grid grid-cols-5">
+                      {/* Categories */}
+                      <div className="col-span-3 p-6">
+                        <div className="mb-4 flex items-center justify-between">
+                          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent">
+                            <Squares2X2Icon className="h-4 w-4" />
+                            Categories
+                          </p>
+                          <Popover.Button
+                            as={Link}
+                            href="/products"
+                            className="text-xs font-semibold text-gray-400 transition hover:text-primary"
+                          >
+                            View all
+                          </Popover.Button>
+                        </div>
                         <ul className="grid grid-cols-2 gap-1">
                           {categories.map((category, key) => (
                             <li key={key}>
                               <Popover.Button
                                 as={Link}
                                 href={`/categories/${category.slug}`}
-                                className="block rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-primary-50 hover:text-primary"
+                                className="group flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-primary-50 hover:text-primary"
                               >
-                                {category.name}
+                                <span className="truncate">{category.name}</span>
+                                <ChevronRightIcon className="h-4 w-4 flex-shrink-0 -translate-x-1 text-primary opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                               </Popover.Button>
                             </li>
                           ))}
+                          {categories.length === 0 && (
+                            <li className="col-span-2 px-3 py-2 text-sm text-gray-400">
+                              Loading categories…
+                            </li>
+                          )}
                         </ul>
                       </div>
-                      <div>
-                        <p className="mb-3 text-xs font-bold uppercase tracking-wider text-accent">
+
+                      {/* Top Brands */}
+                      <div className="col-span-2 border-l border-gray-100 bg-gray-50/70 p-6">
+                        <p className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent">
+                          <TagIcon className="h-4 w-4" />
                           Top Brands
                         </p>
-                        <ul className="grid grid-cols-2 gap-1">
+                        <ul className="grid grid-cols-2 gap-1.5">
                           {brands.map((brand, key) => (
                             <li key={key}>
                               <Popover.Button
                                 as={Link}
                                 href={`/brands/${brand.slug}`}
-                                className="block rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-primary-50 hover:text-primary"
+                                className="block truncate rounded-lg border border-transparent bg-white px-3 py-2 text-center text-sm font-medium text-gray-600 shadow-sm transition hover:border-primary-200 hover:text-primary"
                               >
                                 {brand.name}
                               </Popover.Button>
                             </li>
                           ))}
+                          {brands.length === 0 && (
+                            <li className="col-span-2 px-3 py-2 text-sm text-gray-400">
+                              Loading brands…
+                            </li>
+                          )}
                         </ul>
                       </div>
+                    </div>
+
+                    {/* Footer CTA */}
+                    <div className="flex items-center justify-between border-t border-gray-100 bg-gradient-to-r from-primary-50 to-white px-6 py-3.5">
+                      <span className="text-xs text-gray-500">
+                        Can&apos;t find what you&apos;re looking for?
+                      </span>
+                      <Popover.Button
+                        as={Link}
+                        href="/products"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary-600"
+                      >
+                        Shop all products
+                        <ArrowRightIcon className="h-3.5 w-3.5" />
+                      </Popover.Button>
                     </div>
                   </Popover.Panel>
                 </Transition>

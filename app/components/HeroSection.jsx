@@ -42,7 +42,7 @@ const trust = [
   { icon: TruckIcon, title: "Nationwide Delivery", desc: "Fast & reliable" },
   { icon: CreditCardIcon, title: "Pay on Delivery", desc: "Within Nigeria" },
   { icon: ShieldCheckIcon, title: "Tested & Trusted", desc: "100% as ordered" },
-  { icon: PhoneIcon, title: "Real Support", desc: "Call us anytime" },
+  { icon: PhoneIcon, title: "Support", desc: "Call us anytime" },
 ];
 
 export default function HeroSection() {

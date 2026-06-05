@@ -251,25 +251,37 @@ const CategorySlider = ({ sale_type }) => {
         
         {/* Header */}
         <div className="relative z-10 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-red-500 to-pink-500 p-3 rounded-2xl">
-                <FontAwesomeIcon icon={faFire} className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center space-x-3">
+              <div className="flex-shrink-0 bg-gradient-to-r from-red-500 to-pink-500 p-2.5 sm:p-3 rounded-2xl">
+                <FontAwesomeIcon icon={faFire} className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <div className="min-w-0">
+                <h2 className="truncate text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                   Flash Sales
                 </h2>
-                <p className="text-gray-600 text-sm mt-1">
+                <p className="hidden sm:mt-1 sm:block text-gray-600 text-sm">
                   Limited time offers • Hurry up!
                 </p>
               </div>
             </div>
-            
-            {/* Timer (optional - you can add actual countdown logic) */}
-            <div className="hidden md:flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-              <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-red-500" />
-              <span className="text-sm font-medium text-gray-700">Ends Soon</span>
+
+            <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
+              {/* Timer (optional - you can add actual countdown logic) */}
+              <div className="hidden md:flex items-center space-x-2 bg-white/80 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
+                <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-red-500" />
+                <span className="text-sm font-medium text-gray-700">Ends Soon</span>
+              </div>
+
+              {/* View all */}
+              <Link
+                href="/flash-sales"
+                aria-label="View all flash sale products"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-red-600 hover:to-pink-600 active:scale-95 sm:px-4"
+              >
+                <span>View all</span>
+                <FontAwesomeIcon icon={faChevronRight} className="w-3 h-3" />
+              </Link>
             </div>
           </div>
         </div>

@@ -106,6 +106,12 @@ export default function ProductList({
     setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const isInitialMount = useRef(true);
+  const sectionRef = useRef(null);
+
+  // Smoothly scroll back to the top of this section after a filter selection
+  const scrollToSection = () => {
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   // Effect to save state whenever it changes
   useEffect(() => {
@@ -229,6 +235,7 @@ export default function ProductList({
   const handlePrice = (newPrice) => {
     setPrice(newPrice);
     setPage(1);
+    scrollToSection();
   };
 
   const handleSearch = (event) => {
@@ -239,31 +246,37 @@ export default function ProductList({
   const handleStorage = (options) => {
     setStorages(options);
     setPage(1);
+    scrollToSection();
   };
 
   const handleBrand = (value) => {
     setBrand(value);
     setPage(1);
+    scrollToSection();
   };
 
   const handleCategory = (value) => {
     setCategory(value);
     setPage(1);
+    scrollToSection();
   };
 
   const handleProcessor = (options) => {
     setProcessors(options);
     setPage(1);
+    scrollToSection();
   };
 
   const handleRam = (options) => {
     setRams(options);
     setPage(1);
+    scrollToSection();
   };
 
   const handleSorting = (value) => {
     setSorting(value);
     setPage(1);
+    scrollToSection();
   };
 
   // ---- Active filter tracking (Amazon/Alibaba-style chips) ----
@@ -296,6 +309,7 @@ export default function ProductList({
     setRams([]);
     setProcessors([]);
     setPage(1);
+    scrollToSection();
   };
 
   const onPage = (newPage, newRows) => {
@@ -398,9 +412,9 @@ export default function ProductList({
   );
 
   const SidebarFilters = () => (
-    <div className="overflow-visible rounded-2xl border border-gray-200/80 bg-white shadow-card lg:sticky lg:top-24">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-card lg:sticky lg:top-[160px] lg:max-h-[calc(100vh-180px)]">
       {/* Header */}
-      <div className="flex items-center justify-between rounded-t-2xl border-b border-gray-100 bg-gradient-to-r from-primary-50 to-white px-5 py-4">
+      <div className="flex flex-shrink-0 items-center justify-between rounded-t-2xl border-b border-gray-100 bg-gradient-to-r from-primary-50 to-white px-5 py-4">
         <div className="flex items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
             <AdjustmentsHorizontalIcon className="h-[18px] w-[18px]" />
@@ -428,12 +442,15 @@ export default function ProductList({
 
       {/* Active chips */}
       {activeFilters.length > 0 && (
-        <div className="border-b border-gray-100 bg-gray-50/70 px-5 py-4">
+        <div className="flex-shrink-0 border-b border-gray-100 bg-gray-50/70 px-5 py-4">
           <ActiveFilterChips />
         </div>
       )}
 
-      <FilterSections />
+      {/* Scrollable filter sections — independent from the products list */}
+      <div className="filter-scroll flex-1 overflow-y-auto overscroll-contain">
+        <FilterSections />
+      </div>
     </div>
   );
 
@@ -447,6 +464,9 @@ export default function ProductList({
             <span className="mb-1.5 h-1 w-12 rounded-full bg-accent" />
           </div>
         </div>
+
+        {/* Scroll anchor: lands right on the products area after a filter change */}
+        <div ref={sectionRef} className="scroll-mt-[120px] lg:scroll-mt-[170px]" />
 
         {loading && <CarouselHolder />}
 
