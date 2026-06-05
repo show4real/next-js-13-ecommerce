@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import Logo from "../../public/logo5.png";
-import Image from "next/image";
+import Logo from "./Logo";
 import Link from "next/link";
 import {
   PhoneIcon,
@@ -78,13 +77,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
-            <Image
-              src={Logo}
-              height={64}
-              width={64}
-              alt="Hayzeeonline"
-              className="rounded-xl bg-white p-1"
-            />
+            <Logo className="h-12 w-auto" wordmark />
             <p className="mt-4 text-sm leading-relaxed text-white/70">
               Hayzee Computer Resources — your trusted online store for gadgets,
               mobile phones, laptops, desktops and printers.

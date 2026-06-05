@@ -7,8 +7,12 @@ import HeroSection from "./components/HeroSection";
 import Category from "./categories/Category";
 
 export const metadata = {
-  title: " US used / Uk used Laptop Computers At Affordable Prices - Hayzeeonline",
-  description: "We sell affordable US used / Uk used laptops and Iphones",
+  title: {
+    absolute: "Hayzeeonline — US/UK Used Laptops & Phones at Affordable Prices in Nigeria",
+  },
+  description:
+    "Shop affordable US/UK used laptops, iPhones, Samsung & Android phones at Hayzeeonline. Tested & trusted gadgets — HP, Dell, Lenovo, MacBook — with nationwide delivery and pay on delivery.",
+  alternates: { canonical: "/" },
   keywords: [
     "HP",
     "Dell",
@@ -27,15 +31,10 @@ export const metadata = {
     "used samsung phones",
   ],
   openGraph: {
-    title: "US used / Uk used Gadgets and Appliances at Affordable prices",
+    title: "US/UK Used Gadgets & Appliances at Affordable Prices",
     description:
-      "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+      "US/UK used laptops, mobile phones — Samsung, iPhone, Dell, HP, Lenovo — at affordable prices.",
   },
-
-  other: {
-    "google-site-verification": "4Zkz1j8swUUwJUJrRx2wsqs4YwJy6ru1Xb-9WmFnjek",
-  },
-  applicationName: "Ecommerce Website for Laptops and Mobile phone",
 };
 
 export default function Home() {

@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import ImageGallery from "react-image-gallery";
+import ProductGallery from "./ProductGallery";
 import { Tag, Button, Dropdown, Menu, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 import { getProductImages } from "/app/services/productService";
@@ -50,12 +50,15 @@ export default function ProductGlance({ product, toggle, show }) {
     return <Link href="/checkout">View Cart</Link>;
   };
 
-  const NumberButton = () => {
-    return (
-      cartItem !== 0 && (
-        <div className="flex items-center justify-center bg-gray-50 rounded-lg p-2">
-          <Button
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 border-0"
+  const NumberButton = () =>
+    cartItem ? (
+      <div className="flex items-center gap-3">
+        <span className="text-sm font-semibold text-gray-700">Quantity</span>
+        <div className="inline-flex items-center rounded-lg border border-gray-200">
+          <button
+            type="button"
+            aria-label="Decrease quantity"
+            className="flex h-9 w-9 items-center justify-center text-gray-600 transition hover:text-primary"
             onClick={() => {
               if (quantity > 1) {
                 updateCart(product.id, quantity - 1);
@@ -64,21 +67,22 @@ export default function ProductGlance({ product, toggle, show }) {
               }
             }}
           >
-            <span className="text-lg font-bold">-</span>
-          </Button>
-          <span className="mx-4 text-lg font-semibold min-w-[24px] text-center">
+            <span className="text-lg font-bold">−</span>
+          </button>
+          <span className="w-10 text-center text-base font-bold text-primary">
             {cartItem.quantity}
           </span>
-          <Button
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 border-0"
+          <button
+            type="button"
+            aria-label="Increase quantity"
+            className="flex h-9 w-9 items-center justify-center text-gray-600 transition hover:text-primary"
             onClick={() => updateCart(product.id, quantity + 1)}
           >
             <span className="text-lg font-bold">+</span>
-          </Button>
+          </button>
         </div>
-      )
-    );
-  };
+      </div>
+    ) : null;
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -89,7 +93,7 @@ export default function ProductGlance({ product, toggle, show }) {
     return (
       <button
         type="button"
-        className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="w-full rounded-lg bg-accent px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-600 active:scale-[0.99]"
         onClick={handleAddToCart}
       >
         Buy Now
@@ -140,71 +144,78 @@ export default function ProductGlance({ product, toggle, show }) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 max-h-[90vh] overflow-y-auto">
                   {/* Image Gallery */}
-                  <div className="bg-gray-50 p-6">
-                    <div className="aspect-square">
-                      <ImageGallery
-                        showPlayButton={false}
-                        showNav={true}
-                        showThumbnails={images.length > 1}
-                        items={images.map((image) => ({
-                          original: image,
-                          thumbnail: image,
-                        }))}
-                        additionalClass="rounded-lg overflow-hidden"
-                      />
-                    </div>
+                  <div className="bg-white p-5 sm:p-6">
+                    <ProductGallery images={images} />
                   </div>
 
                   {/* Product Details */}
-                  <div className="p-6 flex flex-col">
+                  <div className="flex flex-col p-5 sm:p-6">
                     {/* Product Type */}
-                    <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
-                      {product.product_type}
-                    </div>
+                    {product.product_type && (
+                      <div className="mb-2 text-xs font-bold uppercase tracking-wider text-accent">
+                        {product.product_type}
+                      </div>
+                    )}
 
-                    {/* Availability Tag */}
-                    <Tag style={tagStyle}>
+                    {/* Availability pill */}
+                    <span
+                      className={`mb-3 inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
+                        product.availability
+                          ? "bg-green-50 text-green-700"
+                          : "bg-red-50 text-red-600"
+                      }`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          product.availability ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      />
                       {product.availability ? "In Stock" : "Sold Out"}
-                    </Tag>
+                    </span>
 
                     {/* Product Name */}
-                    <h1 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
+                    <h1 className="mb-4 text-xl font-extrabold leading-snug text-primary sm:text-2xl">
                       {product.name}
                     </h1>
 
                     {/* Price */}
-                    <div className="mb-6">
-                      <span className="text-3xl font-bold text-gray-900">
+                    <div className="mb-6 rounded-xl bg-primary-50 p-4">
+                      <span className="text-2xl font-extrabold text-primary sm:text-3xl">
                         &#8358;{formatNumber(product.price)}
                       </span>
-                      <div className="mt-2">
-                        <div className="text-sm text-gray-800 font-semibold">
-                        VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))}  (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
-                      </div>
-                      </div>
+                      <p className="mt-1 text-sm text-gray-600">
+                        Incl. VAT &#8358;{formatNumber(Math.round(product.price * 0.075))}
+                        <span className="mx-1.5 text-gray-300">•</span>
+                        Total{" "}
+                        <span className="font-semibold text-primary">
+                          &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))}
+                        </span>
+                      </p>
                     </div>
 
                     {/* Specifications */}
-                    <div className="mb-6">
-                      <h3 className="text-sm font-semibold text-gray-900 mb-3">Specifications</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {product.storage && product.storage !== "null" && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            {product.storage} Storage
-                          </span>
-                        )}
-                        {product.processor && product.processor !== "null" && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            {product.processor} Processor
-                          </span>
-                        )}
-                        {product.ram && product.ram !== "null" && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            {product.ram} RAM
-                          </span>
-                        )}
+                    {(product.storage || product.processor || product.ram) && (
+                      <div className="mb-6">
+                        <h3 className="mb-2 text-sm font-bold text-gray-700">Specifications</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {product.storage && product.storage !== "null" && (
+                            <span className="rounded-lg border border-primary-100 bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary">
+                              {product.storage} Storage
+                            </span>
+                          )}
+                          {product.processor && product.processor !== "null" && (
+                            <span className="rounded-lg border border-primary-100 bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary">
+                              {product.processor} Processor
+                            </span>
+                          )}
+                          {product.ram && product.ram !== "null" && (
+                            <span className="rounded-lg border border-primary-100 bg-primary-50 px-3 py-1.5 text-xs font-semibold text-primary">
+                              {product.ram} RAM
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     {/* Description */}
                     {product.description && (
@@ -225,11 +236,11 @@ export default function ProductGlance({ product, toggle, show }) {
                     )}
 
                     {/* Action Buttons */}
-                    <div className="space-y-3 mt-auto">
+                    <div className="mt-auto space-y-2.5 pt-2">
                       {/* Add to Cart / View Cart */}
                       <button
                         type="button"
-                        className="w-full rounded-lg bg-gray-900 hover:bg-gray-800 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        className="w-full rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white transition hover:bg-primary-500 active:scale-[0.99]"
                         onClick={
                           itemInCart.length === 0
                             ? () => addToCart(product)
@@ -250,7 +261,7 @@ export default function ProductGlance({ product, toggle, show }) {
                       <Link href={`/products/${product.slug}`} className="block">
                         <button
                           type="button"
-                          className="w-full rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-900 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                          className="w-full rounded-lg border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary-50"
                         >
                           See Details
                         </button>

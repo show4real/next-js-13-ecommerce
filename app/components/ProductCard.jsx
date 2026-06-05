@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EyeOutlined, HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { EyeOutlined, HeartOutlined } from "@ant-design/icons";
 import ProductGlance from "./ProductGlance";
 import Link from "next/link";
 
@@ -126,11 +126,11 @@ const ProductCard = ({ product }) => {
               </p>
 
               <button
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-2 text-sm font-semibold text-white transition hover:bg-accent disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
+                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-primary-100 bg-primary-50 py-2 text-xs font-semibold text-primary transition hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-100 disabled:text-gray-400 sm:gap-2 sm:py-2.5 sm:text-sm"
                 disabled={!inStock}
               >
-                <ShoppingCartOutlined />
-                {inStock ? "View Details" : "Unavailable"}
+                <EyeOutlined className="text-[13px] sm:text-sm" />
+                {inStock ? "View Details" : "Sold Out"}
               </button>
             </div>
           </div>

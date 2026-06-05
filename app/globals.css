@@ -102,3 +102,17 @@ body {
 .ant-tabs .ant-tabs-tab:hover {
   color: var(--brand-accent) !important;
 }
+
+/* Mobile filter bottom-sheet (PWA style) */
+.filter-sheet .ant-drawer-content {
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+  overflow: hidden;
+}
+
+/* Cart drawer — fill the screen on small phones instead of a fixed 400px */
+@media (max-width: 440px) {
+  .cart-drawer-root .ant-drawer-content-wrapper {
+    width: 100vw !important;
+  }
+}

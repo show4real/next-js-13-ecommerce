@@ -10,6 +10,14 @@ import {
 import React, { useState, useEffect, useMemo } from "react";
 import { Button, Drawer, Space, Row, Pagination, Slider, Checkbox, Radio, Card } from "antd";
 import { MenuUnfoldOutlined, DownOutlined, FilterOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  FunnelIcon,
+  AdjustmentsHorizontalIcon,
+  XMarkIcon,
+  ArrowsUpDownIcon,
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import ProductCard from "/app/components/ProductCard";
 import CarouselHolder from "/app/products/CarouselHolder";
 import PriceSelect from "/app/components/PriceSelect";
@@ -195,20 +203,24 @@ export default function SearchList({ search }) {
     setSortBy("name");
   };
 
-  const FilterSidebar = () => (
+  const FilterSidebar = ({ hideHeader = false }) => (
     <div className="w-full">
       {/* Filter Header */}
-      <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-        <Button 
-          type="text" 
-          size="small" 
-          onClick={clearAllFilters}
-          className="text-blue-600 hover:text-blue-800"
-        >
-          Clear All
-        </Button>
-      </div>
+      {!hideHeader && (
+        <div className="mb-6 flex items-center justify-between rounded-lg bg-gray-50 p-4">
+          <div className="flex items-center gap-2">
+            <AdjustmentsHorizontalIcon className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+          </div>
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="text-sm font-semibold text-red-500 transition hover:text-red-700"
+          >
+            Clear all
+          </button>
+        </div>
+      )}
 
       {/* Categories Filter */}
       <div className="mb-8">
@@ -305,15 +317,21 @@ export default function SearchList({ search }) {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen" style={{marginTop:100}}>
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <div className="mt-[96px] min-h-screen bg-gray-50 lg:mt-[148px]">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Search Results for {search}
+          <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent">
+            <MagnifyingGlassIcon className="h-3.5 w-3.5" />
+            Search Results
+          </p>
+          <h1 className="mt-1.5 text-2xl font-extrabold tracking-tight text-primary md:text-3xl">
+            Results for <span className="text-accent">&ldquo;{search}&rdquo;</span>
           </h1>
-          <p className="text-gray-600">
-            {loading ? "Loading..." : `${total} products found`}
+          <p className="mt-1.5 text-sm text-gray-500">
+            {loading
+              ? "Searching for the best matches…"
+              : `${total} product${total === 1 ? "" : "s"} found`}
           </p>
         </div>
 
@@ -328,30 +346,38 @@ export default function SearchList({ search }) {
           {/* Main Content */}
           <div className="flex-1">
             {/* Mobile Filter Button & Sort */}
-            <div className="flex items-center justify-between mb-6 lg:justify-end">
-              <Button
-                type="primary"
-                icon={<FilterOutlined />}
+            <div className="mb-6 flex items-center justify-between gap-3 lg:justify-end">
+              <button
+                type="button"
                 onClick={() => setMobileFiltersOpen(true)}
-                className="lg:hidden"
+                className="relative flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-primary shadow-sm transition hover:border-accent hover:text-accent active:scale-[0.98] lg:hidden"
               >
+                <FunnelIcon className="h-5 w-5" />
                 Filters
-              </Button>
-              
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">Sort by:</span>
-                <Select
-                  value={sortBy}
-                  onChange={setSortBy}
-                  className="w-40"
-                  size="large"
-                >
-                  <Option value="newest">Newest First</Option>
-                  <Option value="name">Name A-Z</Option>
-                  <Option value="price-low">Price: Low to High</Option>
-                  <Option value="price-high">Price: High to Low</Option>
-                  
-                </Select>
+                {(selectedCategories.length + selectedRam.length + selectedProcessors.length) > 0 && (
+                  <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-white">
+                    {selectedCategories.length + selectedRam.length + selectedProcessors.length}
+                  </span>
+                )}
+              </button>
+
+              <div className="flex items-center gap-2">
+                <span className="hidden text-sm font-medium text-gray-500 sm:inline">Sort by</span>
+                <div className="relative">
+                  <ArrowsUpDownIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    aria-label="Sort products"
+                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white py-2.5 pl-9 pr-9 text-sm font-semibold text-gray-700 outline-none transition focus:border-primary sm:w-52"
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="name">Name: A → Z</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                  </select>
+                  <ChevronDownIcon className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                </div>
               </div>
             </div>
 
@@ -362,30 +388,30 @@ export default function SearchList({ search }) {
                   <span className="text-sm font-medium text-gray-700 mr-2">Active filters:</span>
                   
                   {selectedCategories.map(category => (
-                    <span key={category} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <span key={category} className="inline-flex items-center gap-1 rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700">
                       {category}
-                      <CloseOutlined 
-                        className="ml-1 cursor-pointer" 
+                      <CloseOutlined
+                        className="cursor-pointer text-[10px] opacity-70 hover:opacity-100"
                         onClick={() => setSelectedCategories(selectedCategories.filter(c => c !== category))}
                       />
                     </span>
                   ))}
-                  
+
                   {selectedRam.map(ram => (
-                    <span key={ram} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span key={ram} className="inline-flex items-center gap-1 rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700">
                       {ram}
-                      <CloseOutlined 
-                        className="ml-1 cursor-pointer" 
+                      <CloseOutlined
+                        className="cursor-pointer text-[10px] opacity-70 hover:opacity-100"
                         onClick={() => setSelectedRam(selectedRam.filter(r => r !== ram))}
                       />
                     </span>
                   ))}
-                  
+
                   {selectedProcessors.map(processor => (
-                    <span key={processor} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    <span key={processor} className="inline-flex items-center gap-1 rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700">
                       {processor}
-                      <CloseOutlined 
-                        className="ml-1 cursor-pointer" 
+                      <CloseOutlined
+                        className="cursor-pointer text-[10px] opacity-70 hover:opacity-100"
                         onClick={() => setSelectedProcessors(selectedProcessors.filter(p => p !== processor))}
                       />
                     </span>
@@ -414,16 +440,18 @@ export default function SearchList({ search }) {
             {/* No Results */}
             {!loading && filteredProducts.length === 0 && (
               <div className="text-center py-20">
-                <div className="text-gray-400 text-6xl mb-4">
-                  <i className="fa fa-search" />
-                </div>
+                <div className="mb-4 text-6xl">🔍</div>
                 <h3 className="text-xl font-medium text-gray-900 mb-2">No products found</h3>
                 <p className="text-gray-600 mb-4">
                   Try adjusting your filters or search terms
                 </p>
-                <Button type="primary" onClick={clearAllFilters}>
+                <button
+                  type="button"
+                  onClick={clearAllFilters}
+                  className="inline-flex items-center rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-accent-600"
+                >
                   Clear All Filters
-                </Button>
+                </button>
               </div>
             )}
 
@@ -431,16 +459,68 @@ export default function SearchList({ search }) {
           </div>
         </div>
 
-        {/* Mobile Filter Drawer */}
+        {/* Mobile Filter Bottom Sheet */}
         <Drawer
-          title="Filters"
-          placement="left"
+          placement="bottom"
+          height="86vh"
+          closable={false}
           onClose={() => setMobileFiltersOpen(false)}
           open={mobileFiltersOpen}
-          width={300}
-          className="lg:hidden"
+          className="lg:hidden filter-sheet"
+          bodyStyle={{ padding: 0 }}
         >
-          <FilterSidebar />
+          <div className="flex h-full flex-col bg-gray-50">
+            {/* Grab handle + header */}
+            <div className="flex-shrink-0 bg-white">
+              <div className="flex justify-center pt-3">
+                <span className="h-1.5 w-11 rounded-full bg-gray-300" />
+              </div>
+              <div className="flex items-center justify-between px-5 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+                    <AdjustmentsHorizontalIcon className="h-[18px] w-[18px]" />
+                  </span>
+                  <h2 className="text-base font-bold text-primary">Filters</h2>
+                  {(selectedCategories.length + selectedRam.length + selectedProcessors.length) > 0 && (
+                    <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-white">
+                      {selectedCategories.length + selectedRam.length + selectedProcessors.length}
+                    </span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  aria-label="Close filters"
+                  className="rounded-full p-1.5 text-gray-500 transition hover:bg-gray-100"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable body */}
+            <div className="flex-1 overflow-y-auto bg-white px-4">
+              <FilterSidebar hideHeader />
+            </div>
+
+            {/* Sticky footer */}
+            <div className="flex flex-shrink-0 items-center gap-3 border-t border-gray-100 bg-white px-5 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] shadow-[0_-6px_16px_rgba(14,27,77,0.06)]">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition hover:border-gray-300"
+              >
+                Clear all
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileFiltersOpen(false)}
+                className="flex-[1.6] rounded-xl bg-accent py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-600 active:scale-[0.98]"
+              >
+                Show {total} {total === 1 ? "result" : "results"}
+              </button>
+            </div>
+          </div>
         </Drawer>
       </div>
     </div>

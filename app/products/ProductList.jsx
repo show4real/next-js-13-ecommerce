@@ -14,6 +14,8 @@ import {
   AdjustmentsHorizontalIcon,
   XMarkIcon,
   ChevronUpIcon,
+  ChevronDownIcon,
+  ArrowsUpDownIcon,
 } from "@heroicons/react/24/outline";
 import ProductCard from "/app/components/ProductCard";
 import CarouselHolder from "/app/products/CarouselHolder";
@@ -34,6 +36,17 @@ import './styles.css';
 const { Option } = Select;
 
 const DEFAULT_PRICE = [4000, 5000000];
+
+const SORT_OPTIONS = [
+  { value: "", label: "Default" },
+  { value: "availability", label: "Availability" },
+  { value: "name-asc", label: "Name: A → Z" },
+  { value: "name-desc", label: "Name: Z → A" },
+  { value: "low-price", label: "Price: Low to High" },
+  { value: "high-price", label: "Price: High to Low" },
+  { value: "date-asc", label: "Date: Old to New" },
+  { value: "date-desc", label: "Date: New to Old" },
+];
 
 // Simple state persistence using a global object (survives navigation)
 const globalState = {};
@@ -357,6 +370,33 @@ export default function ProductList({
       </div>
     ) : null;
 
+  const FilterSections = () => (
+    <>
+      <FilterSection title="Price Range" name="price" count={priceActive ? 1 : 0}>
+        <SimplePriceSlider />
+      </FilterSection>
+      {categoryslug === "" && (
+        <FilterSection title="Category" name="category" count={category ? 1 : 0}>
+          <CategorySelect categories={categories} category={category} handleCategory={handleCategory} />
+        </FilterSection>
+      )}
+      {brandslug === "" && (
+        <FilterSection title="Brand" name="brand" count={brand ? 1 : 0}>
+          <BrandSelect brands={brands} brand={brand} handleBrand={handleBrand} />
+        </FilterSection>
+      )}
+      <FilterSection title="Storage" name="storage" count={storages.length}>
+        <StorageSelect storages={storages} handleStorage={handleStorage} />
+      </FilterSection>
+      <FilterSection title="RAM" name="ram" count={rams.length}>
+        <RamSelect rams={rams} handleRam={handleRam} />
+      </FilterSection>
+      <FilterSection title="Processor" name="processor" count={processors.length}>
+        <ProcessorSelect processors={processors} handleProcessor={handleProcessor} />
+      </FilterSection>
+    </>
+  );
+
   const SidebarFilters = () => (
     <div className="overflow-visible rounded-2xl border border-gray-200/80 bg-white shadow-card lg:sticky lg:top-24">
       {/* Header */}
@@ -393,28 +433,7 @@ export default function ProductList({
         </div>
       )}
 
-      <FilterSection title="Price Range" name="price" count={priceActive ? 1 : 0}>
-        <SimplePriceSlider />
-      </FilterSection>
-      {categoryslug === "" && (
-        <FilterSection title="Category" name="category" count={category ? 1 : 0}>
-          <CategorySelect categories={categories} category={category} handleCategory={handleCategory} />
-        </FilterSection>
-      )}
-      {brandslug === "" && (
-        <FilterSection title="Brand" name="brand" count={brand ? 1 : 0}>
-          <BrandSelect brands={brands} brand={brand} handleBrand={handleBrand} />
-        </FilterSection>
-      )}
-      <FilterSection title="Storage" name="storage" count={storages.length}>
-        <StorageSelect storages={storages} handleStorage={handleStorage} />
-      </FilterSection>
-      <FilterSection title="RAM" name="ram" count={rams.length}>
-        <RamSelect rams={rams} handleRam={handleRam} />
-      </FilterSection>
-      <FilterSection title="Processor" name="processor" count={processors.length}>
-        <ProcessorSelect processors={processors} handleProcessor={handleProcessor} />
-      </FilterSection>
+      <FilterSections />
     </div>
   );
 
@@ -422,21 +441,10 @@ export default function ProductList({
     <div className="bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
         <SocialIconMenu flash_sale={flash_sale} />
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex items-end gap-3">
             <h3 className="text-2xl font-extrabold tracking-tight text-primary md:text-3xl">{heading || productSection}</h3>
             <span className="mb-1.5 h-1 w-12 rounded-full bg-accent" />
-          </div>
-          <div className="mt-6 lg:hidden">
-            <button onClick={() => setFilter(true)} className="flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 font-semibold text-primary shadow-sm transition hover:border-accent hover:text-accent">
-              <FunnelIcon className="mr-2 h-5 w-5" />
-              Filters
-              {activeFilters.length > 0 && (
-                <span className="ml-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-white">
-                  {activeFilters.length}
-                </span>
-              )}
-            </button>
           </div>
         </div>
 
@@ -449,7 +457,7 @@ export default function ProductList({
             </div>
             <div className="lg:col-span-3">
               <div className="mb-6 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-card sm:px-5">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                   <p className="text-sm text-gray-600">
                     Showing{" "}
                     <span className="font-semibold text-primary">
@@ -458,18 +466,56 @@ export default function ProductList({
                     of <span className="font-semibold text-primary">{total}</span> products
                   </p>
                   <div className="flex items-center gap-2">
-                    <span className="hidden text-sm font-medium text-gray-500 sm:inline">Sort by</span>
-                    <div className="w-full sm:w-56">
-                      <Select placeholder="Sort by" className="w-full" value={sort} onChange={handleSorting} size="large">
-                        <Option value="">Default</Option>
-                        <Option value="availability">Availability</Option>
-                        <Option value="name-asc">Name: A-Z</Option>
-                        <Option value="name-desc">Name: Z-A</Option>
-                        <Option value="low-price">Price: Low to High</Option>
-                        <Option value="high-price">Price: High to Low</Option>
-                        <Option value="date-asc">Date: Old to New</Option>
-                        <Option value="date-desc">Date: New to Old</Option>
-                      </Select>
+                    <span className="hidden text-sm font-medium text-gray-500 lg:inline">Sort by</span>
+
+                    {/* Desktop: branded native select */}
+                    <div className="relative hidden lg:block lg:w-56">
+                      <ArrowsUpDownIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                      <select
+                        value={sort}
+                        onChange={(e) => handleSorting(e.target.value)}
+                        aria-label="Sort products"
+                        className="w-full cursor-pointer appearance-none rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-10 text-sm font-semibold text-gray-700 shadow-sm outline-none transition hover:border-primary-300 focus:border-primary focus:ring-2 focus:ring-primary/10"
+                      >
+                        {SORT_OPTIONS.map((o) => (
+                          <option key={o.value} value={o.value}>{o.label}</option>
+                        ))}
+                      </select>
+                      <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    </div>
+
+                    {/* Mobile & tablet: Filters + native sort picker, side by side */}
+                    <div className="flex w-full items-center gap-2 lg:hidden">
+                      <button
+                        type="button"
+                        onClick={() => setFilter(true)}
+                        className="relative flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-sm font-semibold text-primary transition active:scale-[0.98] hover:border-accent hover:text-accent"
+                      >
+                        <FunnelIcon className="h-4 w-4" />
+                        Filters
+                        {activeFilters.length > 0 && (
+                          <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-white">
+                            {activeFilters.length}
+                          </span>
+                        )}
+                      </button>
+
+                      <div className="relative flex-1">
+                        <ArrowsUpDownIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                        <select
+                          value={sort}
+                          onChange={(e) => handleSorting(e.target.value)}
+                          aria-label="Sort products"
+                          className="w-full appearance-none rounded-xl border border-gray-200 bg-white py-3 pl-9 pr-8 text-sm font-semibold text-gray-700 outline-none transition focus:border-primary"
+                        >
+                          {SORT_OPTIONS.map((o) => (
+                            <option key={o.value} value={o.value}>
+                              {o.label}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDownIcon className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -514,9 +560,72 @@ export default function ProductList({
           </div>
         )}
 
-        <Drawer title="Filter Products" placement="left" width={350} onClose={() => setFilter(false)} open={mobileFilter} className="lg:hidden">
-          <div className="space-y-6">
-            <SidebarFilters />
+        <Drawer
+          placement="bottom"
+          height="86vh"
+          closable={false}
+          onClose={() => setFilter(false)}
+          open={mobileFilter}
+          className="lg:hidden filter-sheet"
+          bodyStyle={{ padding: 0 }}
+        >
+          <div className="flex h-full flex-col bg-gray-50">
+            {/* Grab handle + header */}
+            <div className="flex-shrink-0 bg-white">
+              <div className="flex justify-center pt-3">
+                <span className="h-1.5 w-11 rounded-full bg-gray-300" />
+              </div>
+              <div className="flex items-center justify-between px-5 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+                    <AdjustmentsHorizontalIcon className="h-[18px] w-[18px]" />
+                  </span>
+                  <h2 className="text-base font-bold text-primary">Filters</h2>
+                  {activeFilters.length > 0 && (
+                    <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-white">
+                      {activeFilters.length}
+                    </span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFilter(false)}
+                  aria-label="Close filters"
+                  className="rounded-full p-1.5 text-gray-500 transition hover:bg-gray-100"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              </div>
+              {activeFilters.length > 0 && (
+                <div className="border-t border-gray-100 bg-gray-50/70 px-5 py-3">
+                  <ActiveFilterChips />
+                </div>
+              )}
+            </div>
+
+            {/* Scrollable filter body */}
+            <div className="flex-1 overflow-y-auto bg-white">
+              <FilterSections />
+            </div>
+
+            {/* Sticky action footer */}
+            <div className="flex flex-shrink-0 items-center gap-3 border-t border-gray-100 bg-white px-5 py-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] shadow-[0_-6px_16px_rgba(14,27,77,0.06)]">
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                disabled={activeFilters.length === 0}
+                className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-semibold text-gray-600 transition hover:border-gray-300 disabled:opacity-40"
+              >
+                Clear all
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter(false)}
+                className="flex-[1.6] rounded-xl bg-accent py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-600 active:scale-[0.98]"
+              >
+                Show {total} {total === 1 ? "result" : "results"}
+              </button>
+            </div>
           </div>
         </Drawer>
 

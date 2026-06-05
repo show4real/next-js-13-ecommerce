@@ -106,19 +106,22 @@ export default function HeroSection() {
                 <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
                 <div className="absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-white/10 blur-2xl" />
 
-                <div className="relative flex h-full flex-col justify-center p-6 sm:p-10">
-                  <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur">
+                {/* legibility scrim — keeps text readable on any gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+
+                <div className="relative flex h-full flex-col justify-center p-5 sm:p-8 lg:p-10">
+                  <span className="mb-2.5 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur sm:text-xs">
                     <BoltIcon className="h-3.5 w-3.5" /> {slide.eyebrow}
                   </span>
-                  <h2 className="max-w-md text-2xl font-extrabold leading-tight text-white sm:text-4xl">
+                  <h2 className="max-w-md text-balance text-xl font-extrabold leading-snug text-white drop-shadow-sm sm:text-2xl lg:text-[26px] xl:text-[34px]">
                     {slide.title}
                   </h2>
-                  <p className="mt-2 max-w-sm text-sm text-white/85 sm:text-base">
+                  <p className="mt-2 max-w-sm text-balance text-xs font-medium text-white/95 drop-shadow-sm sm:text-sm lg:text-base">
                     {slide.subtitle}
                   </p>
                   <Link
                     href={slide.href}
-                    className="mt-5 inline-flex w-fit items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-bold text-primary shadow-lg transition hover:bg-accent hover:text-white"
+                    className="mt-4 inline-flex w-fit items-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-bold text-primary shadow-lg transition hover:bg-accent hover:text-white sm:mt-5 sm:px-5 sm:py-2.5 sm:text-sm"
                   >
                     {slide.cta}
                     <ChevronRightIcon className="h-4 w-4" />

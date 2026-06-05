@@ -1,5 +1,7 @@
 User-Agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /checkout
+Disallow: /verify
 
 Sitemap: https://hayzeeonline.com/sitemap.xml

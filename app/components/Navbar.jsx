@@ -17,10 +17,9 @@ import {
 import { getAllCats, getBrands, getQuickSearch } from "/app/services/productService";
 import { socials } from "./socials";
 import { Drawer } from "antd";
-import Logo from "/public/logo5.png";
+import Logo from "./Logo";
 import CartQuick from "./CartQuick";
 import useCartStore from "/app/store/zustand";
-import Image from "next/image";
 import "./social.css";
 
 const navigation = {
@@ -260,16 +259,8 @@ export default function Navbar() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 transition hover:opacity-90">
-            <Image
-              src={Logo}
-              alt="Hayzeeonline"
-              width={46}
-              height={46}
-              placeholder="blur"
-              quality={100}
-              className="rounded-lg bg-white/95 p-0.5"
-            />
+          <Link href="/" aria-label="Hayzee Computer Resources — Home" className="flex-shrink-0 transition hover:opacity-90">
+            <Logo className="h-11 w-11" />
           </Link>
 
           {/* Desktop search */}
@@ -495,13 +486,7 @@ export default function Navbar() {
             >
               <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-2xl">
                 <div className="flex items-center justify-between bg-primary px-4 py-4">
-                  <Image
-                    src={Logo}
-                    alt="Hayzeeonline"
-                    width={40}
-                    height={40}
-                    className="rounded-lg bg-white/95 p-0.5"
-                  />
+                  <Logo className="h-10 w-auto" wordmark />
                   <button
                     type="button"
                     className="rounded-full p-2 text-white hover:bg-white/10"
@@ -609,6 +594,7 @@ export default function Navbar() {
         onClose={() => setOpenCart(false)}
         open={openCart}
         className="cart-drawer"
+        rootClassName="cart-drawer-root"
         width={400}
       >
         <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-4">

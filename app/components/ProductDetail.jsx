@@ -1,6 +1,6 @@
 "use client";
 import {useState, useEffect } from "react";
-import ImageGallery from "react-image-gallery";
+import ProductGallery from "./ProductGallery";
 import { Tag, Button, Dropdown, Menu, message, Breadcrumb, Table } from "antd";
 import {
   CheckOutlined,
@@ -357,15 +357,8 @@ const ProductDetail = ({ product }) => {
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
               {/* Gallery */}
               <div className="lg:col-span-3">
-                <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white p-3 shadow-card sm:p-4">
-                  <ImageGallery
-                    showPlayButton={false}
-                    showNav={true}
-                    items={images.map((image) => ({
-                      original: image,
-                      thumbnail: image,
-                    }))}
-                  />
+                <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-card sm:p-4 lg:sticky lg:top-24">
+                  <ProductGallery images={images} />
                 </div>
               </div>
 
