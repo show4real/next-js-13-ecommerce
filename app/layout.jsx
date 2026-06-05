@@ -10,7 +10,6 @@ import Footer from "./components/Footer";
 import Head from "next/head";
 import { Facebook } from "/app/components/Facebook";
 import WhatsAppButton from "/app/components/WhatsAppButton";
-import Loading from "./loading";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -25,7 +24,6 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Navbar />
-        <Loading />
         {children}
         <Facebook />
         <WhatsAppButton

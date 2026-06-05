@@ -11,7 +11,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button, Drawer, Space, Pagination, Select } from "antd";
 import {
   FunnelIcon,
-  AdjustmentsHorizontalIcon
+  AdjustmentsHorizontalIcon,
+  XMarkIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 import ProductCard from "/app/components/ProductCard";
 import CarouselHolder from "/app/products/CarouselHolder";
@@ -30,6 +32,8 @@ import CategorySlider from "app/categories/CategorySlider";
 import './styles.css';
 
 const { Option } = Select;
+
+const DEFAULT_PRICE = [4000, 5000000];
 
 // Simple state persistence using a global object (survives navigation)
 const globalState = {};
@@ -55,6 +59,7 @@ const loadState = (key, defaultValue, productSection, categoryslug, brandslug) =
 
 export default function ProductList({
   productSection,
+  heading,
   sale_type,
   brandslug = "",
   categoryslug = "",
@@ -82,6 +87,10 @@ export default function ProductList({
   const [newLoading, setNewLoading] = useState(false);
   const [mobileFilter, setFilter] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [collapsed, setCollapsed] = useState({ storage: true, ram: true, processor: true });
+
+  const toggleSection = (key) =>
+    setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const isInitialMount = useRef(true);
 
@@ -106,7 +115,7 @@ export default function ProductList({
     fetchProducts();
     fetchBrands();
     fetchCategories();
-  }, [brand, rams, sort, storages, processors, category, rows, page]);
+  }, [brand, rams, sort, storages, processors, category, rows, page, price]);
 
   const fetchProducts = async (retryCount = 3) => {
     setLoading(true);
@@ -244,6 +253,38 @@ export default function ProductList({
     setPage(1);
   };
 
+  // ---- Active filter tracking (Amazon/Alibaba-style chips) ----
+  const priceActive =
+    price[0] !== DEFAULT_PRICE[0] || price[1] !== DEFAULT_PRICE[1];
+
+  const fmtCompact = (v) =>
+    v >= 1000000 ? `${(v / 1000000).toFixed(1)}M` : v >= 1000 ? `${Math.round(v / 1000)}K` : v;
+
+  const activeFilters = [
+    ...(priceActive
+      ? [{ key: "price", label: `₦${fmtCompact(price[0])} – ₦${fmtCompact(price[1])}`, clear: () => handlePrice(DEFAULT_PRICE) }]
+      : []),
+    ...(category
+      ? [{ key: "category", label: categories.find((c) => c.id === category)?.name || "Category", clear: () => handleCategory(null) }]
+      : []),
+    ...(brand
+      ? [{ key: "brand", label: brands.find((b) => b.id === brand)?.name || "Brand", clear: () => handleBrand("") }]
+      : []),
+    ...storages.map((s) => ({ key: `storage-${s}`, label: s, clear: () => handleStorage(storages.filter((x) => x !== s)) })),
+    ...rams.map((r) => ({ key: `ram-${r}`, label: r, clear: () => handleRam(rams.filter((x) => x !== r)) })),
+    ...processors.map((p) => ({ key: `proc-${p}`, label: p, clear: () => handleProcessor(processors.filter((x) => x !== p)) })),
+  ];
+
+  const clearAllFilters = () => {
+    setPrice(DEFAULT_PRICE);
+    setCategory(null);
+    setBrand("");
+    setStorages([]);
+    setRams([]);
+    setProcessors([]);
+    setPage(1);
+  };
+
   const onPage = (newPage, newRows) => {
     console.log('Pagination changed:', { newPage, newRows, currentPage: page, currentRows: rows });
     setPage(newPage);
@@ -261,57 +302,140 @@ export default function ProductList({
     }).format(value);
 
   const SimplePriceSlider = () => (
-    <PriceSelect price={price} handlePrice={handlePrice} fetchProducts={fetchProducts} />
+    <PriceSelect price={price} handlePrice={handlePrice} />
   );
 
-  const FilterSection = ({ title, children }) => (
-    <div className="mb-6">
-      <h3 className="text-sm font-semibold text-gray-900 mb-3">{title}</h3>
-      {children}
-    </div>
-  );
+  const FilterSection = ({ title, name, count, children }) => {
+    const open = !collapsed[name];
+    return (
+      <div className="border-b border-gray-100 last:border-b-0">
+        <button
+          type="button"
+          onClick={() => toggleSection(name)}
+          className="group flex w-full items-center justify-between px-5 py-4 text-left"
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold text-gray-800 group-hover:text-primary">
+            {title}
+            {count > 0 && (
+              <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
+                {count}
+              </span>
+            )}
+          </span>
+          <ChevronUpIcon
+            className={`h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:text-primary ${
+              open ? "" : "rotate-180"
+            }`}
+          />
+        </button>
+        {open && <div className="px-5 pb-5 pt-1">{children}</div>}
+      </div>
+    );
+  };
+
+  const ActiveFilterChips = ({ className = "" }) =>
+    activeFilters.length > 0 ? (
+      <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+        {activeFilters.map((f) => (
+          <button
+            key={f.key}
+            type="button"
+            onClick={() => { f.clear(); setPage(1); }}
+            className="group inline-flex items-center gap-1.5 rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700 transition hover:border-accent hover:bg-accent hover:text-white"
+          >
+            {f.label}
+            <XMarkIcon className="h-3.5 w-3.5 opacity-70 transition group-hover:opacity-100" />
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={clearAllFilters}
+          className="text-xs font-semibold text-gray-400 underline-offset-2 transition hover:text-red-500 hover:underline"
+        >
+          Clear all
+        </button>
+      </div>
+    ) : null;
 
   const SidebarFilters = () => (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 sticky top-6">
-      <div className="flex items-center mb-6">
-        <AdjustmentsHorizontalIcon className="h-5 w-5 text-gray-600 mr-2" />
-        <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+    <div className="overflow-visible rounded-2xl border border-gray-200/80 bg-white shadow-card lg:sticky lg:top-24">
+      {/* Header */}
+      <div className="flex items-center justify-between rounded-t-2xl border-b border-gray-100 bg-gradient-to-r from-primary-50 to-white px-5 py-4">
+        <div className="flex items-center gap-2.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm">
+            <AdjustmentsHorizontalIcon className="h-[18px] w-[18px]" />
+          </span>
+          <div className="leading-tight">
+            <h2 className="text-sm font-bold text-gray-900">Filters</h2>
+            <p className="text-[11px] text-gray-400">
+              {activeFilters.length > 0
+                ? `${activeFilters.length} applied`
+                : "Refine results"}
+            </p>
+          </div>
+        </div>
+        {activeFilters.length > 0 && (
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-500 transition hover:bg-red-100"
+          >
+            <XMarkIcon className="h-3.5 w-3.5" />
+            Reset
+          </button>
+        )}
       </div>
-      <FilterSection title="Price Range">
+
+      {/* Active chips */}
+      {activeFilters.length > 0 && (
+        <div className="border-b border-gray-100 bg-gray-50/70 px-5 py-4">
+          <ActiveFilterChips />
+        </div>
+      )}
+
+      <FilterSection title="Price Range" name="price" count={priceActive ? 1 : 0}>
         <SimplePriceSlider />
       </FilterSection>
       {categoryslug === "" && (
-        <FilterSection title="Category">
+        <FilterSection title="Category" name="category" count={category ? 1 : 0}>
           <CategorySelect categories={categories} category={category} handleCategory={handleCategory} />
         </FilterSection>
       )}
       {brandslug === "" && (
-        <FilterSection title="Brand">
+        <FilterSection title="Brand" name="brand" count={brand ? 1 : 0}>
           <BrandSelect brands={brands} brand={brand} handleBrand={handleBrand} />
         </FilterSection>
       )}
-      <FilterSection title="Storage">
+      <FilterSection title="Storage" name="storage" count={storages.length}>
         <StorageSelect storages={storages} handleStorage={handleStorage} />
       </FilterSection>
-      <FilterSection title="RAM">
+      <FilterSection title="RAM" name="ram" count={rams.length}>
         <RamSelect rams={rams} handleRam={handleRam} />
       </FilterSection>
-      <FilterSection title="Processor">
+      <FilterSection title="Processor" name="processor" count={processors.length}>
         <ProcessorSelect processors={processors} handleProcessor={handleProcessor} />
       </FilterSection>
     </div>
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SocialIconMenu categoryslug="" brandslug="" flash_sale={flash_sale} notice={notice} />
+    <div className="bg-transparent">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
+        <SocialIconMenu flash_sale={flash_sale} />
         <div className="mb-8">
-          <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mb-6 pt-5">{productSection}</h3>
-          <div className="lg:hidden mb-6">
-            <button onClick={() => setFilter(true)} className="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 shadow-sm">
-              <FunnelIcon className="h-5 w-5 mr-2" />
-              Show Filters
+          <div className="flex items-end gap-3">
+            <h3 className="text-2xl font-extrabold tracking-tight text-primary md:text-3xl">{heading || productSection}</h3>
+            <span className="mb-1.5 h-1 w-12 rounded-full bg-accent" />
+          </div>
+          <div className="mt-6 lg:hidden">
+            <button onClick={() => setFilter(true)} className="flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 font-semibold text-primary shadow-sm transition hover:border-accent hover:text-accent">
+              <FunnelIcon className="mr-2 h-5 w-5" />
+              Filters
+              {activeFilters.length > 0 && (
+                <span className="ml-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-white">
+                  {activeFilters.length}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -324,22 +448,36 @@ export default function ProductList({
               <SidebarFilters />
             </div>
             <div className="lg:col-span-3">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                <p className="text-gray-600 mb-4 sm:mb-0">
-                  Showing {((page - 1) * rows) + 1}-{Math.min(page * rows, total)} of {total} products (Page {page})
-                </p>
-                <div className="w-full sm:w-64">
-                  <Select placeholder="Sort by" className="w-full" value={sort} onChange={handleSorting} size="large">
-                    <Option value="">Default</Option>
-                    <Option value="availability">Availability</Option>
-                    <Option value="name-asc">Name: A-Z</Option>
-                    <Option value="name-desc">Name: Z-A</Option>
-                    <Option value="low-price">Price: Low to High</Option>
-                    <Option value="high-price">Price: High to Low</Option>
-                    <Option value="date-asc">Date: Old to New</Option>
-                    <Option value="date-desc">Date: New to Old</Option>
-                  </Select>
+              <div className="mb-6 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-card sm:px-5">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-gray-600">
+                    Showing{" "}
+                    <span className="font-semibold text-primary">
+                      {total === 0 ? 0 : (page - 1) * rows + 1}–{Math.min(page * rows, total)}
+                    </span>{" "}
+                    of <span className="font-semibold text-primary">{total}</span> products
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="hidden text-sm font-medium text-gray-500 sm:inline">Sort by</span>
+                    <div className="w-full sm:w-56">
+                      <Select placeholder="Sort by" className="w-full" value={sort} onChange={handleSorting} size="large">
+                        <Option value="">Default</Option>
+                        <Option value="availability">Availability</Option>
+                        <Option value="name-asc">Name: A-Z</Option>
+                        <Option value="name-desc">Name: Z-A</Option>
+                        <Option value="low-price">Price: Low to High</Option>
+                        <Option value="high-price">Price: High to Low</Option>
+                        <Option value="date-asc">Date: Old to New</Option>
+                        <Option value="date-desc">Date: New to Old</Option>
+                      </Select>
+                    </div>
+                  </div>
                 </div>
+                {activeFilters.length > 0 && (
+                  <div className="mt-3 border-t border-gray-100 pt-3">
+                    <ActiveFilterChips />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">

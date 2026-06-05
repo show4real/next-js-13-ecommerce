@@ -213,7 +213,7 @@ const CategorySlider = ({ sale_type }) => {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-3xl p-8">
           <div className="text-center">
             <div className="relative inline-block">
@@ -232,7 +232,7 @@ const CategorySlider = ({ sale_type }) => {
 
   if (!products.length) {
     return (
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <div className="bg-gray-50 rounded-3xl p-12 text-center">
           <FontAwesomeIcon icon={faClock} className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-600 mb-2">No Flash Sale Products</h3>
@@ -243,7 +243,7 @@ const CategorySlider = ({ sale_type }) => {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-24">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
       <div className=" rounded-3xl p-8 relative overflow-hidden">
         {/* Background decoration */}
         {/* <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-red-200/20 to-pink-200/20 rounded-full -translate-y-32 translate-x-32"></div>

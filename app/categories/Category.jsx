@@ -64,27 +64,24 @@ const Category = ({}) => {
   };
 
   const ViewAllButton = () => (
-    <Button 
-      type="primary"
-      size="large"
+    <button
       onClick={handleViewAllCategory}
-      className="bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 rounded-lg font-medium shadow-sm"
-      icon={<ArrowRightIcon className="h-4 w-4" />}
-      iconPosition="end"
+      className="group inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent"
     >
       View All Categories
-    </Button>
+      <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+    </button>
   );
 
   const CategoryViewAllButton = ({ category }) => (
     <button
       onClick={() => handleViewAll(category.slug)}
-      className="group inline-flex items-center px-8 py-3 bg-gradient-to-r from-slate-800 to-slate-700 text-white font-medium rounded-full hover:from-slate-700 hover:to-slate-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+      className="group inline-flex items-center rounded-full bg-primary px-8 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-accent hover:shadow-xl"
     >
-      <span className="group-hover:translate-x-1 transition-transform duration-300">
+      <span className="transition-transform duration-300 group-hover:translate-x-1">
         View All {category.name}
       </span>
-      <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+      <ArrowRightIcon className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
     </button>
   );
 

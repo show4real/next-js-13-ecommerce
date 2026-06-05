@@ -6,42 +6,24 @@ const WhatsAppButton = ({ phoneNumber, message }) => {
   const encodedMessage = encodeURIComponent(message);
 
   return (
-    <div className="fixed bottom-5 right-3 z-50 text-white px-6 py-3 rounded-lg flex items-center">
-      <a
-        href={`https://wa.me/${phoneNumber}?text=${encodedMessage}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={styles.button}
-      >
-        <Image
-          src={Whatsapp}
-          alt="Hayzeeonline Computer resources"
-          width={50}
-          placeholder="blur"
-          quality={100}
-        />
-        {/* <img src="/public/whatsapp.webp" alt="WhatsApp" style={styles.icon} /> */}
-        Chat with Us
-      </a>
-    </div>
+    <a
+      href={`https://wa.me/${phoneNumber}?text=${encodedMessage}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Chat with us on WhatsApp"
+      className="fixed bottom-5 right-4 z-50 inline-flex items-center gap-2 rounded-full bg-[#25D366] py-2 pl-2 pr-4 font-bold text-white shadow-lg ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:bg-[#1ebe5b] hover:shadow-xl active:scale-95"
+    >
+      <Image
+        src={Whatsapp}
+        alt="WhatsApp"
+        width={32}
+        height={32}
+        placeholder="blur"
+        quality={100}
+      />
+      <span className="hidden text-sm sm:inline">Chat with Us</span>
+    </a>
   );
-};
-
-const styles = {
-  button: {
-    backgroundColor: "#25D366",
-    color: "#fff",
-    padding: "8px 16px",
-    borderRadius: "5px",
-    textDecoration: "none",
-    fontWeight: "bold",
-    fontSize: "16px",
-  },
-  icon: {
-    marginRight: "10px",
-    width: "24px",
-    height: "24px",
-  },
 };
 
 export default WhatsAppButton;

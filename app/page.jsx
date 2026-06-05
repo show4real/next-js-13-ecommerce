@@ -3,8 +3,8 @@ import Loading from "./loading";
 import ProductList from "./products/ProductList";
 import ProductSaleType from "./products/ProductSalesType";
 import FeaturedServices from "./components/FeaturedServices";
+import HeroSection from "./components/HeroSection";
 import Category from "./categories/Category";
-import CategorySlider from "./categories/CategorySlider";
 
 export const metadata = {
   title: " US used / Uk used Laptop Computers At Affordable Prices - Hayzeeonline",
@@ -40,28 +40,28 @@ export const metadata = {
 
 export default function Home() {
   return (
-  <main className="w-full px-4 sm:px-6 lg:px-8 mt-[70px] lg:mt-[150px]">
-    
-  <Suspense fallback={<Loading />}>
-    <ProductList
-      productSection="Trending Products"
-      sale_type={null}
-      brandslug={""}
-      categoryslug={""}
-      shop={false}
-      flash_sale={true}
-    />
-    <Category />
-    {/* <ProductSaleType sale_type="flash sales" /> */}
-    {/* <ProductSaleType sale_type="PRE-ORDER (24Hours)" />
-    <ProductSaleType sale_type="PRE-ORDER (21DAYS)" />
-    <ProductSaleType sale_type="PRE-ORDER (7DAYS)" /> */}
-    <ProductSaleType sale_type="promo sales" />
-    <FeaturedServices />
-    <ProductSaleType sale_type="black friday" />
-    <ProductSaleType sale_type="Mid year sales" />
-  </Suspense>
-</main>
+  <main className="w-full mt-[96px] pb-10 lg:mt-[148px]">
+    <Suspense fallback={<Loading />}>
+      <div className="pt-5 sm:pt-6">
+        <HeroSection />
+      </div>
+
+      <ProductList
+        productSection="Trending Products"
+        heading="Top Picks For You"
+        sale_type={null}
+        brandslug={""}
+        categoryslug={""}
+        shop={false}
+        flash_sale={true}
+      />
+      <Category />
+      <ProductSaleType sale_type="promo sales" />
+      <FeaturedServices />
+      <ProductSaleType sale_type="black friday" />
+      <ProductSaleType sale_type="Mid year sales" />
+    </Suspense>
+  </main>
 
   );
 }

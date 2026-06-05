@@ -4,8 +4,12 @@ import Paystack from "/app/components/paystack.webp";
 
 const PaymentImage = () => {
   return (
-    <div className="overflow-hidden bg-white rounded-sm shadow-sm">
-      <Image className="object-fit w-full h-32" src={Paystack} alt="Sample" />
+    <div className="flex items-center justify-center rounded-xl border border-gray-100 bg-gray-50 p-4">
+      <Image
+        src={Paystack}
+        alt="Secured by Paystack — Visa, Mastercard & Verve accepted"
+        className="h-auto w-full max-w-[280px] object-contain"
+      />
     </div>
   );
 };

@@ -2,8 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --brand-navy: #0e1b4d;
+  --brand-accent: #ff7a1a;
+}
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f4f5f8;
+  color: #15233f;
+  -webkit-font-smoothing: antialiased;
+}
 
 .header-sticky {
   background: rgba(252, 252, 252, 1) !important;
+}
+
+/* ---- Reusable component classes ---- */
+@layer components {
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 font-semibold text-white shadow-sm transition-all duration-200 hover:bg-accent-600 hover:shadow-md active:scale-[0.98];
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 font-semibold text-white shadow-sm transition-all duration-200 hover:bg-primary-500 hover:shadow-md active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-white px-5 py-2.5 font-semibold text-primary transition-all duration-200 hover:border-primary/40 hover:bg-primary-50;
+  }
+  .section-title {
+    @apply text-xl font-bold tracking-tight text-primary sm:text-2xl;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+}
+
+/* ---- Utilities ---- */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Smooth shimmer skeleton */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e7eaf1;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Hide horizontal scrollbars on category rails but keep scroll */
+.snap-rail {
+  scroll-snap-type: x mandatory;
+}
+.snap-rail > * {
+  scroll-snap-align: start;
+}
+
+/* Ant Design tweaks to match brand */
+.custom-pagination .ant-pagination-item-active {
+  border-color: var(--brand-navy);
+}
+.custom-pagination .ant-pagination-item-active a {
+  color: var(--brand-navy);
+}
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--brand-navy) !important;
+}
+.ant-tabs .ant-tabs-ink-bar {
+  background: var(--brand-accent) !important;
+}
+.ant-tabs .ant-tabs-tab:hover {
+  color: var(--brand-accent) !important;
 }

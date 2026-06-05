@@ -70,7 +70,7 @@ export default async function ProductDetails({ params }) {
   }
 
   return (
-    <main className="mt-[100px] md:mt-[100px] md:px-[100px]">
+    <main className="mt-[96px] lg:mt-[148px]">
       <ProductDetail product={product} />
     </main>
   );
