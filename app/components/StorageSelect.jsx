@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { MagnifyingGlassIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 const storagesList = [
+  // Phone / tablet flash storage
+  "16GB", "32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB",
+  // Laptop / desktop drives
   "32GB SSD", "64GB SSD", "128GB SSD", "180GB SSD", "200GB SSD", "256GB SSD",
   "512GB SSD", "1TB SSD", "60GB HDD", "120GB HDD", "180GB HDD", "200GB HDD",
   "250GB HDD", "320GB HDD", "500GB HDD", "1TB HDD", "128GB SSHD", "256GB SSHD",

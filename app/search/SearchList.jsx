@@ -38,6 +38,8 @@ const { Option } = Select;
 export default function SearchList({ search }) {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  // Distinct categories present in the search results (from each product's category field)
+  const [resultCategories, setResultCategories] = useState([]);
   
   const [rows, setRows] = useState(100);
   const [page, setPage] = useState(1);
@@ -111,7 +113,22 @@ export default function SearchList({ search }) {
       const res = await getAllSearchProducts({
         search_all,
       });
-      setProducts(res.products);
+      const prods = res.products || [];
+      setProducts(prods);
+
+      // Collect the distinct categories represented in the results
+      const map = new Map();
+      prods.forEach((p) => {
+        if (p.category_id && p.category) {
+          const existing = map.get(p.category_id);
+          if (existing) existing.count += 1;
+          else map.set(p.category_id, { id: p.category_id, name: p.category, count: 1 });
+        }
+      });
+      setResultCategories(
+        Array.from(map.values()).sort((a, b) => b.count - a.count)
+      );
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -334,6 +351,30 @@ export default function SearchList({ search }) {
               : `${total} product${total === 1 ? "" : "s"} found`}
           </p>
         </div>
+
+        {/* Categories found in the results — shown before the products. Clicking
+            one opens the shop with that category pre-selected in the filter. */}
+        {!loading && resultCategories.length > 0 && (
+          <div className="mb-8">
+            <p className="mb-3 text-xs font-bold uppercase tracking-wider text-accent">
+              Browse by category
+            </p>
+            <div className="flex flex-wrap gap-2.5">
+              {resultCategories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/products?category=${cat.id}`}
+                  className="group inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-primary shadow-sm transition hover:border-accent hover:bg-accent hover:text-white"
+                >
+                  {cat.name}
+                  <span className="flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary-50 px-1.5 text-[11px] font-bold text-primary transition group-hover:bg-white/20 group-hover:text-white">
+                    {cat.count}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}

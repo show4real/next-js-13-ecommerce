@@ -1,7 +1,7 @@
 import React from "react";
 
 const ramsList = [
-  "2GB", "4GB", "6GB", "8GB", "12GB", "16GB", "24GB", "32GB",
+  "1GB", "2GB", "3GB", "4GB", "6GB", "8GB", "12GB", "16GB", "24GB", "32GB",
   "64GB", "128GB", "256GB", "512GB", "1TB",
 ];
 

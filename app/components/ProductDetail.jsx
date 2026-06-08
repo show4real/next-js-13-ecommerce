@@ -1,7 +1,7 @@
 "use client";
 import {useState, useEffect } from "react";
 import ProductGallery from "./ProductGallery";
-import { Tag, Button, Dropdown, Menu, message, Breadcrumb, Table } from "antd";
+import { Tag, Button, Dropdown, Menu, message, Breadcrumb } from "antd";
 import {
   CheckOutlined,
   ShareAltOutlined,
@@ -14,12 +14,14 @@ import {
   ShieldCheckIcon,
   CreditCardIcon,
   MapPinIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import {
   getProductImages,
   getRelatedProduct,
-  getProductInfos,
 } from "/app/services/productService";
+import { getProductSpecs } from "/app/lib/productSpecs";
 import useCartStore from "/app/store/zustand";
 import "./NumberButton.css";
 import Link from "next/link";
@@ -31,7 +33,7 @@ const ProductDetail = ({ product }) => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [productInfos, setProductInfos] = useState([]);
+  const [showSpecs, setShowSpecs] = useState(true);
 
   const { cart, addToCart, removeFromCart, updateCart } = useCartStore();
   const itemInCart = cart.filter((item) => item.id === product.id);
@@ -43,7 +45,6 @@ const ProductDetail = ({ product }) => {
     if (product) {
       fetchImages();
       fetchRelatedProducts();
-      fetchProductInfos();
     }
   }, [product]);
 
@@ -72,24 +73,6 @@ const ProductDetail = ({ product }) => {
         setLoading(false);
         setRelatedProducts([]);
       });
-  };
-
-  const fetchProductInfos = async () => {
-    try {
-      setLoading(true);
-      const res = await getProductInfos(product.id);
-      setProductInfos(
-        res.product_descriptions.map((item, key) => ({
-          key: key,
-          label: item.label,
-          value: item.values,
-        }))
-      );
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching product infos:", err);
-      setLoading(false);
-    }
   };
 
   const tagStyle = {
@@ -291,32 +274,6 @@ const ProductDetail = ({ product }) => {
     );
   };
 
-  const AdditionalInfo = () => {
-    const columns = [
-      {
-        title: "Information",
-        dataIndex: "label",
-        key: "label",
-      },
-      {
-        title: "Properties",
-        dataIndex: "value",
-        key: "value",
-      },
-    ];
-
-    return (
-      <Table
-        dataSource={productInfos}
-        columns={columns}
-        pagination={false}
-        bordered
-        size="small"
-        style={{ marginBottom: "20px" }}
-      />
-    );
-  };
-
   const CustomBreadcrumb = () => {
     return (
       <Breadcrumb separator="/">
@@ -331,10 +288,9 @@ const ProductDetail = ({ product }) => {
     return <div>Loading...</div>;
   }
 
-  const hasSpecs =
-    (product.storage && product.storage !== "null") ||
-    (product.processor && product.processor !== "null") ||
-    (product.ram && product.ram !== "null");
+  // Full spec list from the product's own columns (Model, Subtype, Condition,
+  // Number of Cores, Storage Type, Display Size, Graphics Card, etc.)
+  const specs = getProductSpecs(product);
 
   const trust = [
     { icon: TruckIcon, text: "Nationwide delivery" },
@@ -407,28 +363,50 @@ const ProductDetail = ({ product }) => {
                     </p>
                   </div>
 
-                  {/* Specifications */}
-                  {hasSpecs && (
-                    <div className="mt-5">
-                      <p className="mb-2 text-sm font-bold text-gray-700">Specifications</p>
-                      <div className="flex select-none flex-wrap gap-2">
-                        {product.storage && product.storage !== "null" && (
-                          <span className="rounded-lg border border-primary-100 bg-primary-50 px-3 py-1.5 text-sm font-semibold text-primary">
-                            {product.storage} Storage
-                          </span>
-                        )}
-                        {product.processor && product.processor !== "null" && (
-                          <span className="rounded-lg border border-primary-100 bg-primary-50 px-3 py-1.5 text-sm font-semibold text-primary">
-                            {product.processor} Processor
-                          </span>
-                        )}
-                        {product.ram && product.ram !== "null" && (
-                          <span className="rounded-lg border border-primary-100 bg-primary-50 px-3 py-1.5 text-sm font-semibold text-primary">
-                            {product.ram} RAM
-                          </span>
-                        )}
+                  {/* Specifications — full table built from the product columns */}
+                  {specs.length > 0 && (
+                    <section aria-labelledby="specifications-heading" className="mt-5">
+                      <h2
+                        id="specifications-heading"
+                        className="mb-3 text-sm font-bold text-gray-700"
+                      >
+                        Specifications
+                      </h2>
+
+                      {showSpecs && (
+                        <dl className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+                          {specs.map((spec) => (
+                            <div
+                              key={spec.label}
+                              className="flex flex-col-reverse gap-0.5 border-b border-gray-100 py-2.5"
+                            >
+                              <dt className="text-[11px] font-medium uppercase tracking-wider text-gray-400">
+                                {spec.label}
+                              </dt>
+                              <dd className="text-sm font-semibold text-gray-900">
+                                {spec.value}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+                      )}
+
+                      <div className="mt-3 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setShowSpecs((prev) => !prev)}
+                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-600 transition hover:text-green-700"
+                          aria-expanded={showSpecs}
+                        >
+                          {showSpecs ? "Hide options" : "Show options"}
+                          {showSpecs ? (
+                            <ChevronUpIcon className="h-4 w-4" />
+                          ) : (
+                            <ChevronDownIcon className="h-4 w-4" />
+                          )}
+                        </button>
                       </div>
-                    </div>
+                    </section>
                   )}
 
                   {/* Description */}

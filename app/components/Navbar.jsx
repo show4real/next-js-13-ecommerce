@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState, useEffect, useRef } from "react";
+import { Fragment, useState, useEffect, useRef, useMemo } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -105,6 +105,17 @@ export default function Navbar() {
     return () => clearTimeout(t);
   }, [query]);
 
+  // Distinct categories present in the live search results
+  const searchCategories = useMemo(() => {
+    const map = new Map();
+    results.forEach((p) => {
+      if (p.category_id && p.category && !map.has(p.category_id)) {
+        map.set(p.category_id, { id: p.category_id, name: p.category });
+      }
+    });
+    return Array.from(map.values());
+  }, [results]);
+
   const fetchBrands = () => {
     getBrands().then(
       (res) => setBrands(res.brands || []),
@@ -146,6 +157,28 @@ export default function Navbar() {
           </div>
         ) : results.length > 0 ? (
           <>
+            {/* Matching categories — click to open the shop with it pre-selected */}
+            {searchCategories.length > 0 && (
+              <div className="border-b border-gray-100 p-2">
+                <p className="px-2.5 pb-1.5 pt-1 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                  Categories
+                </p>
+                <div className="flex flex-wrap gap-2 px-1.5 pb-1.5">
+                  {searchCategories.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={`/products?category=${cat.id}`}
+                      onClick={() => setShowResults(false)}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-primary transition hover:border-accent hover:bg-accent hover:text-white"
+                    >
+                      <Squares2X2Icon className="h-3.5 w-3.5" />
+                      {cat.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <ul className="divide-y divide-gray-50 p-2">
               {results.slice(0, 6).map((product) => (
                 <li key={product.id}>

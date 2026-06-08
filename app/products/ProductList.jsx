@@ -16,9 +16,9 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
   ArrowsUpDownIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import ProductCard from "/app/components/ProductCard";
-import CarouselHolder from "/app/products/CarouselHolder";
 import PriceSelect from "/app/components/PriceSelect";
 import SearchSelect from "/app/components/SearchSelect";
 import StorageSelect from "/app/components/StorageSelect";
@@ -26,6 +26,8 @@ import BrandSelect from "/app/components/BrandSelect";
 import CategorySelect from "/app/components/CategorySelect";
 import RamSelect from "/app/components/RamSelect";
 import ProcessorSelect from "/app/components/ProcessorSelect";
+import CheckboxFilter from "/app/components/CheckboxFilter";
+import { getModelOptions } from "/app/lib/models";
 import SortSelect from "/app/components/SortSelect";
 import SocialIconMenu from "/app/components/SocialIconMenu";
 import Link from "next/link";
@@ -36,6 +38,75 @@ import './styles.css';
 const { Option } = Select;
 
 const DEFAULT_PRICE = [4000, 5000000];
+
+// ---- Option lists for the extended attribute filters ----
+const SUBTYPE_OPTIONS = [
+  "Ultrabook", "Notebook", "Gaming Laptop", "2-in-1 Convertible", "Chromebook",
+  "Business Laptop", "Workstation", "Netbook", "MacBook", "All-in-One",
+];
+
+const CONDITION_OPTIONS = [
+  "Brand New", "UK Used", "Nigerian Used", "Refurbished", "Open Box", "US Used"
+];
+
+const CORES_OPTIONS = [
+  "2 Cores", "4 Cores", "6 Cores", "8 Cores", "10 Cores", "12 Cores", "14 Cores", "16 Cores",
+];
+
+const STORAGE_TYPE_OPTIONS = [
+  "SSD", "NVMe SSD", "HDD", "SSHD", "eMMC", "SSD + HDD",
+];
+
+const DISPLAY_SIZE_OPTIONS = [
+  // Phones
+  '4.7"', '5.0"', '5.4"', '5.5"', '5.8"', '6.1"', '6.3"', '6.5"', '6.7"', '6.8"',
+  // Tablets
+  '7"', '8"', '8.3"', '9.7"', '10.2"', '10.9"', '11"', '12.4"', '12.9"',
+  // Laptops
+  '10.1"', '11.6"', '12.5"', '13.3"', '14"', '15.6"', '16"', '17.3"',
+];
+
+const GRAPHICS_OPTIONS = [
+  "Intel HD Graphics", "Intel UHD Graphics", "Intel Iris Xe", "AMD Radeon",
+  "NVIDIA GeForce MX", "NVIDIA GTX 1050", "NVIDIA GTX 1650", "NVIDIA RTX 3050",
+  "NVIDIA RTX 3060", "NVIDIA RTX 4060", "Apple GPU",
+];
+
+// OS options are scoped to the current device type so the filter only offers
+// systems that make sense (mobile OS versions for phones, desktop OS for laptops).
+const COMPUTER_OS_OPTIONS = [
+  "Windows 11", "Windows 10", "Windows 8", "Windows 7",
+  "macOS", "Chrome OS", "Linux", "No OS / DOS",
+];
+
+const PHONE_OS_OPTIONS = [
+  // iPhone
+  "iOS 18", "iOS 17", "iOS 16", "iOS 15", "iOS 14", "iOS 13", "iOS",
+  // Android
+  "Android 15", "Android 14", "Android 13", "Android 12", "Android 11",
+  "Android 10", "Android 9", "Android",
+  // Other mobile
+  "HarmonyOS",
+];
+
+const TABLET_OS_OPTIONS = [
+  "iPadOS 18", "iPadOS 17", "iPadOS 16", "iPadOS 15", "iPadOS",
+  "Android 15", "Android 14", "Android 13", "Android 12", "Android",
+  "Windows 11", "Windows 10", "HarmonyOS",
+];
+
+// Fallback when the device type can't be determined (covers everything).
+const OS_OPTIONS = [
+  ...COMPUTER_OS_OPTIONS.filter((o) => o !== "No OS / DOS"),
+  ...PHONE_OS_OPTIONS, "iPadOS", "No OS / DOS",
+];
+
+const COLOR_OPTIONS = [
+  "Black", "Silver", "Gray", "Space Gray", "White", "Gold", "Rose Gold",
+  "Blue", "Red", "Green",
+];
+
+const EXCHANGE_OPTIONS = ["Yes", "No"];
 
 const SORT_OPTIONS = [
   { value: "", label: "Default" },
@@ -76,12 +147,15 @@ export default function ProductList({
   sale_type,
   brandslug = "",
   categoryslug = "",
+  initialCategory = "",
   flash_sale,
 }) {
   // Load initial state from global storage
   const [products, setProducts] = useState([]);
   const [rows, setRows] = useState(() => loadState('rows', 12, productSection, categoryslug, brandslug));
-  const [page, setPage] = useState(() => loadState('page', 1, productSection, categoryslug, brandslug));
+  const [page, setPage] = useState(() =>
+    initialCategory ? 1 : loadState('page', 1, productSection, categoryslug, brandslug)
+  );
   const [total, setTotal] = useState(1);
 
   const [brands, setBrands] = useState([]);
@@ -94,13 +168,30 @@ export default function ProductList({
   const [price, setPrice] = useState(() => loadState('price', [4000, 5000000], productSection, categoryslug, brandslug));
   const [search_all, setSearch] = useState(() => loadState('search', "", productSection, categoryslug, brandslug));
   const [brand, setBrand] = useState(() => loadState('brand', "", productSection, categoryslug, brandslug));
-  const [category, setCategory] = useState(() => loadState('category', null, productSection, categoryslug, brandslug));
+  const [category, setCategory] = useState(() =>
+    initialCategory
+      ? Number(initialCategory)
+      : loadState('category', null, productSection, categoryslug, brandslug)
+  );
+
+  // Extended attribute filters
+  const [models, setModels] = useState(() => loadState('models', [], productSection, categoryslug, brandslug));
+  const [subtypes, setSubtypes] = useState(() => loadState('subtypes', [], productSection, categoryslug, brandslug));
+  const [conditions, setConditions] = useState(() => loadState('conditions', [], productSection, categoryslug, brandslug));
+  const [cores, setCores] = useState(() => loadState('cores', [], productSection, categoryslug, brandslug));
+  const [storageTypes, setStorageTypes] = useState(() => loadState('storageTypes', [], productSection, categoryslug, brandslug));
+  const [displaySizes, setDisplaySizes] = useState(() => loadState('displaySizes', [], productSection, categoryslug, brandslug));
+  const [graphics, setGraphics] = useState(() => loadState('graphics', [], productSection, categoryslug, brandslug));
+  const [operatingSystems, setOperatingSystems] = useState(() => loadState('operatingSystems', [], productSection, categoryslug, brandslug));
+  const [colors, setColors] = useState(() => loadState('colors', [], productSection, categoryslug, brandslug));
+  const [exchange, setExchange] = useState(() => loadState('exchange', [], productSection, categoryslug, brandslug));
 
   const [loading, setLoading] = useState(false);
   const [newLoading, setNewLoading] = useState(false);
   const [mobileFilter, setFilter] = useState(false);
   const [notice, setNotice] = useState(null);
-  const [collapsed, setCollapsed] = useState({ storage: true, ram: true, processor: true });
+  // Empty map = every section open by default (open = !collapsed[name])
+  const [collapsed, setCollapsed] = useState({});
 
   const toggleSection = (key) =>
     setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -126,15 +217,26 @@ export default function ProductList({
       saveState('search', search_all, productSection, categoryslug, brandslug);
       saveState('brand', brand, productSection, categoryslug, brandslug);
       saveState('category', category, productSection, categoryslug, brandslug);
+      saveState('models', models, productSection, categoryslug, brandslug);
+      saveState('subtypes', subtypes, productSection, categoryslug, brandslug);
+      saveState('conditions', conditions, productSection, categoryslug, brandslug);
+      saveState('cores', cores, productSection, categoryslug, brandslug);
+      saveState('storageTypes', storageTypes, productSection, categoryslug, brandslug);
+      saveState('displaySizes', displaySizes, productSection, categoryslug, brandslug);
+      saveState('graphics', graphics, productSection, categoryslug, brandslug);
+      saveState('operatingSystems', operatingSystems, productSection, categoryslug, brandslug);
+      saveState('colors', colors, productSection, categoryslug, brandslug);
+      saveState('exchange', exchange, productSection, categoryslug, brandslug);
     }
-  }, [rows, page, storages, processors, rams, sort, price, search_all, brand, category, productSection, categoryslug, brandslug]);
+  }, [rows, page, storages, processors, rams, sort, price, search_all, brand, category, models, subtypes, conditions, cores, storageTypes, displaySizes, graphics, operatingSystems, colors, exchange, productSection, categoryslug, brandslug]);
 
   useEffect(() => {
     isInitialMount.current = false;
     fetchProducts();
     fetchBrands();
     fetchCategories();
-  }, [brand, rams, sort, storages, processors, category, rows, page, price]);
+  }, [brand, rams, sort, storages, processors, category, rows, page, price, models, subtypes, conditions, cores, storageTypes, displaySizes, graphics, operatingSystems, colors, exchange]);
+
 
   const fetchProducts = async (retryCount = 3) => {
     setLoading(true);
@@ -142,6 +244,20 @@ export default function ProductList({
       let res;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      // Extended attribute filters shared across every endpoint
+      const extraFilters = {
+        models,
+        subtypes,
+        conditions,
+        cores,
+        storage_types: storageTypes,
+        display_sizes: displaySizes,
+        graphics_cards: graphics,
+        operating_systems: operatingSystems,
+        colors,
+        exchange,
+      };
 
       if (productSection === "Trending Products") {
         res = await getProducts({
@@ -155,6 +271,7 @@ export default function ProductList({
           processors,
           category,
           search_all,
+          ...extraFilters,
         });
       } else if (productSection === "Laptops") {
         res = await getLaptopProducts({
@@ -170,6 +287,7 @@ export default function ProductList({
           search_all,
           categoryslug,
           brandslug,
+          ...extraFilters,
         });
       } else {
         res = await getCategoryProducts({
@@ -185,6 +303,7 @@ export default function ProductList({
           search_all,
           categoryslug,
           brandslug,
+          ...extraFilters,
         });
       }
 
@@ -279,6 +398,24 @@ export default function ProductList({
     scrollToSection();
   };
 
+  // Generic handler factory for the extended multi-select filters
+  const makeMultiHandler = (setter) => (options) => {
+    setter(options);
+    setPage(1);
+    scrollToSection();
+  };
+
+  const handleSubtypes = makeMultiHandler(setSubtypes);
+  const handleConditions = makeMultiHandler(setConditions);
+  const handleCores = makeMultiHandler(setCores);
+  const handleStorageTypes = makeMultiHandler(setStorageTypes);
+  const handleDisplaySizes = makeMultiHandler(setDisplaySizes);
+  const handleGraphics = makeMultiHandler(setGraphics);
+  const handleOperatingSystems = makeMultiHandler(setOperatingSystems);
+  const handleColors = makeMultiHandler(setColors);
+  const handleExchange = makeMultiHandler(setExchange);
+  const handleModels = makeMultiHandler(setModels);
+
   // ---- Active filter tracking (Amazon/Alibaba-style chips) ----
   const priceActive =
     price[0] !== DEFAULT_PRICE[0] || price[1] !== DEFAULT_PRICE[1];
@@ -299,6 +436,16 @@ export default function ProductList({
     ...storages.map((s) => ({ key: `storage-${s}`, label: s, clear: () => handleStorage(storages.filter((x) => x !== s)) })),
     ...rams.map((r) => ({ key: `ram-${r}`, label: r, clear: () => handleRam(rams.filter((x) => x !== r)) })),
     ...processors.map((p) => ({ key: `proc-${p}`, label: p, clear: () => handleProcessor(processors.filter((x) => x !== p)) })),
+    ...models.map((m) => ({ key: `model-${m}`, label: m, clear: () => handleModels(models.filter((x) => x !== m)) })),
+    ...subtypes.map((s) => ({ key: `subtype-${s}`, label: s, clear: () => handleSubtypes(subtypes.filter((x) => x !== s)) })),
+    ...conditions.map((c) => ({ key: `cond-${c}`, label: c, clear: () => handleConditions(conditions.filter((x) => x !== c)) })),
+    ...cores.map((c) => ({ key: `cores-${c}`, label: c, clear: () => handleCores(cores.filter((x) => x !== c)) })),
+    ...storageTypes.map((s) => ({ key: `stype-${s}`, label: s, clear: () => handleStorageTypes(storageTypes.filter((x) => x !== s)) })),
+    ...displaySizes.map((d) => ({ key: `disp-${d}`, label: d, clear: () => handleDisplaySizes(displaySizes.filter((x) => x !== d)) })),
+    ...graphics.map((g) => ({ key: `gpu-${g}`, label: g, clear: () => handleGraphics(graphics.filter((x) => x !== g)) })),
+    ...operatingSystems.map((o) => ({ key: `os-${o}`, label: o, clear: () => handleOperatingSystems(operatingSystems.filter((x) => x !== o)) })),
+    ...colors.map((c) => ({ key: `color-${c}`, label: c, clear: () => handleColors(colors.filter((x) => x !== c)) })),
+    ...exchange.map((e) => ({ key: `exchange-${e}`, label: `Exchange: ${e}`, clear: () => handleExchange(exchange.filter((x) => x !== e)) })),
   ];
 
   const clearAllFilters = () => {
@@ -308,6 +455,16 @@ export default function ProductList({
     setStorages([]);
     setRams([]);
     setProcessors([]);
+    setModels([]);
+    setSubtypes([]);
+    setConditions([]);
+    setCores([]);
+    setStorageTypes([]);
+    setDisplaySizes([]);
+    setGraphics([]);
+    setOperatingSystems([]);
+    setColors([]);
+    setExchange([]);
     setPage(1);
     scrollToSection();
   };
@@ -328,14 +485,14 @@ export default function ProductList({
       minimumFractionDigits: 0,
     }).format(value);
 
-  const SimplePriceSlider = () => (
-    <PriceSelect price={price} handlePrice={handlePrice} />
-  );
-
-  const FilterSection = ({ title, name, count, children }) => {
+  // NOTE: these are render *helpers* called as functions ( {filterSection(...)} ),
+  // NOT JSX components ( <FilterSection /> ). Calling them inline keeps the DOM
+  // identity stable across re-renders, so the sidebar's scroll position is
+  // preserved when a section is toggled (no jump back to the top).
+  const filterSection = ({ title, name, count, children }) => {
     const open = !collapsed[name];
     return (
-      <div className="border-b border-gray-100 last:border-b-0">
+      <div key={name} className="border-b border-gray-100 last:border-b-0">
         <button
           type="button"
           onClick={() => toggleSection(name)}
@@ -360,7 +517,7 @@ export default function ProductList({
     );
   };
 
-  const ActiveFilterChips = ({ className = "" }) =>
+  const activeFilterChips = (className = "") =>
     activeFilters.length > 0 ? (
       <div className={`flex flex-wrap items-center gap-2 ${className}`}>
         {activeFilters.map((f) => (
@@ -384,34 +541,121 @@ export default function ProductList({
       </div>
     ) : null;
 
-  const FilterSections = () => (
+  // Laptop/computer-only filters don't apply to phones, tablets, accessories, etc.
+  // Detect the current category context (route slug, selected category, or section).
+  const selectedCat = categories.find((c) => c.id === category);
+  const categoryContext = `${categoryslug} ${selectedCat?.slug || ""} ${selectedCat?.name || ""} ${productSection || ""} ${heading || ""}`.toLowerCase();
+  const isNonComputerCategory =
+    /phone|tablet|ipad|accessor|printer|monitor|android|iphone|watch|earbud|airpod|audio/i.test(categoryContext);
+  const showLaptopFilters = !isNonComputerCategory;
+
+  // Intelligent Model options: scoped to the current device type + brand so the
+  // list only ever offers models that make sense for the current selections.
+  const selectedBrandName = brands.find((b) => b.id === brand)?.name || "";
+  let deviceType = null;
+  if (/tablet|ipad/.test(categoryContext)) deviceType = "tablet";
+  else if (/phone|iphone|android/.test(categoryContext)) deviceType = "phone";
+  else if (/laptop|desktop|macbook|notebook|ultrabook|computer/.test(categoryContext)) deviceType = "laptop";
+
+  let modelBrandHint = "";
+  if (/iphone|apple-phone|apple phone/.test(categoryContext)) modelBrandHint = "Apple Phone";
+  else if (/ipad|apple-ipad|apple ipad/.test(categoryContext)) modelBrandHint = "Apple iPad";
+  else if (/macbook|laptop-apple|laptop apple/.test(categoryContext)) modelBrandHint = "MacBook";
+  else if (/samsung/.test(categoryContext)) modelBrandHint = "Samsung";
+
+  const modelOptions = getModelOptions({
+    type: deviceType,
+    brand: selectedBrandName || modelBrandHint,
+  });
+
+  // Scope the Operating System options to the current device type.
+  const osOptions =
+    deviceType === "phone"
+      ? PHONE_OS_OPTIONS
+      : deviceType === "tablet"
+      ? TABLET_OS_OPTIONS
+      : deviceType === "laptop"
+      ? COMPUTER_OS_OPTIONS
+      : OS_OPTIONS;
+
+  const filterSections = () => (
     <>
-      <FilterSection title="Price Range" name="price" count={priceActive ? 1 : 0}>
-        <SimplePriceSlider />
-      </FilterSection>
-      {categoryslug === "" && (
-        <FilterSection title="Category" name="category" count={category ? 1 : 0}>
-          <CategorySelect categories={categories} category={category} handleCategory={handleCategory} />
-        </FilterSection>
-      )}
-      {brandslug === "" && (
-        <FilterSection title="Brand" name="brand" count={brand ? 1 : 0}>
-          <BrandSelect brands={brands} brand={brand} handleBrand={handleBrand} />
-        </FilterSection>
-      )}
-      <FilterSection title="Storage" name="storage" count={storages.length}>
-        <StorageSelect storages={storages} handleStorage={handleStorage} />
-      </FilterSection>
-      <FilterSection title="RAM" name="ram" count={rams.length}>
-        <RamSelect rams={rams} handleRam={handleRam} />
-      </FilterSection>
-      <FilterSection title="Processor" name="processor" count={processors.length}>
-        <ProcessorSelect processors={processors} handleProcessor={handleProcessor} />
-      </FilterSection>
+      {filterSection({
+        title: "Price Range", name: "price", count: priceActive ? 1 : 0,
+        children: <PriceSelect price={price} handlePrice={handlePrice} />,
+      })}
+      {categoryslug === "" && filterSection({
+        title: "Category", name: "category", count: category ? 1 : 0,
+        children: <CategorySelect categories={categories} category={category} handleCategory={handleCategory} />,
+      })}
+      {brandslug === "" && filterSection({
+        title: "Brand", name: "brand", count: brand ? 1 : 0,
+        children: <BrandSelect brands={brands} brand={brand} handleBrand={handleBrand} />,
+      })}
+      {filterSection({
+        title: "Storage", name: "storage", count: storages.length,
+        children: <StorageSelect storages={storages} handleStorage={handleStorage} />,
+      })}
+      {filterSection({
+        title: "RAM", name: "ram", count: rams.length,
+        children: <RamSelect rams={rams} handleRam={handleRam} />,
+      })}
+      {showLaptopFilters && filterSection({
+        title: "Processor", name: "processor", count: processors.length,
+        children: <ProcessorSelect processors={processors} handleProcessor={handleProcessor} />,
+      })}
+      {modelOptions.length > 0 && filterSection({
+        title: "Model", name: "model", count: models.length,
+        children: (
+          <CheckboxFilter
+            options={modelOptions}
+            selected={models}
+            onChange={handleModels}
+            placeholder="Search model…"
+            limit={10}
+          />
+        ),
+      })}
+      {showLaptopFilters && filterSection({
+        title: "Subtype", name: "subtype", count: subtypes.length,
+        children: <CheckboxFilter options={SUBTYPE_OPTIONS} selected={subtypes} onChange={handleSubtypes} placeholder="Search subtype…" />,
+      })}
+      {filterSection({
+        title: "Condition", name: "condition", count: conditions.length,
+        children: <CheckboxFilter options={CONDITION_OPTIONS} selected={conditions} onChange={handleConditions} />,
+      })}
+      {showLaptopFilters && filterSection({
+        title: "Number of Cores", name: "cores", count: cores.length,
+        children: <CheckboxFilter options={CORES_OPTIONS} selected={cores} onChange={handleCores} grid={2} />,
+      })}
+      {showLaptopFilters && filterSection({
+        title: "Storage Type", name: "storageType", count: storageTypes.length,
+        children: <CheckboxFilter options={STORAGE_TYPE_OPTIONS} selected={storageTypes} onChange={handleStorageTypes} grid={2} />,
+      })}
+      {filterSection({
+        title: "Display Size", name: "displaySize", count: displaySizes.length,
+        children: <CheckboxFilter options={DISPLAY_SIZE_OPTIONS} selected={displaySizes} onChange={handleDisplaySizes} grid={3} />,
+      })}
+      {showLaptopFilters && filterSection({
+        title: "Graphics Card", name: "graphics", count: graphics.length,
+        children: <CheckboxFilter options={GRAPHICS_OPTIONS} selected={graphics} onChange={handleGraphics} placeholder="Search graphics…" />,
+      })}
+      {filterSection({
+        title: "Operating System", name: "os", count: operatingSystems.length,
+        children: <CheckboxFilter options={osOptions} selected={operatingSystems} onChange={handleOperatingSystems} />,
+      })}
+      {filterSection({
+        title: "Color", name: "color", count: colors.length,
+        children: <CheckboxFilter options={COLOR_OPTIONS} selected={colors} onChange={handleColors} grid={2} />,
+      })}
+      {filterSection({
+        title: "Exchange Possible", name: "exchange", count: exchange.length,
+        children: <CheckboxFilter options={EXCHANGE_OPTIONS} selected={exchange} onChange={handleExchange} grid={2} />,
+      })}
     </>
   );
 
-  const SidebarFilters = () => (
+  const sidebarFilters = () => (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-card lg:sticky lg:top-[160px] lg:max-h-[calc(100vh-180px)]">
       {/* Header */}
       <div className="flex flex-shrink-0 items-center justify-between rounded-t-2xl border-b border-gray-100 bg-gradient-to-r from-primary-50 to-white px-5 py-4">
@@ -443,13 +687,13 @@ export default function ProductList({
       {/* Active chips */}
       {activeFilters.length > 0 && (
         <div className="flex-shrink-0 border-b border-gray-100 bg-gray-50/70 px-5 py-4">
-          <ActiveFilterChips />
+          {activeFilterChips()}
         </div>
       )}
 
       {/* Scrollable filter sections — independent from the products list */}
       <div className="filter-scroll flex-1 overflow-y-auto overscroll-contain">
-        <FilterSections />
+        {filterSections()}
       </div>
     </div>
   );
@@ -468,12 +712,9 @@ export default function ProductList({
         {/* Scroll anchor: lands right on the products area after a filter change */}
         <div ref={sectionRef} className="scroll-mt-[120px] lg:scroll-mt-[170px]" />
 
-        {loading && <CarouselHolder />}
-
-        {!loading && (
-          <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
             <div className="hidden lg:block lg:col-span-1">
-              <SidebarFilters />
+              {sidebarFilters()}
             </div>
             <div className="lg:col-span-3">
               <div className="mb-6 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-card sm:px-5">
@@ -541,18 +782,30 @@ export default function ProductList({
                 </div>
                 {activeFilters.length > 0 && (
                   <div className="mt-3 border-t border-gray-100 pt-3">
-                    <ActiveFilterChips />
+                    {activeFilterChips()}
                   </div>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">
-                {products.map((product, key) => (
-                  <ProductCard product={product} key={key} />
-                ))}
-              </div>
+              {loading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="aspect-square w-full rounded-xl bg-gray-200" />
+                      <div className="mt-3 h-3 w-3/4 rounded bg-gray-200" />
+                      <div className="mt-2 h-3 w-1/2 rounded bg-gray-200" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">
+                  {products.map((product, key) => (
+                    <ProductCard product={product} key={key} />
+                  ))}
+                </div>
+              )}
 
-              {products.length > 0 && productSection !== "Trending Products" && (
+              {!loading && products.length > 0 && productSection !== "Trending Products" && (
                 <div className="flex justify-center py-8">
                   <Pagination
                     total={total}
@@ -569,7 +822,7 @@ export default function ProductList({
                 </div>
               )}
 
-              {products.length < 1 && (
+              {!loading && products.length < 1 && (
                 <div className="text-center py-16">
                   <div className="text-gray-400 text-6xl mb-4">🔍</div>
                   <h3 className="text-xl font-medium text-gray-900 mb-2">No Products Found</h3>
@@ -578,7 +831,6 @@ export default function ProductList({
               )}
             </div>
           </div>
-        )}
 
         <Drawer
           placement="bottom"
@@ -618,14 +870,14 @@ export default function ProductList({
               </div>
               {activeFilters.length > 0 && (
                 <div className="border-t border-gray-100 bg-gray-50/70 px-5 py-3">
-                  <ActiveFilterChips />
+                  {activeFilterChips()}
                 </div>
               )}
             </div>
 
             {/* Scrollable filter body */}
-            <div className="flex-1 overflow-y-auto bg-white">
-              <FilterSections />
+            <div className="filter-list-scroll flex-1 overflow-y-auto bg-white">
+              {filterSections()}
             </div>
 
             {/* Sticky action footer */}

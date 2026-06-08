@@ -1,18 +1,8 @@
 import ProductDetail from "/app/components/ProductDetail";
 import ProductMiss from "/app/components/ProductMiss";
+import { getProduct } from "/app/services/api";
 
 // export const dynamicParams = true; // default val = true
-
-async function getProduct(id) {
-  const response = await fetch(
-    `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`,
-    { cache: "no-store" }
-  );
-  if (!response.ok) return null;
-  const product = await response.json();
-
-  return product.product;
-}
 
 export async function generateMetadata({ params, searchParams }, parent) {
   const product = await getProduct(params.id);

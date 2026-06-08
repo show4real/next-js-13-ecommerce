@@ -1,18 +1,9 @@
 import ProductDetail from "/app/components/ProductDetail";
 import ProductMiss from "/app/components/ProductMiss";
+import { getProduct } from "/app/services/api";
+import { getProductSpecs } from "/app/lib/productSpecs";
 
 // export const dynamicParams = true; // default val = true
-
-async function getProduct(id) {
-  const response = await fetch(
-    `https://apiv2.hayzeeonline.com/api/singleproduct/${id}`,
-    { cache: "no-store" }
-  );
-  if (!response.ok) return null;
-  const product = await response.json();
-
-  return product.product;
-}
 
 const stripHtml = (html = "") =>
   html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -76,6 +67,21 @@ export default async function ProductDetails({ params }) {
     );
   }
 
+  // Map the product condition to a schema.org condition URL
+  const conditionRaw = String(product.condition || "").toLowerCase();
+  const itemCondition = conditionRaw.includes("new")
+    ? "https://schema.org/NewCondition"
+    : conditionRaw.includes("refurb")
+    ? "https://schema.org/RefurbishedCondition"
+    : "https://schema.org/UsedCondition";
+
+  // Explicit, machine-readable specifications for rich product results
+  const additionalProperty = getProductSpecs(product).map((s) => ({
+    "@type": "PropertyValue",
+    name: s.label,
+    value: String(s.value),
+  }));
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -83,16 +89,20 @@ export default async function ProductDetails({ params }) {
     image: product.image ? [product.image] : [],
     description: stripHtml(product.description).slice(0, 500),
     sku: String(product.id),
-    category: product.product_type || undefined,
+    mpn: product.model || undefined,
+    model: product.model || undefined,
+    color: product.color || undefined,
+    category: product.subtype || product.product_type || undefined,
     brand: product.brand?.name
       ? { "@type": "Brand", name: product.brand.name }
       : undefined,
+    ...(additionalProperty.length ? { additionalProperty } : {}),
     offers: {
       "@type": "Offer",
       url: `https://hayzeeonline.com/products/${product.slug}`,
       priceCurrency: "NGN",
       price: product.price,
-      itemCondition: "https://schema.org/UsedCondition",
+      itemCondition,
       availability: product.availability
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",

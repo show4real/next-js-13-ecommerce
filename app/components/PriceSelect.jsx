@@ -53,8 +53,8 @@ const PriceSelect = ({ price, handlePrice, fetchProducts }) => {
         </span>
       </div>
 
-      {/* Preset chips */}
-      {/* <div className="flex flex-wrap gap-2">
+      {/* Preset chips — quick-select price ranges */}
+      <div className="flex flex-wrap gap-2">
         {PRESETS.map((p) => {
           const active = isPresetActive(p.range);
           return (
@@ -72,14 +72,14 @@ const PriceSelect = ({ price, handlePrice, fetchProducts }) => {
             </button>
           );
         })}
-      </div> */}
+      </div>
 
       {/* Divider */}
-      {/* <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-gray-100" />
         <span className="text-[11px] font-medium text-gray-400">custom range</span>
         <div className="h-px flex-1 bg-gray-100" />
-      </div> */}
+      </div>
 
       {/* Min / Max inputs side by side */}
       <div className="flex items-center gap-2">

@@ -2,15 +2,13 @@
 import React, { useState, useEffect } from "react";
 
 import useCartStore from "/app/store/zustand";
-import settings from "/app/services/settings";
-import { authService } from "../services/response";
 import { notification, Spin } from "antd";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PaymentImage from "./PaymentImage";
 import DeliverySelect from "./DeliverySelect";
 import { getReferrers } from "../services/productService";
+import { initiatePayment, storeOrder } from "../services/api";
 import {
   CreditCardIcon,
   ChatBubbleLeftRightIcon,
@@ -147,10 +145,14 @@ const Checkout = () => {
   const finalAmount = Math.round(vatAmount + subtotal + pickup_charges);
 
     try {
-      const response = await axios.post(
-        "https://apiv2.hayzeeonline.com/api/initiate-payment",
-  { amount: finalAmount-pickup_charges, email, discount, pickup_charges, vat: vatAmount, subtotal }
-      );
+      const data = await initiatePayment({
+        amount: finalAmount - pickup_charges,
+        email,
+        discount,
+        pickup_charges,
+        vat: vatAmount,
+        subtotal,
+      });
       const checkout =
         typeof window !== "undefined"
           ? localStorage.setItem("cart", JSON.stringify(cart))
@@ -159,7 +161,7 @@ const Checkout = () => {
         typeof window !== "undefined"
           ? localStorage.setItem("shipping_details", JSON.stringify(fields))
           : null;
-      router.push(response.data.payment_url);
+      router.push(data.payment_url);
 
       setSaving(false);
     } catch (error) {
@@ -221,18 +223,7 @@ const Checkout = () => {
     }
     data.set("total_price", totalPrice);
 
-    return axios
-      .post(
-        `${settings.API_URL}store/order`,
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Accept: "application/json",
-          },
-        },
-        authService.handleResponse
-      )
+    return storeOrder(data)
       .then((res) => {
         setSaving(false);
         setFields({
