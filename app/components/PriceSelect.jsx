@@ -53,8 +53,8 @@ const PriceSelect = ({ price, handlePrice, fetchProducts }) => {
         </span>
       </div>
 
-      {/* Preset chips — quick-select price ranges */}
-      <div className="flex flex-wrap gap-2">
+      {/* Preset list — quick-select price ranges, low to high */}
+      <div className="flex flex-col gap-2">
         {PRESETS.map((p) => {
           const active = isPresetActive(p.range);
           return (
@@ -62,13 +62,18 @@ const PriceSelect = ({ price, handlePrice, fetchProducts }) => {
               key={p.label}
               type="button"
               onClick={() => applyPreset(p.range)}
-              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-all duration-150 ${
+              className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm font-bold transition-all duration-150 ${
                 active
                   ? "border-primary bg-primary text-white shadow-sm"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary"
+                  : "border-gray-200 bg-white text-gray-800 hover:border-primary hover:text-primary"
               }`}
             >
-              {p.label}
+              <span>{p.label}</span>
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  active ? "bg-white" : "bg-transparent"
+                }`}
+              />
             </button>
           );
         })}

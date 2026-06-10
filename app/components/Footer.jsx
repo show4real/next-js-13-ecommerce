@@ -2,6 +2,7 @@
 import React from "react";
 import Logo from "./Logo";
 import Link from "next/link";
+import TrustBadges from "./TrustBadges";
 import {
   PhoneIcon,
   MapPinIcon,
@@ -9,24 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { socials } from "./socials";
-
-const offices = [
-  {
-    name: "Sango Office",
-    address: "The Polytechnic Ibadan Entrance Gate, Sango, Ibadan, Oyo State.",
-    phone: "08112946602",
-  },
-  {
-    name: "Iwo Road Office",
-    address: "Omoola Motors, Fanawole Street, Behind World Oil, Iwo Road.",
-    phone: "08071024533",
-  },
-  {
-    name: "Ojoo Office",
-    address: "Shop 3, Zolo Complex, Olororo Junction (OnileAro), Ojo Road, Ibadan.",
-    phone: "08076420157",
-  },
-];
+import { OFFICES as offices } from "/app/lib/business";
 
 const SocialLink = ({ href, label, path }) => (
   <a
@@ -47,6 +31,13 @@ const SocialLink = ({ href, label, path }) => (
 export default function Footer() {
   return (
     <footer className="mt-12 bg-primary text-white">
+      {/* Trust badges band */}
+      <div className="border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <TrustBadges variant="footer" />
+        </div>
+      </div>
+
       {/* Newsletter band */}
       <div className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 sm:px-6 md:flex-row lg:px-8">
@@ -103,6 +94,7 @@ export default function Footer() {
               <li><Link href="/brands/android-phone" className="transition hover:text-white">Android Phones</Link></li>
               <li><Link href="/flash-sales" className="transition hover:text-white">Flash Sales</Link></li>
               <li><Link href="/products" className="transition hover:text-white">All Products</Link></li>
+              <li><Link href="/blog" className="transition hover:text-white">Blog</Link></li>
             </ul>
           </div>
 

@@ -102,11 +102,24 @@ export default async function ProductDetails({ params }) {
       url: `https://hayzeeonline.com/products/${product.slug}`,
       priceCurrency: "NGN",
       price: product.price,
+      // Keep the offer fresh for a year so it isn't flagged as expired.
+      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10),
       itemCondition,
       availability: product.availability
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
-      seller: { "@type": "Organization", name: "Hayzeeonline" },
+      seller: { "@id": "https://hayzeeonline.com/#organization" },
+      warranty: {
+        "@type": "WarrantyPromise",
+        durationOfWarranty: {
+          "@type": "QuantitativeValue",
+          value: 30,
+          unitCode: "DAY",
+        },
+        warrantyScope: "https://schema.org/PartsAndLaborWarranty",
+      },
     },
   };
 

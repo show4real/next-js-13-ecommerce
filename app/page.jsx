@@ -4,7 +4,12 @@ import ProductList from "./products/ProductList";
 import ProductSaleType from "./products/ProductSalesType";
 import FeaturedServices from "./components/FeaturedServices";
 import HeroSection from "./components/HeroSection";
+import HeroSearch from "./components/HeroSearch";
+import TrustBadges from "./components/TrustBadges";
+import Testimonials from "./components/Testimonials";
+import Faq from "./components/Faq";
 import Category from "./categories/Category";
+import { localBusinessJsonLd } from "./lib/business";
 
 export const metadata = {
   title: {
@@ -40,10 +45,22 @@ export const metadata = {
 export default function Home() {
   return (
   <main className="w-full mt-[96px] pb-10 lg:mt-[148px]">
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+    />
     <Suspense fallback={<Loading />}>
       <div className="pt-5 sm:pt-6">
+        <HeroSearch />
+      </div>
+
+      <div className="pt-4 sm:pt-5">
         <HeroSection />
       </div>
+
+      <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <TrustBadges />
+      </section>
 
       <ProductList
         productSection="Trending Products"
@@ -59,6 +76,8 @@ export default function Home() {
       <FeaturedServices />
       <ProductSaleType sale_type="black friday" />
       <ProductSaleType sale_type="Mid year sales" />
+      <Testimonials />
+      <Faq />
     </Suspense>
   </main>
 

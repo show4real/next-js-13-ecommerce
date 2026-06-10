@@ -498,7 +498,7 @@ export default function ProductList({
           onClick={() => toggleSection(name)}
           className="group flex w-full items-center justify-between px-5 py-4 text-left"
         >
-          <span className="flex items-center gap-2 text-sm font-semibold text-gray-800 group-hover:text-primary">
+          <span className="flex items-center gap-2 text-sm font-bold text-gray-900 group-hover:text-primary">
             {title}
             {count > 0 && (
               <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
@@ -512,7 +512,7 @@ export default function ProductList({
             }`}
           />
         </button>
-        {open && <div className="px-5 pb-5 pt-1">{children}</div>}
+        {open && <div className="px-5 pb-5 pt-1 font-semibold text-gray-700">{children}</div>}
       </div>
     );
   };

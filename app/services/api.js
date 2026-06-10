@@ -50,6 +50,35 @@ export async function getProductInfos(id) {
   }
 }
 
+/* ------------------------------------ Blog ---------------------------------- */
+
+// Paginated blog list. Returns the Laravel paginator object
+// ({ data: [...], current_page, last_page, total, ... }) or null on failure.
+export async function getBlogs({ page = 1, rows = 9, search = "" } = {}) {
+  try {
+    const res = await fetch(`${BASE_URL}user/allblogs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ page, rows, search }),
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.blogs ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// Single blog post by slug (the API's /blog/{id} route resolves by slug).
+// Returns the blog object, or null if missing.
+export async function getBlog(slug) {
+  const res = await fetch(`${BASE_URL}blog/${slug}`, { cache: "no-store" });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data?.blog ?? null;
+}
+
 /* ----------------------------------- Brands --------------------------------- */
 
 // Single brand by id or slug. Returns the brand object, or null if missing.

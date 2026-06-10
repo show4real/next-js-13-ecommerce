@@ -11,18 +11,19 @@ import {
 } from "@ant-design/icons";
 import {
   TruckIcon,
-  ShieldCheckIcon,
-  CreditCardIcon,
   MapPinIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
+import TrustBadges from "./TrustBadges";
 import {
   getProductImages,
   getRelatedProduct,
 } from "/app/services/productService";
 import { getProductSpecs } from "/app/lib/productSpecs";
 import useCartStore from "/app/store/zustand";
+import { OFFICES as offices } from "/app/lib/business";
 import "./NumberButton.css";
 import Link from "next/link";
 import CarouselDetailHolder from "./CarouselDetailHolder";
@@ -230,24 +231,6 @@ const ProductDetail = ({ product }) => {
   };
 
   const PickupLocation = () => {
-    const offices = [
-      {
-        name: "Sango Office",
-        address: "The Polytechnic Ibadan Entrance Gate, Sango, Ibadan, Oyo State.",
-        phone: "08112946602",
-      },
-      {
-        name: "Iwo Road Office",
-        address: "Omoola Motors, Fanawole Street, Behind World Oil, Iwo Road.",
-        phone: "08071024533",
-      },
-      {
-        name: "Ojoo Office",
-        address: "Shop 3, Zolo Complex, Olororo Junction (OnileAro), Ojo Road, Ibadan.",
-        phone: "08076420157",
-      },
-    ];
-
     return (
       <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
         <div className="flex items-center gap-2">
@@ -291,13 +274,6 @@ const ProductDetail = ({ product }) => {
   // Full spec list from the product's own columns (Model, Subtype, Condition,
   // Number of Cores, Storage Type, Display Size, Graphics Card, etc.)
   const specs = getProductSpecs(product);
-
-  const trust = [
-    { icon: TruckIcon, text: "Nationwide delivery" },
-    { icon: CreditCardIcon, text: "Pay on delivery" },
-    { icon: ShieldCheckIcon, text: "Tested & trusted" },
-    { icon: CheckOutlined, text: "100% as ordered", ant: true },
-  ];
 
   return (
     <section className="bg-gray-50 py-8 sm:py-10">
@@ -449,20 +425,27 @@ const ProductDetail = ({ product }) => {
                   </div>
 
                   {/* Trust badges */}
-                  <div className="mt-6 grid grid-cols-2 gap-3 border-t border-gray-100 pt-5">
-                    {trust.map((t) => (
-                      <div key={t.text} className="flex items-center gap-2 text-sm text-gray-600">
-                        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary">
-                          {t.ant ? (
-                            <t.icon style={{ color: "#0E1B4D" }} />
-                          ) : (
-                            <t.icon className="h-4 w-4" />
-                          )}
-                        </span>
-                        <span className="font-medium">{t.text}</span>
-                      </div>
-                    ))}
-                  </div>
+                  <TrustBadges
+                    variant="compact"
+                    className="mt-6 border-t border-gray-100 pt-5"
+                  />
+
+                  {/* Warranty */}
+                  <Link
+                    href="/warranty"
+                    className="mt-4 flex items-center gap-3 rounded-xl border border-gray-100 bg-primary-50 px-4 py-3 transition hover:border-primary-200"
+                  >
+                    <ShieldCheckIcon className="h-5 w-5 flex-shrink-0 text-accent" />
+                    <span className="text-sm text-gray-600">
+                      <span className="font-semibold text-primary">
+                        30-day warranty
+                      </span>{" "}
+                      on this device.{" "}
+                      <span className="font-semibold text-accent underline">
+                        Read our warranty policy
+                      </span>
+                    </span>
+                  </Link>
 
                   {/* Share */}
                   <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">

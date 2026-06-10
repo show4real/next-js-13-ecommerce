@@ -40,6 +40,48 @@ body {
   }
 }
 
+/* ---- Blog article content (rendered HTML) ---- */
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4 {
+  @apply mt-8 mb-3 font-bold leading-snug text-primary;
+}
+.blog-content h2 {
+  @apply text-2xl;
+}
+.blog-content h3 {
+  @apply text-xl;
+}
+.blog-content h4 {
+  @apply text-lg;
+}
+.blog-content p {
+  @apply my-4 text-gray-700;
+}
+.blog-content a {
+  @apply font-medium text-accent underline underline-offset-2 hover:text-accent-600;
+}
+.blog-content ul {
+  @apply my-4 list-disc space-y-2 pl-6;
+}
+.blog-content ol {
+  @apply my-4 list-decimal space-y-2 pl-6;
+}
+.blog-content img {
+  @apply my-6 h-auto w-full rounded-xl;
+}
+.blog-content blockquote {
+  @apply my-6 border-l-4 border-accent bg-accent-50/50 px-4 py-2 italic text-gray-600;
+}
+.blog-content table {
+  @apply my-6 w-full border-collapse text-sm;
+}
+.blog-content th,
+.blog-content td {
+  @apply border border-gray-200 px-3 py-2 text-left;
+}
+
 /* ---- Utilities ---- */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

@@ -35,6 +35,7 @@ const navigation = {
     { name: "Black Friday", href: "/black-friday" },
     { name: "Mid Year Sales", href: "/mid-year-sales" },
     { name: "Promo Sales", href: "/promo-sales" },
+    { name: "Blog", href: "/blog" },
   ],
 };
 

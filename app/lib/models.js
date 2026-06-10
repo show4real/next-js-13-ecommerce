@@ -34,13 +34,29 @@ export const MODELS = [
 
   // ------------------------------- MacBook ----------------------------------
   ...make("MacBook", "laptop", [
-    "MacBook Air 13 (2015)", "MacBook Air 13 (2017)", "MacBook Air 13 (2019)",
-    "MacBook Air M1", "MacBook Air M2", "MacBook Air M3", "MacBook Air 15 (M2)",
-    "MacBook Pro 13 (2015)", "MacBook Pro 13 (2017)", "MacBook Pro 13 (2018)",
-    "MacBook Pro 13 (2019)", "MacBook Pro 13 (2020)", "MacBook Pro 13 M1",
-    "MacBook Pro 13 M2", "MacBook Pro 14 (M1 Pro)", "MacBook Pro 14 (M2 Pro)",
-    "MacBook Pro 14 (M3 Pro)", "MacBook Pro 16 (2019)", "MacBook Pro 16 (M1 Pro)",
-    "MacBook Pro 16 (M2 Pro)", "MacBook Pro 16 (M3 Max)", "MacBook 12 (Retina)",
+    // MacBook Air (Intel)
+    "MacBook Air 11 (2014)", "MacBook Air 11 (2015)", "MacBook Air 13 (2014)",
+    "MacBook Air 13 (2015)", "MacBook Air 13 (2017)", "MacBook Air 13 (2018)",
+    "MacBook Air 13 (2019)", "MacBook Air 13 (2020, Intel)",
+    // MacBook Air (Apple Silicon)
+    "MacBook Air M1", "MacBook Air 13 (M2)", "MacBook Air 15 (M2)",
+    "MacBook Air 13 (M3)", "MacBook Air 15 (M3)",
+    // MacBook Pro 13 (Intel)
+    "MacBook Pro 13 (2015)", "MacBook Pro 13 (2016)", "MacBook Pro 13 (2017)",
+    "MacBook Pro 13 (2018)", "MacBook Pro 13 (2019)", "MacBook Pro 13 (2020, Intel)",
+    // MacBook Pro 13 (Apple Silicon)
+    "MacBook Pro 13 M1", "MacBook Pro 13 M2",
+    // MacBook Pro 14
+    "MacBook Pro 14 (M1 Pro)", "MacBook Pro 14 (M1 Max)", "MacBook Pro 14 (M2 Pro)",
+    "MacBook Pro 14 (M2 Max)", "MacBook Pro 14 (M3)", "MacBook Pro 14 (M3 Pro)",
+    "MacBook Pro 14 (M3 Max)",
+    // MacBook Pro 15 / 16
+    "MacBook Pro 15 (2017)", "MacBook Pro 15 (2018)", "MacBook Pro 15 (2019)",
+    "MacBook Pro 16 (2019)", "MacBook Pro 16 (M1 Pro)", "MacBook Pro 16 (M1 Max)",
+    "MacBook Pro 16 (M2 Pro)", "MacBook Pro 16 (M2 Max)", "MacBook Pro 16 (M3 Pro)",
+    "MacBook Pro 16 (M3 Max)",
+    // MacBook (12-inch)
+    "MacBook 12 (Retina)",
   ]),
 
   // --------------------------------- HP -------------------------------------
@@ -187,30 +203,68 @@ export const MODELS = [
 
   // -------------------------------- Asus ------------------------------------
   ...make("Asus", "laptop", [
-    "ZenBook 13", "ZenBook 14", "ZenBook 15", "VivoBook 14", "VivoBook 15",
-    "VivoBook S15", "ROG Zephyrus G14", "ROG Zephyrus G15", "ROG Strix G15",
-    "ROG Strix Scar 17", "TUF Gaming F15", "TUF Gaming A15", "TUF Dash F15",
-    "ExpertBook B9", "Chromebook Flip C434",
+    // ZenBook
+    "ZenBook 13", "ZenBook 14", "ZenBook 14X", "ZenBook 15", "ZenBook Flip 13",
+    "ZenBook Flip 14", "ZenBook Flip 15", "ZenBook Duo 14", "ZenBook Pro 15",
+    "ZenBook Pro Duo 15", "ZenBook S 13",
+    // VivoBook
+    "VivoBook 14", "VivoBook 15", "VivoBook 17", "VivoBook S14", "VivoBook S15",
+    "VivoBook Pro 14", "VivoBook Pro 15", "VivoBook Pro 16", "VivoBook Flip 14",
+    "VivoBook Go 14", "VivoBook Go 15",
+    // ROG (Republic of Gamers)
+    "ROG Zephyrus G14", "ROG Zephyrus G15", "ROG Zephyrus G16", "ROG Zephyrus M16",
+    "ROG Zephyrus Duo 16", "ROG Strix G15", "ROG Strix G17", "ROG Strix Scar 15",
+    "ROG Strix Scar 17", "ROG Strix Scar 18", "ROG Flow X13", "ROG Flow Z13",
+    // TUF Gaming
+    "TUF Gaming F15", "TUF Gaming F17", "TUF Gaming A15", "TUF Gaming A17",
+    "TUF Dash F15", "TUF Gaming A16",
+    // Business / Chromebook
+    "ExpertBook B9", "ExpertBook B1", "ExpertBook B5", "Chromebook Flip C434",
+    "Chromebook CX1", "Chromebook CX9",
   ]),
 
   // -------------------------------- Acer ------------------------------------
   ...make("Acer", "laptop", [
-    "Aspire 3", "Aspire 5", "Aspire 7", "Swift 3", "Swift 5", "Nitro 5",
-    "Predator Helios 300", "Predator Triton 500", "Spin 3", "Spin 5",
-    "TravelMate P2", "Chromebook 314",
+    // Aspire
+    "Aspire 1", "Aspire 3", "Aspire 5", "Aspire 7", "Aspire Vero", "Aspire Go",
+    // Swift
+    "Swift 1", "Swift 3", "Swift 5", "Swift X", "Swift Go 14", "Swift Edge 16",
+    // Spin
+    "Spin 1", "Spin 3", "Spin 5", "Spin 7",
+    // Nitro / Predator (gaming)
+    "Nitro 5", "Nitro 7", "Nitro 16", "Nitro 17", "Predator Helios 300",
+    "Predator Helios 16", "Predator Helios 18", "Predator Triton 300",
+    "Predator Triton 500", "Predator Triton 500 SE",
+    // Business / Chromebook
+    "TravelMate P2", "TravelMate P4", "TravelMate P6", "Extensa 15",
+    "Chromebook 314", "Chromebook 315", "Chromebook Spin 514",
   ]),
 
   // --------------------------------- MSI ------------------------------------
   ...make("MSI", "laptop", [
-    "GF63 Thin", "GF65 Thin", "GP66 Leopard", "GS66 Stealth", "Katana GF66",
-    "Modern 14", "Modern 15", "Prestige 14", "Prestige 15", "Stealth 15M",
-    "Creator 15", "Bravo 15",
+    // Gaming – GF / GL / Katana / Cyborg / Thin
+    "GF63 Thin", "GF65 Thin", "GF66 Katana", "Katana GF66", "Katana 15",
+    "Katana 17", "Cyborg 15", "Sword 15", "Sword 17", "Pulse GL66", "Pulse 15",
+    "Pulse 17",
+    // Gaming – GP / GE / GS / Raider / Vector / Stealth / Titan
+    "GP66 Leopard", "GP76 Leopard", "GE66 Raider", "GE76 Raider", "Raider GE68",
+    "Raider GE78", "Vector GP66", "Vector GP76", "GS66 Stealth", "Stealth 14",
+    "Stealth 15M", "Stealth 16", "Stealth 17", "Titan GT77", "GT76 Titan",
+    // Creator / Content
+    "Creator 15", "Creator 17", "Creator M16", "Creator Z16", "Creator Z17",
+    // Business / Thin & light
+    "Modern 14", "Modern 15", "Prestige 14", "Prestige 15", "Prestige 16",
+    "Summit E13 Flip", "Summit E14", "Summit E16 Flip", "Bravo 15", "Bravo 17",
   ]),
 
   // ------------------------------- Toshiba ----------------------------------
   ...make("Toshiba", "laptop", [
-    "Satellite C50", "Satellite L50", "Satellite Pro R50", "Portege Z30",
-    "Tecra A40", "Dynabook Tecra",
+    "Satellite C40", "Satellite C50", "Satellite C55", "Satellite C660",
+    "Satellite L40", "Satellite L50", "Satellite L750", "Satellite Pro C50",
+    "Satellite Pro R50", "Satellite Pro A50", "Portege X30", "Portege Z30",
+    "Portege Z830", "Tecra A40", "Tecra A50", "Tecra X40", "Tecra Z40",
+    "Dynabook Tecra A40", "Dynabook Tecra A50", "Dynabook Portege X30",
+    "Dynabook Satellite Pro C50",
   ]),
 
   // ----------------------------- Packard Bell -------------------------------
