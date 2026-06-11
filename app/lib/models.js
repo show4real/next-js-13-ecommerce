@@ -557,6 +557,7 @@ const RAW_MODELS = [
     "ExpertBook B1", "ExpertBook B2", "ExpertBook B3", "ExpertBook B5",
     "ExpertBook B9", "ProArt Studiobook 16", "ProArt P16", "ProArt PX13",
     "Chromebook Flip C434", "Chromebook Flip CX5", "Chromebook CX1",
+    
     "Chromebook CX9", "Chromebook Plus CX34",
   ]),
 
