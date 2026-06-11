@@ -18,15 +18,29 @@ const slides = [
     subtitle: "HP • Dell • Lenovo • MacBook — fairly used, fully tested.",
     cta: "Shop Laptops",
     href: "/laptops",
-    gradient: "from-primary via-primary-500 to-primary-400",
+    // gradient: "from-primary via-primary-500 to-primary-400",
+    image:
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=80",
   },
   {
-    eyebrow: "Smartphones",
-    title: "iPhones & Androids You'll Love",
-    subtitle: "Apple, Samsung & more — clean devices, honest prices.",
-    cta: "Shop Phones",
+    eyebrow: "Apple iPhones",
+    title: "iPhones You'll Absolutely Love",
+    subtitle: "Clean, original devices — from the iPhone 8 to the latest Pro.",
+    cta: "Shop iPhones",
     href: "/brands/apple-phone",
-    gradient: "from-[#1c1140] via-[#3a1d6e] to-accent-600",
+    // gradient: "from-[#1c1140] via-[#3a1d6e] to-accent-600",
+    image:
+      "https://images.unsplash.com/photo-1592286927505-1def25115558?auto=format&fit=crop&w=1200&q=80",
+  },
+  {
+    eyebrow: "Samsung Galaxy",
+    title: "Samsung Galaxy at Honest Prices",
+    subtitle: "Galaxy S, A & Note series — phones, tablets & laptops.",
+    cta: "Shop Samsung",
+    href: "/brands/samsung",
+    // gradient: "from-[#101a4d] via-[#15357a] to-[#1f7ae0]",
+    image:
+      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=1200&q=80",
   },
   {
     eyebrow: "Flash Sales",
@@ -34,7 +48,9 @@ const slides = [
     subtitle: "Grab weekly flash offers before they're gone.",
     cta: "View Flash Sales",
     href: "/flash-sales",
-    gradient: "from-accent-700 via-accent-600 to-accent-400",
+    // gradient: "from-accent-700 via-accent-600 to-accent-400",
+    image:
+      "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1200&q=80",
   },
 ];
 
@@ -102,12 +118,33 @@ export default function HeroSection() {
                   i === active ? "opacity-100" : "pointer-events-none opacity-0"
                 }`}
               >
-                {/* decorative blobs */}
-                <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
-                <div className="absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-white/10 blur-2xl" />
+                {/* full-bleed device photo */}
+                {slide.image && (
+                  <img
+                    src={slide.image}
+                    alt={slide.title}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                  />
+                )}
 
-                {/* legibility scrim — keeps text readable on any gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+                {/* decorative blobs (gradient-only slides) */}
+                {!slide.image && (
+                  <>
+                    <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
+                    <div className="absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-white/10 blur-2xl" />
+                  </>
+                )}
+
+                {/* legibility scrim — darker on the left so the copy stays
+                    readable while the device shows through on the right. */}
+                <div
+                  className={`absolute inset-0 ${
+                    slide.image
+                      ? "bg-gradient-to-r from-black/85 via-black/55 to-black/20"
+                      : "bg-gradient-to-r from-black/45 via-black/15 to-transparent"
+                  }`}
+                />
 
                 <div className="relative flex h-full flex-col justify-center p-5 sm:p-8 lg:p-10">
                   <span className="mb-2.5 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur sm:text-xs">
@@ -150,27 +187,39 @@ export default function HeroSection() {
         <div className="col-span-12 grid grid-cols-2 gap-4 lg:col-span-3 lg:grid-cols-1">
           <Link
             href="/black-friday"
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-primary p-5 text-white shadow-card transition hover:shadow-card-hover"
+            className="group relative flex min-h-[120px] flex-col justify-between overflow-hidden rounded-2xl bg-primary p-5 text-white shadow-card transition hover:shadow-card-hover"
           >
-            <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-accent/30 blur-xl" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-accent-300">
+            <img
+              src="https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?auto=format&fit=crop&w=800&q=80"
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/75" />
+            <span className="relative text-xs font-semibold uppercase tracking-wider text-accent-300">
               Mega Event
             </span>
-            <p className="mt-1 text-lg font-bold leading-snug">Black Friday Deals</p>
-            <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-white/90 group-hover:text-accent-300">
+            <p className="relative mt-1 text-lg font-bold leading-snug drop-shadow-sm">Black Friday Deals</p>
+            <span className="relative mt-2 inline-flex items-center gap-1 text-sm font-semibold text-white/90 group-hover:text-accent-300">
               Shop now <ChevronRightIcon className="h-4 w-4" />
             </span>
           </Link>
           <Link
             href="/promo-sales"
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-accent-200 bg-accent-50 p-5 text-primary shadow-card transition hover:shadow-card-hover"
+            className="group relative flex min-h-[120px] flex-col justify-between overflow-hidden rounded-2xl bg-primary p-5 text-white shadow-card transition hover:shadow-card-hover"
           >
-            <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-accent/20 blur-xl" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-accent-600">
+            <img
+              src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800&q=80"
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/75" />
+            <span className="relative text-xs font-semibold uppercase tracking-wider text-accent-300">
               Save Big
             </span>
-            <p className="mt-1 text-lg font-bold leading-snug">Promo Sales</p>
-            <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-accent-700">
+            <p className="relative mt-1 text-lg font-bold leading-snug drop-shadow-sm">Promo Sales</p>
+            <span className="relative mt-2 inline-flex items-center gap-1 text-sm font-semibold text-white/90 group-hover:text-accent-300">
               Grab offers <ChevronRightIcon className="h-4 w-4" />
             </span>
           </Link>

@@ -145,11 +145,11 @@ const Category = ({}) => {
       </div>
 
       {/* YouTube */}
-      {youtube && (
+      {/* {youtube && (
         <div className="mt-8">
           <YouTubeChannel />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

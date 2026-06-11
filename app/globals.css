@@ -12,9 +12,31 @@ html {
 }
 
 body {
-  background-color: #f4f5f8;
   color: #15233f;
+  background-color: #eef1f8;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Brand ambient background: soft navy + accent glows over a light base,
+   finished with a faint "HR" monogram watermark. Kept very subtle so white
+   content cards still read clearly. Rendered on a fixed pseudo-element (instead
+   of background-attachment: fixed, which is buggy on iOS) so it stays calm and
+   gap-free while the page scrolls over it. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #e7ecf7;
+  background-image:
+    radial-gradient(820px 600px at 4% -6%, rgba(14, 27, 77, 0.42), transparent 50%),
+    radial-gradient(720px 560px at 100% 0%, rgba(230, 162, 23, 0.34), transparent 48%),
+    radial-gradient(760px 600px at 98% 100%, rgba(255, 122, 26, 0.3), transparent 50%),
+    radial-gradient(960px 720px at 22% 118%, rgba(14, 27, 77, 0.36), transparent 52%),
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='130'%20height='130'%3E%3Ctext%20x='65'%20y='78'%20font-family='Arial,Helvetica,sans-serif'%20font-size='34'%20font-weight='700'%20fill='%230e1b4d'%20fill-opacity='0.05'%20text-anchor='middle'%3EHR%3C/text%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+  background-position: center;
 }
 
 .header-sticky {

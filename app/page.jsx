@@ -4,6 +4,7 @@ import ProductList from "./products/ProductList";
 import ProductSaleType from "./products/ProductSalesType";
 import FeaturedServices from "./components/FeaturedServices";
 import HeroSection from "./components/HeroSection";
+import BrandShowcase from "./components/BrandShowcase";
 import HeroSearch from "./components/HeroSearch";
 import TrustBadges from "./components/TrustBadges";
 import Testimonials from "./components/Testimonials";
@@ -76,6 +77,7 @@ export default function Home() {
       <FeaturedServices />
       <ProductSaleType sale_type="black friday" />
       <ProductSaleType sale_type="Mid year sales" />
+      <BrandShowcase />
       <Testimonials />
       <Faq />
     </Suspense>
