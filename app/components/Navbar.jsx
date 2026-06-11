@@ -1,23 +1,28 @@
 "use client";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useRef, useMemo } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Bars3Icon,
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   UserIcon,
   XMarkIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  Squares2X2Icon,
+  TagIcon,
+  TruckIcon,
+  MapPinIcon,
+  ArrowRightIcon,
 } from "@heroicons/react/24/outline";
-import { getAllCats, getBrands } from "/app/services/productService";
-import { Button, Drawer } from "antd";
-import Logo from "/public/logo5.png";
+import { getAllCats, getBrands, getQuickSearch } from "/app/services/productService";
+import { socials } from "./socials";
+import { Drawer } from "antd";
+import Logo from "./Logo";
 import CartQuick from "./CartQuick";
-import SearchSuggestion from "/app/components/SearchSuggestion";
 import useCartStore from "/app/store/zustand";
-import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faUser } from "@fortawesome/free-solid-svg-icons";
 import "./social.css";
 
 const navigation = {
@@ -25,11 +30,12 @@ const navigation = {
     { name: "Laptops", href: "/laptops" },
     { name: "Apple", href: "/brands/apple-phone" },
     { name: "Android", href: "/brands/android-phone" },
-    { name: "Shop", href: "/products" },
-    { name: "Flash Sales", href: "/flash-sales" },
+    { name: "Shop All", href: "/products" },
+    { name: "Flash Sales", href: "/flash-sales", hot: true },
     { name: "Black Friday", href: "/black-friday" },
-    { name: "Mid Sales", href: "/mid-year-sales" },
+    { name: "Mid Year Sales", href: "/mid-year-sales" },
     { name: "Promo Sales", href: "/promo-sales" },
+    { name: "Blog", href: "/blog" },
   ],
 };
 
@@ -37,535 +43,670 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+const slugify = (text) =>
+  text.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
+
+const formatNumber = (number) =>
+  number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [isSticky, setIsSticky] = useState(false);
   const [loading, setLoading] = useState(false);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [openCart, setOpenCart] = useState(false);
-  const [openSearch, setOpenSearch] = useState(false);
 
-  const showDrawer = () => {
-    setOpenCart(true);
-  };
+  // Inline live search
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [mobileSearch, setMobileSearch] = useState(false);
+  const searchRef = useRef(null);
 
-  const hideNav = () => {
-    setOpen(false);
-  };
-
-  const onCloseCart = () => {
-    setOpenCart(false);
-  };
-
-  const onCloseSearch = () => {
-    setOpenSearch(false);
-  };
-
-  const showSearchDrawer = () => {
-    setOpenSearch(true);
-  };
-
+  const router = useRouter();
+  const pathname = usePathname();
   const { cart } = useCartStore();
-  console.log(cart);
-
-  const clearCart = useCartStore((state) => state.clearCart);
-
   const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  const isActive = (href) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   useEffect(() => {
     fetchBrands();
     fetchCategories();
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []);
 
-  const fetchBrands = () => {
-    setLoading(true);
-    getBrands().then(
-      (res) => {
-        setBrands(res.brands);
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
-      },
-      (error) => {
-        setLoading(false);
+  // Close search dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowResults(false);
       }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Debounced live search
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+    const t = setTimeout(() => {
+      setSearching(true);
+      getQuickSearch({ search_all: query })
+        .then((res) => {
+          setResults(res.products || []);
+          setSearching(false);
+        })
+        .catch(() => setSearching(false));
+    }, 300);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // Distinct categories present in the live search results
+  const searchCategories = useMemo(() => {
+    const map = new Map();
+    results.forEach((p) => {
+      if (p.category_id && p.category && !map.has(p.category_id)) {
+        map.set(p.category_id, { id: p.category_id, name: p.category });
+      }
+    });
+    return Array.from(map.values());
+  }, [results]);
+
+  const fetchBrands = () => {
+    getBrands().then(
+      (res) => setBrands(res.brands || []),
+      () => {}
     );
   };
 
   const fetchCategories = () => {
-    setLoading(true);
     getAllCats().then(
-      (res) => {
-        setCategories(res.categories);
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
-      },
-      (error) => {
-        setLoading(false);
-      }
+      (res) => setCategories(res.categories || []),
+      () => {}
     );
   };
 
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isSticky ? 'shadow-lg' : ''}`}>
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600">
-        <p className="text-center px-4 py-3 text-sm sm:text-sm lg:text-base font-medium text-white">
-          <span className="text-blue-100 animate-pulse">
-            ⚡ Quality Gadgets | Laptops | Smartphones | Payment on Delivery within Nigeria 
-            <span className="hidden sm:inline"> | Free Delivery Within Ibadan (T&C Apply)</span>
-          </span>
-        </p>
-      </div>
+  const submitSearch = (e) => {
+    e?.preventDefault();
+    if (!query.trim()) return;
+    setShowResults(false);
+    setMobileSearch(false);
+    router.push(`/search/${slugify(query)}`);
+  };
 
-      <div className="bg-white shadow-md border-b border-gray-100">
-        {/* Mobile menu */}
-        <Transition.Root show={open} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-40 lg:hidden"
-            onClose={setOpen}
-          >
-            <Transition.Child
-              as={Fragment}
-              enter="transition-opacity ease-linear duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity ease-linear duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm" />
-            </Transition.Child>
-
-            <div className="fixed inset-0 z-40 flex">
-              <Transition.Child
-                as={Fragment}
-                enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-2xl">
-                  <div className="flex px-4 pb-2 pt-5 bg-gradient-to-r from-blue-50 to-indigo-50">
-                    <button
-                      type="button"
-                      className="relative -m-2 inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-gray-700 hover:bg-white transition-colors duration-200"
-                      onClick={() => setOpen(false)}
-                    >
-                      <span className="absolute -inset-0.5" />
-                      <span className="sr-only">Close menu</span>
-                      <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                  </div>
-
-                  {/* Mobile Navigation Links */}
-                  <div className="space-y-2 border-t border-gray-100 px-4 py-6" style={{marginTop:100}}>
-                    {navigation.pages.map((page) => (
-                      <div key={page.name} className="flow-root">
-                        <Link
-                          href={page.href}
-                          onClick={() => setOpen(false)}
-                          className="-m-2 block p-3 font-medium text-gray-800 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                        >
-                          {page.name}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Mobile Tabs */}
-                  <Tab.Group as="div" className="mt-2">
-                    <div className="border-b border-gray-100 bg-gray-50">
-                      <Tab.List className="-mb-px flex space-x-8 px-4">
-                        <Tab
-                          key="categories"
-                          className={({ selected }) =>
-                            classNames(
-                              selected
-                                ? "border-blue-500 text-blue-600 bg-white"
-                                : "border-transparent text-gray-600 hover:text-gray-800",
-                              "flex-1 whitespace-nowrap border-b-2 px-3 py-4 text-sm font-semibold rounded-t-lg transition-all duration-200"
-                            )
-                          }
-                        >
-                          Categories
-                        </Tab>
-                        <Tab
-                          key="brands"
-                          className={({ selected }) =>
-                            classNames(
-                              selected
-                                ? "border-blue-500 text-blue-600 bg-white"
-                                : "border-transparent text-gray-600 hover:text-gray-800",
-                              "flex-1 whitespace-nowrap border-b-2 px-3 py-4 text-sm font-semibold rounded-t-lg transition-all duration-200"
-                            )
-                          }
-                        >
-                          Brands
-                        </Tab>
-                      </Tab.List>
-                    </div>
-                    <Tab.Panels as={Fragment}>
-                      <Tab.Panel
-                        key="categories"
-                        className="space-y-10 px-4 pb-8 pt-6"
-                      >
-                        <div>
-                          <ul
-                            role="list"
-                            aria-labelledby={`heading-mobile`}
-                            className="mt-0 flex flex-col space-y-3"
-                          >
-                            {!loading &&
-                              categories.map((category, key) => (
-                                <li className="flow-root" key={key}>
-                                  <Link
-                                    href={`/categories/${category.slug}`}
-                                    className="-m-2 block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                                    onClick={() => setOpen(false)}
-                                  >
-                                    {category.name}
-                                  </Link>
-                                </li>
-                              ))}
-                          </ul>
-                        </div>
-                      </Tab.Panel>
-                      <Tab.Panel
-                        key="brands"
-                        className="space-y-10 px-4 pb-8 pt-6"
-                      >
-                        <div>
-                          <ul
-                            role="list"
-                            aria-labelledby={`heading-mobile`}
-                            className="mt-0 flex flex-col space-y-3"
-                          >
-                            {!loading &&
-                              brands.map((brand, key) => (
-                                <li className="flow-root" key={key}>
-                                  <Link
-                                    href={`/brands/${brand.slug}`}
-                                    className="-m-2 block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                                    onClick={() => setOpen(false)}
-                                  >
-                                    {brand.name}
-                                  </Link>
-                                </li>
-                              ))}
-                          </ul>
-                        </div>
-                      </Tab.Panel>
-                    </Tab.Panels>
-                  </Tab.Group>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition.Root>
-
-        <header className="relative bg-white">
-          <nav
-            aria-label="Top"
-            className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-          >
-            <div className="flex h-16 items-center justify-between">
-              {/* Mobile menu button */}
-              <button
-                type="button"
-                className="relative rounded-lg bg-white p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 lg:hidden transition-colors duration-200"
-                onClick={() => setOpen(true)}
-              >
-                <span className="absolute -inset-0.5" />
-                <span className="sr-only">Open menu</span>
-                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-              </button>
-
-              {/* Logo */}
-              <div className="flex lg:ml-0">
-                <Link href="/" className="hover:opacity-80 transition-opacity duration-200">
-                  <Image
-                    src={Logo}
-                    alt="Hayzeeonline Computer resources"
-                    width={50}
-                    height={50}
-                    placeholder="blur"
-                    quality={100}
-                    className="rounded-lg"
-                  />
-                </Link>
-              </div>
-
-              {/* Desktop Navigation */}
-              <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch lg:flex-1">
-                <div className="flex h-full ">
-                  {navigation.pages.map((page, key) => (
+  const SearchDropdown = () => (
+    <Transition
+      show={showResults && query.trim().length > 0}
+      as={Fragment}
+      enter="transition ease-out duration-150"
+      enterFrom="opacity-0 -translate-y-1"
+      enterTo="opacity-100 translate-y-0"
+      leave="transition ease-in duration-100"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
+    >
+      <div className="absolute left-0 right-0 top-full mt-2 z-50 max-h-[70vh] overflow-y-auto rounded-2xl border border-gray-100 bg-white shadow-2xl">
+        {searching ? (
+          <div className="flex items-center gap-3 px-5 py-6 text-sm text-gray-500">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+            Searching for “{query}”…
+          </div>
+        ) : results.length > 0 ? (
+          <>
+            {/* Matching categories — click to open the shop with it pre-selected */}
+            {searchCategories.length > 0 && (
+              <div className="border-b border-gray-100 p-2">
+                <p className="px-2.5 pb-1.5 pt-1 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                  Categories
+                </p>
+                <div className="flex flex-wrap gap-2 px-1.5 pb-1.5">
+                  {searchCategories.map((cat) => (
                     <Link
-                      key={page.name}
-                      href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                      key={cat.id}
+                      href={`/products?category=${cat.id}`}
+                      onClick={() => setShowResults(false)}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-primary transition hover:border-accent hover:bg-accent hover:text-white"
                     >
-                      {page.name}
+                      <Squares2X2Icon className="h-3.5 w-3.5" />
+                      {cat.name}
                     </Link>
                   ))}
-                  
-                  {/* Collections Dropdown */}
-                  <Popover className="flex">
-                    {({ open }) => (
-                      <>
-                        <div key={1} className="relative flex">
+                </div>
+              </div>
+            )}
+
+            <ul className="divide-y divide-gray-50 p-2">
+              {results.slice(0, 6).map((product) => (
+                <li key={product.id}>
+                  <Link
+                    href={`/products/${product.slug}`}
+                    onClick={() => setShowResults(false)}
+                    className="group flex items-center gap-3 rounded-xl p-2.5 transition hover:bg-primary-50"
+                  >
+                    <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="h-full w-full object-contain transition group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-gray-800 group-hover:text-primary">
+                        {product.name}
+                      </p>
+                      <span
+                        className={classNames(
+                          "mt-1 inline-block text-[11px] font-semibold",
+                          product.availability ? "text-green-600" : "text-red-500"
+                        )}
+                      >
+                        {product.availability ? "In stock" : "Sold out"}
+                      </span>
+                    </div>
+                    <span className="flex-shrink-0 text-sm font-bold text-primary">
+                      &#8358;{formatNumber(product.price)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={submitSearch}
+              className="flex w-full items-center justify-center gap-2 border-t border-gray-100 bg-primary-50 px-5 py-3 text-sm font-semibold text-primary transition hover:bg-primary-100"
+            >
+              See all results for “{query}”
+              <span aria-hidden>→</span>
+            </button>
+          </>
+        ) : (
+          <div className="px-5 py-6 text-sm text-gray-500">
+            No products match “{query}”. Press enter to search anyway.
+          </div>
+        )}
+      </div>
+    </Transition>
+  );
+
+  const SearchBar = ({ id }) => (
+    <form onSubmit={submitSearch} className="relative w-full">
+      <div className="flex w-full items-stretch overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-black/5 focus-within:ring-2 focus-within:ring-accent">
+        <input
+          id={id}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setShowResults(true)}
+          placeholder="Search laptops, phones, brands…"
+          className="w-full bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none"
+        />
+        <button
+          type="submit"
+          aria-label="Search"
+          className="flex items-center gap-2 bg-accent px-4 text-white transition hover:bg-accent-600"
+        >
+          <MagnifyingGlassIcon className="h-5 w-5" />
+          <span className="hidden text-sm font-semibold sm:inline">Search</span>
+        </button>
+      </div>
+      {SearchDropdown()}
+    </form>
+  );
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50">
+      {/* Announcement marquee */}
+      <div className="overflow-hidden bg-primary py-2 text-white">
+        <div className="flex w-max animate-marquee whitespace-nowrap text-xs font-medium sm:text-sm">
+          {[0, 1].map((dup) => (
+            <span key={dup} className="flex items-center">
+              <span className="mx-6 inline-flex items-center gap-2">
+                ⚡ Quality US/UK used Laptops & Smartphones
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <TruckIcon className="h-4 w-4 text-accent" /> Payment on Delivery nationwide
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <MapPinIcon className="h-4 w-4 text-accent" /> Free delivery within Ibadan (T&amp;C apply)
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                🔥 Flash deals every week
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Main header */}
+      <div className="bg-primary-700 shadow-md">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:gap-5 sm:px-6 lg:px-8">
+          {/* Mobile menu button */}
+          <button
+            type="button"
+            className="rounded-lg p-1.5 text-white/90 hover:bg-white/10 lg:hidden"
+            onClick={() => setOpen(true)}
+          >
+            <span className="sr-only">Open menu</span>
+            <Bars3Icon className="h-6 w-6" />
+          </button>
+
+          {/* Logo */}
+          <Link href="/" aria-label="Hayzee Computer Resources — Home" className="flex-shrink-0 transition hover:opacity-90">
+            <Logo className="h-10 w-auto" />
+          </Link>
+
+          {/* Desktop search */}
+          <div ref={searchRef} className="hidden flex-1 md:block">
+            {SearchBar({ id: "desktop-search" })}
+          </div>
+
+          {/* Right actions */}
+          <div className="ml-auto flex items-center gap-1 sm:gap-2">
+            {/* Mobile search toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileSearch((v) => !v)}
+              className="rounded-lg p-2 text-white hover:bg-white/10 md:hidden"
+              aria-label="Search"
+            >
+              <MagnifyingGlassIcon className="h-6 w-6" />
+            </button>
+
+            {/* Account */}
+            <Link
+              href="https://hayzeeonline-referral.hayzeeonline.com"
+              className="group hidden items-center gap-2 rounded-lg px-2.5 py-1.5 text-white transition hover:bg-white/10 sm:flex"
+            >
+              <UserIcon className="h-6 w-6" />
+              <span className="hidden text-left leading-tight lg:block">
+                <span className="block text-[11px] text-white/70">Account</span>
+                <span className="block text-sm font-semibold">Sign in</span>
+              </span>
+            </Link>
+
+            {/* Cart */}
+            <button
+              type="button"
+              onClick={() => setOpenCart(true)}
+              className="group relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-white transition hover:bg-white/10"
+            >
+              <span className="relative">
+                <ShoppingBagIcon className="h-6 w-6" />
+                {totalQuantity > 0 && (
+                  <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold text-white ring-2 ring-primary-700">
+                    {totalQuantity}
+                  </span>
+                )}
+              </span>
+              <span className="hidden text-left leading-tight lg:block">
+                <span className="block text-[11px] text-white/70">Your</span>
+                <span className="block text-sm font-semibold">Cart</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile search row */}
+        <Transition
+          show={mobileSearch}
+          as={Fragment}
+          enter="transition ease-out duration-200"
+          enterFrom="opacity-0 -translate-y-2"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="px-4 pb-3 md:hidden" ref={searchRef}>
+            {SearchBar({ id: "mobile-search" })}
+          </div>
+        </Transition>
+      </div>
+
+      {/* Category strip */}
+      <div className="hidden border-b border-gray-200 bg-white lg:block">
+        <div className="mx-auto flex max-w-7xl items-center gap-1 px-4 sm:px-6 lg:px-8">
+          {/* All categories popover */}
+          <Popover className="relative">
+            {({ open: pop }) => (
+              <>
+                <Popover.Button
+                  className={classNames(
+                    "flex items-center gap-2 px-4 py-3 text-sm font-semibold transition",
+                    pop ? "text-accent" : "text-primary hover:text-accent"
+                  )}
+                >
+                  <Squares2X2Icon className="h-5 w-5" />
+                  All Categories
+                  <ChevronDownIcon
+                    className={classNames(
+                      "h-4 w-4 transition-transform",
+                      pop && "rotate-180"
+                    )}
+                  />
+                </Popover.Button>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-200"
+                  enterFrom="opacity-0 translate-y-1"
+                  enterTo="opacity-100 translate-y-0"
+                  leave="transition ease-in duration-150"
+                  leaveFrom="opacity-100 translate-y-0"
+                  leaveTo="opacity-0 translate-y-1"
+                >
+                  <Popover.Panel className="absolute left-0 top-full z-50 mt-0 w-[680px] overflow-hidden rounded-b-2xl border border-gray-100 bg-white shadow-2xl ring-1 ring-black/5">
+                    <div className="grid grid-cols-5">
+                      {/* Categories */}
+                      <div className="col-span-3 p-6">
+                        <div className="mb-4 flex items-center justify-between">
+                          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent">
+                            <Squares2X2Icon className="h-4 w-4" />
+                            Categories
+                          </p>
                           <Popover.Button
-                            className={classNames(
-                              open
-                                ? "border-blue-500 text-blue-600 bg-blue-50"
-                                : "border-transparent text-gray-700 hover:text-blue-600 hover:bg-blue-50",
-                              "relative z-10 -mb-px flex items-center border-b-2 px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg"
-                            )}
+                            as={Link}
+                            href="/products"
+                            className="text-xs font-semibold text-gray-400 transition hover:text-primary"
                           >
-                            Collections
+                            View all
                           </Popover.Button>
                         </div>
+                        <ul className="grid grid-cols-2 gap-1">
+                          {categories.map((category, key) => (
+                            <li key={key}>
+                              <Popover.Button
+                                as={Link}
+                                href={`/categories/${category.slug}`}
+                                className="group flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-primary-50 hover:text-primary"
+                              >
+                                <span className="truncate">{category.name}</span>
+                                <ChevronRightIcon className="h-4 w-4 flex-shrink-0 -translate-x-1 text-primary opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+                              </Popover.Button>
+                            </li>
+                          ))}
+                          {categories.length === 0 && (
+                            <li className="col-span-2 px-3 py-2 text-sm text-gray-400">
+                              Loading categories…
+                            </li>
+                          )}
+                        </ul>
+                      </div>
 
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-200"
-                          enterFrom="opacity-0 translate-y-1"
-                          enterTo="opacity-100 translate-y-0"
-                          leave="transition ease-in duration-150"
-                          leaveFrom="opacity-100 translate-y-0"
-                          leaveTo="opacity-0 translate-y-1"
-                        >
-                          <Popover.Panel className="absolute inset-x-0 top-full text-sm text-gray-500 z-50">
-                            <div
-                              className="absolute inset-0 top-1/2 bg-white shadow-xl rounded-lg"
-                              aria-hidden="true"
-                            />
+                      {/* Top Brands */}
+                      <div className="col-span-2 border-l border-gray-100 bg-gray-50/70 p-6">
+                        <p className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent">
+                          <TagIcon className="h-4 w-4" />
+                          Top Brands
+                        </p>
+                        <ul className="grid grid-cols-2 gap-1.5">
+                          {brands.map((brand, key) => (
+                            <li key={key}>
+                              <Popover.Button
+                                as={Link}
+                                href={`/brands/${brand.slug}`}
+                                className="block truncate rounded-lg border border-transparent bg-white px-3 py-2 text-center text-sm font-medium text-gray-600 shadow-sm transition hover:border-primary-200 hover:text-primary"
+                              >
+                                {brand.name}
+                              </Popover.Button>
+                            </li>
+                          ))}
+                          {brands.length === 0 && (
+                            <li className="col-span-2 px-3 py-2 text-sm text-gray-400">
+                              Loading brands…
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
 
-                            <div className="relative bg-white rounded-lg shadow-xl border border-gray-100">
-                              <div className="mx-auto max-w-7xl px-8">
-                                <div className="grid gap-x-8 gap-y-10 py-16">
-                                  <div className="grid grid-cols-2 gap-x-8 gap-y-10 text-sm">
-                                    <div>
-                                      <p
-                                        id={`clothing-heading`}
-                                        className="font-semibold text-gray-900 text-base mb-6"
-                                      >
-                                        Categories
-                                      </p>
-                                      <ul
-                                        role="list"
-                                        aria-labelledby={`clothing-heading`}
-                                        className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
-                                      >
-                                        {!loading &&
-                                          categories.map((category, key) => (
-                                            <li
-                                              className="flow-root"
-                                              key={key}
-                                            >
-                                              <Link
-                                                href={`/categories/${category.slug}`}
-                                                className="-m-2 block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                                                onClose={() => {
-                                                  hideNav();
-                                                }}
-                                              >
-                                                {category.name}
-                                              </Link>
-                                            </li>
-                                          ))}
-                                      </ul>
-                                    </div>
-                                    <div>
-                                      <p
-                                        id={`brands-heading`}
-                                        className="font-semibold text-gray-900 text-base mb-6"
-                                      >
-                                        Brands
-                                      </p>
-                                      <ul
-                                        key={1}
-                                        role="list"
-                                        aria-labelledby={`brands-heading`}
-                                        className="mt-6 sm:mt-4 grid grid-cols-3 gap-4 sm:gap-6"
-                                      >
-                                        {brands.map((brand, key) => (
-                                          <li className="flex" key={key}>
-                                            <Link
-                                              href={`/brands/${brand.slug}`}
-                                              className="block p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                                            >
-                                              {brand.name}
-                                            </Link>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </Popover.Panel>
-                        </Transition>
-                      </>
-                    )}
-                  </Popover>
-                </div>
-              </Popover.Group>
+                    {/* Footer CTA */}
+                    <div className="flex items-center justify-between border-t border-gray-100 bg-gradient-to-r from-primary-50 to-white px-6 py-3.5">
+                      <span className="text-xs text-gray-500">
+                        Can&apos;t find what you&apos;re looking for?
+                      </span>
+                      <Popover.Button
+                        as={Link}
+                        href="/products"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-primary-600"
+                      >
+                        Shop all products
+                        <ArrowRightIcon className="h-3.5 w-3.5" />
+                      </Popover.Button>
+                    </div>
+                  </Popover.Panel>
+                </Transition>
+              </>
+            )}
+          </Popover>
 
-              {/* Right Side Actions */}
-              <div className="flex items-center space-x-2">
-                {/* Search Button */}
-                <button
-                  type="button"
-                  onClick={showSearchDrawer}
-                  className="group flex items-center p-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
-                >
-                  <FontAwesomeIcon
-                    icon={faSearch}
-                    className="text-blue-500 w-5 h-5 group-hover:scale-110 transition-transform duration-200"
-                  />
-                  <span className="text-xs font-semibold text-blue-500 ml-2 hidden sm:block">
-                    Search
-                  </span>
-                </button>
+          <span className="mx-1 h-5 w-px bg-gray-200" />
 
-                {/* Cart Button */}
-                <button
-                  type="button"
-                  onClick={showDrawer}
-                  className="group relative flex items-center p-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
-                >
-                  <ShoppingBagIcon
-                    className="h-6 w-6 flex-shrink-0 text-blue-500 group-hover:scale-110 transition-transform duration-200"
-                    aria-hidden="true"
-                  />
-                  {totalQuantity > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                      {totalQuantity}
-                    </span>
-                  )}
-                  <span className="ml-2 text-sm font-medium text-blue-600 group-hover:text-blue-700 hidden sm:block">
-                    Cart
-                  </span>
-                  <span className="sr-only">items in cart, view bag</span>
-                </button>
-
-                {/* User/Account Button */}
+          {/* Page links */}
+          <div className="no-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
+            {navigation.pages.map((page) => {
+              const active = isActive(page.href);
+              return (
                 <Link
-                  href="https://hayzeeonline-referral.hayzeeonline.com"
-                  className="group flex items-center p-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                  key={page.name}
+                  href={page.href}
+                  aria-current={active ? "page" : undefined}
+                  className={classNames(
+                    "relative flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-3 text-sm transition",
+                    active
+                      ? page.hot
+                        ? "font-semibold text-accent-600"
+                        : "font-semibold text-primary"
+                      : page.hot
+                      ? "font-medium text-accent-600 hover:bg-accent-50"
+                      : "font-medium text-gray-700 hover:bg-primary-50 hover:text-primary",
+                    active &&
+                      "after:absolute after:inset-x-3 after:bottom-1 after:h-0.5 after:rounded-full after:bg-accent"
+                  )}
                 >
-                  <UserIcon
-                    className="h-6 w-6 flex-shrink-0 text-blue-500 group-hover:scale-110 transition-transform duration-200"
-                    aria-hidden="true"
-                  />
-                  <span className="ml-2 text-xs font-semibold text-blue-500 hidden sm:block">
-                    Account
-                  </span>
+                  {page.hot && <span className="text-base leading-none">🔥</span>}
+                  {page.name}
                 </Link>
-              </div>
-            </div>
-          </nav>
-        </header>
-
-        {/* Search Drawer */}
-        <Drawer
-          title={
-            <div className="flex items-center space-x-2">
-              <FontAwesomeIcon icon={faSearch} className="text-blue-500" />
-              <span>Quick Search</span>
-            </div>
-          }
-          placement="right"
-          onClose={onCloseSearch}
-          open={openSearch}
-          className="search-drawer"
-          width={400}
-        >
-          <div className="mt-0 mb-4 flex justify-center text-center text-sm text-gray-500">
-            <button
-              type="button"
-              className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
-              onClick={onCloseSearch}
-            >
-              ← Back to Menu
-            </button>
+              );
+            })}
           </div>
-          <SearchSuggestion onCloseSearch={onCloseSearch} />
-        </Drawer>
 
-        {/* Cart Drawer */}
-        <Drawer
-          title={
-            <div className="flex items-center space-x-2">
-              <ShoppingBagIcon className="h-5 w-5 text-blue-500" />
-              <span>Shopping Cart</span>
-              {totalQuantity > 0 && (
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
-                  {totalQuantity} items
-                </span>
-              )}
-            </div>
-          }
-          placement="right"
-          onClose={onCloseCart}
-          open={openCart}
-          className="cart-drawer"
-          width={400}
-        >
-          <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-100">
-            <button
-              type="button"
-              className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
-              onClick={onCloseCart}
-            >
-              ← Continue Shopping
-            </button>
-            {totalQuantity > 0 && (
-              <Link
-                onClick={onCloseCart}
-                href="/checkout"
-                className="font-medium text-green-600 hover:text-green-500 transition-colors duration-200"
+          {/* Social links */}
+          <div className="ml-3 hidden flex-shrink-0 items-center gap-1 border-l border-gray-200 pl-3 xl:flex">
+            {socials.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={s.label}
+                title={s.label}
+                className="flex h-7 w-7 items-center justify-center rounded-full text-gray-400 transition hover:bg-primary-50 hover:text-primary"
               >
-                Checkout →
-              </Link>
+                <svg className="h-[18px] w-[18px]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={s.path} />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ---------- Mobile menu drawer ---------- */}
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-[60] lg:hidden" onClose={setOpen}>
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-[60] flex">
+            <Transition.Child
+              as={Fragment}
+              enter="transition ease-in-out duration-300 transform"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition ease-in-out duration-300 transform"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
+            >
+              <Dialog.Panel className="relative flex w-full max-w-xs flex-col overflow-y-auto bg-white pb-12 shadow-2xl">
+                <div className="flex items-center justify-between bg-primary px-4 py-4">
+                  <Logo className="h-10 w-auto" wordmark />
+                  <button
+                    type="button"
+                    className="rounded-full p-2 text-white hover:bg-white/10"
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="sr-only">Close menu</span>
+                    <XMarkIcon className="h-6 w-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-1 px-4 py-4">
+                  {navigation.pages.map((page) => {
+                    const active = isActive(page.href);
+                    return (
+                      <Link
+                        key={page.name}
+                        href={page.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={classNames(
+                          "flex items-center gap-2 rounded-lg px-3 py-2.5 font-medium transition",
+                          active
+                            ? "border-l-4 border-accent bg-primary-50 text-primary"
+                            : "text-gray-800 hover:bg-primary-50 hover:text-primary"
+                        )}
+                      >
+                        {page.hot && <span>🔥</span>}
+                        {page.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <Tab.Group as="div" className="mt-2">
+                  <Tab.List className="flex border-y border-gray-100 bg-gray-50 px-4">
+                    {["Categories", "Brands"].map((label) => (
+                      <Tab
+                        key={label}
+                        className={({ selected }) =>
+                          classNames(
+                            "flex-1 border-b-2 px-3 py-3 text-sm font-semibold outline-none transition",
+                            selected
+                              ? "border-accent text-primary"
+                              : "border-transparent text-gray-500 hover:text-gray-700"
+                          )
+                        }
+                      >
+                        {label}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                  <Tab.Panels>
+                    <Tab.Panel className="px-4 py-4">
+                      <ul className="space-y-1">
+                        {categories.map((category, key) => (
+                          <li key={key}>
+                            <Link
+                              href={`/categories/${category.slug}`}
+                              onClick={() => setOpen(false)}
+                              className="block rounded-lg px-3 py-2 text-gray-600 transition hover:bg-primary-50 hover:text-primary"
+                            >
+                              {category.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </Tab.Panel>
+                    <Tab.Panel className="px-4 py-4">
+                      <ul className="space-y-1">
+                        {brands.map((brand, key) => (
+                          <li key={key}>
+                            <Link
+                              href={`/brands/${brand.slug}`}
+                              onClick={() => setOpen(false)}
+                              className="block rounded-lg px-3 py-2 text-gray-600 transition hover:bg-primary-50 hover:text-primary"
+                            >
+                              {brand.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </Tab.Panel>
+                  </Tab.Panels>
+                </Tab.Group>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
+
+      {/* ---------- Cart Drawer ---------- */}
+      <Drawer
+        title={
+          <div className="flex items-center gap-2">
+            <ShoppingBagIcon className="h-5 w-5 text-primary" />
+            <span className="font-semibold text-primary">Shopping Cart</span>
+            {totalQuantity > 0 && (
+              <span className="rounded-full bg-accent-100 px-2 py-0.5 text-xs font-semibold text-accent-700">
+                {totalQuantity} items
+              </span>
             )}
           </div>
-          
-          <CartQuick />
-          
+        }
+        placement="right"
+        onClose={() => setOpenCart(false)}
+        open={openCart}
+        className="cart-drawer"
+        rootClassName="cart-drawer-root"
+        width={400}
+      >
+        <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-4">
+          <button
+            type="button"
+            className="text-sm font-medium text-primary transition hover:text-accent"
+            onClick={() => setOpenCart(false)}
+          >
+            ← Continue Shopping
+          </button>
           {totalQuantity > 0 && (
-            <div className="mt-6 pt-4 border-t border-gray-100">
-              <Link
-                onClick={onCloseCart}
-                href="/checkout"
-                className="flex items-center justify-center rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-base font-medium text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
-              >
-                Proceed to Checkout
-              </Link>
-            </div>
+            <Link
+              onClick={() => setOpenCart(false)}
+              href="/checkout"
+              className="text-sm font-semibold text-green-600 transition hover:text-green-700"
+            >
+              Checkout →
+            </Link>
           )}
-        </Drawer>
-      </div>
+        </div>
+
+        <CartQuick />
+
+        {totalQuantity > 0 && (
+          <div className="mt-6 border-t border-gray-100 pt-4">
+            <Link
+              onClick={() => setOpenCart(false)}
+              href="/checkout"
+              className="btn-accent w-full"
+            >
+              Proceed to Checkout
+            </Link>
+          </div>
+        )}
+      </Drawer>
     </nav>
   );
 }

@@ -1,30 +1,31 @@
 import React, { useState } from "react";
-import { EyeOutlined, HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { EyeOutlined, HeartOutlined } from "@ant-design/icons";
 import ProductGlance from "./ProductGlance";
 import Link from "next/link";
 
-const ProductCard = ({ product, key }) => {
+const ProductCard = ({ product }) => {
   const [productView, setProduct] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [wished, setWished] = useState(false);
 
-  const formatNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
+  const formatNumber = (number) =>
+    number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
 
   const limitProductName = (str) => {
     const stringWithoutPipe = str.replace(/\|/g, "");
     const words = stringWithoutPipe.trim().split(/\s+/);
-    const first10Words = words.slice(0, 12).join(" ");
-    return first10Words + (words.length > 12 ? "..." : "");
+    const first12 = words.slice(0, 12).join(" ");
+    return first12 + (words.length > 12 ? "..." : "");
   };
 
-  const toggle = () => {
-    setProduct(!productView);
-  };
+  const toggle = () => setProduct(!productView);
 
-  const productQuickView = (productView) => {
-    setProduct(productView);
-  };
+  const inStock = product.availability == 1;
+  const hasDiscount = product.old_price && product.old_price > product.price;
+  const discountPct = hasDiscount
+    ? Math.round(((product.old_price - product.price) / product.old_price) * 100)
+    : 0;
+  const vat = Math.round(product.price * 0.075);
 
   return (
     <>
@@ -32,25 +33,39 @@ const ProductCard = ({ product, key }) => {
         <ProductGlance product={productView} toggle={toggle} show={true} />
       )}
 
-      <div 
-        className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden"
+      <div
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary-100 hover:shadow-card-hover"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden bg-gray-50 rounded-t-2xl">
+        {/* Badges */}
+        <div className="pointer-events-none absolute left-3 top-3 z-10 flex flex-col gap-1.5">
+          {hasDiscount && (
+            <span className="rounded-md bg-accent px-2 py-0.5 text-xs font-bold text-white shadow-sm">
+              -{discountPct}%
+            </span>
+          )}
+        </div>
+        <span
+          className={`absolute right-3 top-3 z-10 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+            inStock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"
+          }`}
+        >
+          {inStock ? "In Stock" : "Sold Out"}
+        </span>
+
+        {/* Image */}
+        <div className="relative aspect-square overflow-hidden bg-gray-50">
           <img
-            className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
             src={product.image}
             alt={product.name}
             loading="lazy"
           />
-          
-          {/* Hover Image */}
           {product.image_hover && (
             <img
-              className={`absolute inset-0 h-full w-full object-contain transition-all duration-500 ${
-                isHovered ? 'opacity-100' : 'opacity-0'
+              className={`absolute inset-0 h-full w-full object-contain p-3 transition-opacity duration-500 ${
+                isHovered ? "opacity-100" : "opacity-0"
               }`}
               src={product.image_hover}
               alt={product.name}
@@ -58,81 +73,68 @@ const ProductCard = ({ product, key }) => {
             />
           )}
 
-          {/* Stock Badge */}
-          <div className="absolute top-3 right-3">
-            <span
-              className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                product.availability == 1
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-              }`}
+          {/* Hover quick actions */}
+          <div className="absolute right-3 top-12 flex flex-col gap-2 opacity-0 transition-all duration-300 group-hover:opacity-100">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setProduct(product);
+              }}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-primary shadow-md transition hover:bg-primary hover:text-white"
+              title="Quick view"
             >
-              {product.availability == 1 ? "In Stock" : "Sold Out"}
-            </span>
-          </div>
-
-          {/* Quick Action Buttons */}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300">
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-              <button
-                onClick={() => productQuickView(product)}
-                className="bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors duration-200"
-                title="Quick View"
-              >
-                <EyeOutlined className="text-sm" />
-              </button>
-              <button
-                className="bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors duration-200"
-                title="Add to Wishlist"
-              >
-                <HeartOutlined className="text-sm" />
-              </button>
-            </div>
+              <EyeOutlined />
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setWished((w) => !w);
+              }}
+              className={`flex h-9 w-9 items-center justify-center rounded-full shadow-md transition ${
+                wished
+                  ? "bg-accent text-white"
+                  : "bg-white text-primary hover:bg-accent hover:text-white"
+              }`}
+              title="Add to wishlist"
+            >
+              <HeartOutlined />
+            </button>
           </div>
         </div>
 
-        {/* Product Info */}
-        <Link href={`/products/${product.slug}`}>
-          <div className="p-4 space-y-3">
-            {/* Product Name */}
-            <h3 className="text-sm font-medium text-gray-900 leading-relaxed hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+        {/* Info */}
+        <Link href={`/products/${product.slug}`} className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col gap-2 p-4">
+            <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-medium leading-snug text-gray-800 transition-colors group-hover:text-primary">
               {limitProductName(product.name)}
             </h3>
 
-            {/* Price and Actions */}
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-gray-900">
+            <div className="mt-auto">
+              <div className="flex items-end gap-2">
+                <span className="text-lg font-extrabold text-primary">
                   &#8358;{formatNumber(product.price)}
                 </span>
-                    <span className="text-xs text-gray-800 mt-1">
-                       VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))} (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
-                    </span>
-                   
+                {hasDiscount && (
+                  <span className="pb-0.5 text-xs text-gray-400 line-through">
+                    &#8358;{formatNumber(product.old_price)}
+                  </span>
+                )}
               </div>
-              
-              {/* Add to Cart Button - Desktop Only */}
+              <p className="mt-0.5 text-[11px] text-gray-500">
+                +VAT &#8358;{formatNumber(vat)} · Total &#8358;
+                {formatNumber(product.price + vat)}
+              </p>
+
               <button
-                className="hidden sm:flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200 opacity-0 group-hover:opacity-100"
-                title="Add to Cart"
-                disabled={product.availability != 1}
+                className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-primary-100 bg-primary-50 py-2 text-xs font-semibold text-primary transition hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-100 disabled:text-gray-400 sm:gap-2 sm:py-2.5 sm:text-sm"
+                disabled={!inStock}
               >
-                <ShoppingCartOutlined className="text-sm" />
+                <EyeOutlined className="text-[13px] sm:text-sm" />
+                {inStock ? "View Details" : "Sold Out"}
               </button>
             </div>
-
-            {/* Discount Badge */}
-            {product.old_price && product.old_price > product.price && (
-              <div className="absolute top-3 left-3">
-                <span className="bg-red-500 text-white px-2 py-1 text-xs font-semibold rounded-md">
-                  {Math.round(((product.old_price - product.price) / product.old_price) * 100)}% OFF
-                </span>
-              </div>
-            )}
           </div>
         </Link>
-
-       
       </div>
     </>
   );

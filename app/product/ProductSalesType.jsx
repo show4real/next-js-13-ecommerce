@@ -97,16 +97,6 @@ const SaleProductCard = ({ product }) => {
             </div>
           </div>
         </div>
-
-        {/* CTA - mobile tap target */}
-        <div className="px-3 pb-3">
-          <div className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-center py-2 rounded-xl text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200 sm:block hidden">
-            View Deal
-          </div>
-          <div className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-center py-2 rounded-xl text-xs font-semibold sm:hidden block">
-            View Deal
-          </div>
-        </div>
       </div>
     </Link>
   );
@@ -139,7 +129,7 @@ export default function ProductSaleType({ sale_type }) {
   const isFlashSale = sale_type?.toLowerCase().includes("flash");
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-24">
+    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-[112px] lg:mt-[172px]">
       {/* Header */}
       <div className={`rounded-2xl p-4 sm:p-6 mb-6 ${isFlashSale ? "bg-gradient-to-r from-red-600 via-rose-500 to-pink-500" : "bg-gradient-to-r from-blue-600 to-indigo-600"}`}>
         <div className="flex items-center justify-between flex-wrap gap-3">
@@ -159,20 +149,12 @@ export default function ProductSaleType({ sale_type }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            {isFlashSale && (
-              <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-semibold">
-                <ClockIcon />
-                <span>Ends Soon</span>
-              </div>
-            )}
-            <Link
-              href={`/products?sale_type=${encodeURIComponent(sale_type)}`}
-              className="bg-white text-gray-900 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold hover:bg-gray-100 transition-colors whitespace-nowrap"
-            >
-              View All →
-            </Link>
-          </div>
+          {isFlashSale && (
+            <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-semibold">
+              <ClockIcon />
+              <span>Ends Soon</span>
+            </div>
+          )}
         </div>
       </div>
 

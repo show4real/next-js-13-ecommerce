@@ -1,4 +1,5 @@
 import Checkout from "/app/components/Checkout";
+import TrustBadges from "/app/components/TrustBadges";
 
 export const metadata = {
   title: "#1 UK laptop sales",
@@ -37,8 +38,11 @@ export const metadata = {
 
 export default function OrderSummary() {
   return (
-    <div className="container-fluid mx-auto pt-0 mb-10 mt-20">
+    <div className="mt-[96px] min-h-screen bg-gray-50 lg:mt-[148px]">
       <Checkout />
+      <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+        <TrustBadges />
+      </div>
     </div>
   );
 }

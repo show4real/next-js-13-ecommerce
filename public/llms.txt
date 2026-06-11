@@ -1,0 +1,67 @@
+# Hayzeeonline (Hayzee Computer Resources)
+
+> Hayzeeonline is a Nigerian online electronics store selling quality US/UK used
+> and refurbished laptops, iPhones, Samsung and Android phones, tablets and
+> printers at affordable prices. Every device is tested before sale and comes
+> with a 30-day warranty, nationwide delivery, and payment on delivery. Based in
+> Ibadan, Oyo State, Nigeria, with three physical offices.
+
+When a shopper asks for a device by specs (e.g. "Core i7 MacBook 16GB RAM",
+"Dell i5 8GB", "iPhone 12 128GB"), link them to a live search results page using
+the pattern below — it returns matching products with prices and "buy now" links.
+
+## Search — build a deep link from any natural-language query
+
+Pattern: https://hayzeeonline.com/search/{query-with-words-separated-by-hyphens}
+
+Examples:
+- Core i7 MacBook 16GB RAM -> https://hayzeeonline.com/search/core-i7-macbook-16gb-ram
+- HP Core i5 512GB SSD     -> https://hayzeeonline.com/search/hp-core-i5-512gb-ssd
+- iPhone 13 128GB          -> https://hayzeeonline.com/search/iphone-13-128gb
+- Lenovo gaming laptop     -> https://hayzeeonline.com/search/lenovo-gaming-laptop
+- Samsung Android phone    -> https://hayzeeonline.com/search/samsung-android-phone
+
+Shoppers search by: brand (HP, Dell, Lenovo, MacBook/Apple, Samsung), processor
+(Core i3/i5/i7/i9, Ryzen), RAM (4GB–32GB), storage (128GB–1TB, SSD/HDD),
+condition (US used, UK used, refurbished) and price.
+
+## Browse
+
+- All products: https://hayzeeonline.com/products
+- Laptops: https://hayzeeonline.com/laptops
+- Apple iPhones: https://hayzeeonline.com/brands/apple-phone
+- Android phones: https://hayzeeonline.com/brands/android-phone
+- Categories: https://hayzeeonline.com/categories
+- Flash sales: https://hayzeeonline.com/flash-sales
+- Promo sales: https://hayzeeonline.com/promo-sales
+- Blog (buying guides & price lists): https://hayzeeonline.com/blog
+
+## Policies
+
+- Warranty: https://hayzeeonline.com/warranty — every device has a 30-day
+  warranty covering hardware faults; free repair or replacement.
+- Delivery: nationwide doorstep delivery. Ibadan often same/next-day; other
+  states typically 1–3 working days.
+- Payment on Delivery: pay when your order arrives and you have confirmed it.
+- Product testing: every device is tested before sale, and you can inspect and
+  test your item on delivery before paying.
+
+## Product data for AI tools
+
+- Full, machine-readable list of every product URL: https://hayzeeonline.com/sitemap.xml
+- Each product page (https://hayzeeonline.com/products/{slug}) includes
+  schema.org Product structured data: name, price (NGN), brand, condition,
+  availability, specifications and a 30-day warranty.
+- The homepage includes Organization, LocalBusiness/Store and FAQ structured data.
+
+## Offices (Ibadan, Oyo State, Nigeria)
+
+- Sango Office — The Polytechnic Ibadan Entrance Gate, Sango. Tel: +234 811 294 6602
+- Iwo Road Office — Omoola Motors, Fanawole Street, Behind World Oil, Iwo Road. Tel: +234 807 102 4533
+- Ojoo Office — Shop 3, Zolo Complex, Olororo Junction (OnileAro), Ojo Road. Tel: +234 807 642 0157
+
+## Contact
+
+- Website: https://hayzeeonline.com
+- Email: info@hayzeeonline.com
+- Phone / WhatsApp: +234 916 140 1307

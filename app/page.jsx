@@ -3,12 +3,21 @@ import Loading from "./loading";
 import ProductList from "./products/ProductList";
 import ProductSaleType from "./products/ProductSalesType";
 import FeaturedServices from "./components/FeaturedServices";
+import HeroSection from "./components/HeroSection";
+import HeroSearch from "./components/HeroSearch";
+import TrustBadges from "./components/TrustBadges";
+import Testimonials from "./components/Testimonials";
+import Faq from "./components/Faq";
 import Category from "./categories/Category";
-import CategorySlider from "./categories/CategorySlider";
+import { localBusinessJsonLd } from "./lib/business";
 
 export const metadata = {
-  title: " US used / Uk used Laptop Computers At Affordable Prices - Hayzeeonline",
-  description: "We sell affordable US used / Uk used laptops and Iphones",
+  title: {
+    absolute: "Hayzeeonline — US/UK Used Laptops & Phones at Affordable Prices in Nigeria",
+  },
+  description:
+    "Shop affordable US/UK used laptops, iPhones, Samsung & Android phones at Hayzeeonline. Tested & trusted gadgets — HP, Dell, Lenovo, MacBook — with nationwide delivery and pay on delivery.",
+  alternates: { canonical: "/" },
   keywords: [
     "HP",
     "Dell",
@@ -27,41 +36,50 @@ export const metadata = {
     "used samsung phones",
   ],
   openGraph: {
-    title: "US used / Uk used Gadgets and Appliances at Affordable prices",
+    title: "US/UK Used Gadgets & Appliances at Affordable Prices",
     description:
-      "US used / Uk used Laptops Mobile Phone Samsung Iphone Dell HP Lenovo at affordable prices",
+      "US/UK used laptops, mobile phones — Samsung, iPhone, Dell, HP, Lenovo — at affordable prices.",
   },
-
-  other: {
-    "google-site-verification": "4Zkz1j8swUUwJUJrRx2wsqs4YwJy6ru1Xb-9WmFnjek",
-  },
-  applicationName: "Ecommerce Website for Laptops and Mobile phone",
 };
 
 export default function Home() {
   return (
-  <main className="w-full px-4 sm:px-6 lg:px-8 mt-[70px] lg:mt-[150px]">
-    
-  <Suspense fallback={<Loading />}>
-    <ProductList
-      productSection="Trending Products"
-      sale_type={null}
-      brandslug={""}
-      categoryslug={""}
-      shop={false}
-      flash_sale={true}
+  <main className="w-full mt-[96px] pb-10 lg:mt-[148px]">
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
     />
-    <Category />
-    {/* <ProductSaleType sale_type="flash sales" /> */}
-    {/* <ProductSaleType sale_type="PRE-ORDER (24Hours)" />
-    <ProductSaleType sale_type="PRE-ORDER (21DAYS)" />
-    <ProductSaleType sale_type="PRE-ORDER (7DAYS)" /> */}
-    <ProductSaleType sale_type="promo sales" />
-    <FeaturedServices />
-    <ProductSaleType sale_type="black friday" />
-    <ProductSaleType sale_type="Mid year sales" />
-  </Suspense>
-</main>
+    <Suspense fallback={<Loading />}>
+      <div className="pt-5 sm:pt-6">
+        <HeroSearch />
+      </div>
+
+      <div className="pt-4 sm:pt-5">
+        <HeroSection />
+      </div>
+
+      <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <TrustBadges />
+      </section>
+
+      <ProductList
+        productSection="Trending Products"
+        heading="Top Picks For You"
+        sale_type={null}
+        brandslug={""}
+        categoryslug={""}
+        shop={false}
+        flash_sale={true}
+      />
+      <Category />
+      <ProductSaleType sale_type="promo sales" />
+      <FeaturedServices />
+      <ProductSaleType sale_type="black friday" />
+      <ProductSaleType sale_type="Mid year sales" />
+      <Testimonials />
+      <Faq />
+    </Suspense>
+  </main>
 
   );
 }

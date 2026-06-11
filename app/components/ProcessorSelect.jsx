@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { ChevronDownIcon, XMarkIcon, MagnifyingGlassIcon, CheckIcon } from "@heroicons/react/24/outline";
+import React, { useState } from "react";
+import { MagnifyingGlassIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 const processorsList = [
   "Intel Atom","Intel Celeron","Intel Pentium","Intel Core i3","Intel Core i5",
@@ -26,131 +26,72 @@ const processorsList = [
 ];
 
 const ProcessorSelect = ({ processors, handleProcessor }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const dropdownRef = useRef(null);
-  const searchRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (isOpen && searchRef.current) searchRef.current.focus();
-  }, [isOpen]);
 
   const filtered = processorsList.filter((p) =>
     p.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggle = (item) => {
+  const toggle = (item) =>
     handleProcessor(
       processors.includes(item)
         ? processors.filter((p) => p !== item)
         : [...processors, item]
     );
-  };
-
-  const remove = (item, e) => {
-    e.stopPropagation();
-    handleProcessor(processors.filter((p) => p !== item));
-  };
-
-  const clearAll = (e) => {
-    e.stopPropagation();
-    handleProcessor([]);
-  };
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
-      {/* Trigger */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-left shadow-sm hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 min-h-[50px]"
-      >
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex-1 flex flex-wrap gap-1">
-            {processors.length === 0 ? (
-              <span className="text-gray-500 font-medium">Processor</span>
-            ) : (
-              <>
-                {processors.slice(0, 2).map((p) => (
-                  <span key={p} className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-800">
-                    {p}
-                    <XMarkIcon className="h-3 w-3 cursor-pointer hover:text-purple-900" onClick={(e) => remove(p, e)} />
-                  </span>
-                ))}
-                {processors.length > 2 && (
-                  <span className="text-xs text-gray-500 py-1">+{processors.length - 2} more</span>
-                )}
-              </>
-            )}
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            {processors.length > 0 && (
-              <XMarkIcon
-                className="h-4 w-4 text-gray-400 hover:text-red-500 transition-colors"
-                onClick={clearAll}
-              />
-            )}
-            <ChevronDownIcon className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
-          </div>
-        </div>
-      </button>
+    <div className="w-full">
+      <div className="relative mb-2">
+        <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search processor…"
+          className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm text-gray-700 placeholder-gray-400 outline-none transition focus:border-primary focus:bg-white"
+        />
+      </div>
 
-      {/* Dropdown */}
-      {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-white shadow-xl rounded-xl border border-gray-100 overflow-hidden">
-          {/* Search */}
-          <div className="p-2 border-b border-gray-100">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                ref={searchRef}
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search processor…"
-                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-          </div>
-          {/* Options */}
-          <div className="max-h-56 overflow-y-auto">
-            {filtered.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-gray-400 text-center">No results</p>
-            ) : (
-              filtered.map((item) => {
-                const checked = processors.includes(item);
-                return (
-                  <div
-                    key={item}
-                    onClick={() => toggle(item)}
-                    className={`flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors duration-100 ${checked ? "bg-purple-50" : "hover:bg-gray-50"}`}
+      <ul className="no-scrollbar max-h-56 space-y-0.5 overflow-y-auto">
+        {filtered.length === 0 ? (
+          <li className="px-3 py-2 text-sm text-gray-400">No results</li>
+        ) : (
+          filtered.map((item) => {
+            const checked = processors.includes(item);
+            return (
+              <li key={item}>
+                <button
+                  type="button"
+                  onClick={() => toggle(item)}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition ${
+                    checked ? "text-primary" : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <span
+                    className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded border transition ${
+                      checked ? "border-primary bg-primary" : "border-gray-300 bg-white"
+                    }`}
                   >
-                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all duration-150 ${checked ? "bg-purple-600 border-purple-600" : "bg-white border-gray-300"}`}>
-                      {checked && <CheckIcon className="h-3 w-3 text-white stroke-[3]" />}
-                    </div>
-                    <span className={`text-sm select-none ${checked ? "font-semibold text-purple-800" : "text-gray-700"}`}>{item}</span>
-                  </div>
-                );
-              })
-            )}
-          </div>
-          {/* Footer */}
-          {processors.length > 0 && (
-            <div className="px-4 py-2 border-t border-gray-100 flex items-center justify-between bg-gray-50">
-              <span className="text-xs text-gray-500">{processors.length} selected</span>
-              <button type="button" onClick={() => handleProcessor([])} className="text-xs text-red-500 hover:text-red-700 font-medium">Clear all</button>
-            </div>
-          )}
+                    {checked && <CheckIcon className="h-3 w-3 stroke-[3] text-white" />}
+                  </span>
+                  <span className={`truncate ${checked ? "font-semibold" : ""}`}>{item}</span>
+                </button>
+              </li>
+            );
+          })
+        )}
+      </ul>
+
+      {processors.length > 0 && (
+        <div className="mt-2 flex items-center justify-between border-t border-gray-100 pt-2">
+          <span className="text-xs font-medium text-gray-500">{processors.length} selected</span>
+          <button
+            type="button"
+            onClick={() => handleProcessor([])}
+            className="text-xs font-semibold text-red-500 transition hover:text-red-700"
+          >
+            Clear
+          </button>
         </div>
       )}
     </div>
