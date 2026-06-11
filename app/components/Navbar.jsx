@@ -181,40 +181,76 @@ export default function Navbar() {
             )}
 
             <ul className="divide-y divide-gray-50 p-2">
-              {results.slice(0, 6).map((product) => (
-                <li key={product.id}>
-                  <Link
-                    href={`/products/${product.slug}`}
-                    onClick={() => setShowResults(false)}
-                    className="group flex items-center gap-3 rounded-xl p-2.5 transition hover:bg-primary-50"
-                  >
-                    <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-full w-full object-contain transition group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-gray-800 group-hover:text-primary">
-                        {product.name}
-                      </p>
-                      <span
-                        className={classNames(
-                          "mt-1 inline-block text-[11px] font-semibold",
-                          product.availability ? "text-green-600" : "text-red-500"
+              {results.slice(0, 6).map((product) => {
+                const eyebrow = [product.brand?.name, product.category]
+                  .filter(Boolean)
+                  .join(" · ");
+                const hasDiscount =
+                  product.old_price && product.old_price > product.price;
+                const discountPct = hasDiscount
+                  ? Math.round(
+                      ((product.old_price - product.price) / product.old_price) *
+                        100
+                    )
+                  : 0;
+                return (
+                  <li key={product.id}>
+                    <Link
+                      href={`/products/${product.slug}`}
+                      onClick={() => setShowResults(false)}
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition hover:bg-primary-50"
+                    >
+                      <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-full w-full object-contain transition group-hover:scale-105"
+                          loading="lazy"
+                        />
+                        {hasDiscount && (
+                          <span className="absolute left-0 top-0 rounded-br-lg bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white">
+                            -{discountPct}%
+                          </span>
                         )}
-                      >
-                        {product.availability ? "In stock" : "Sold out"}
-                      </span>
-                    </div>
-                    <span className="flex-shrink-0 text-sm font-bold text-primary">
-                      &#8358;{formatNumber(product.price)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        {eyebrow && (
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 sm:text-[11px]">
+                            {eyebrow}
+                          </p>
+                        )}
+                        <p className="break-words text-[13px] font-medium leading-snug text-gray-800 group-hover:text-primary sm:text-sm">
+                          {product.name}
+                        </p>
+                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                          <span className="text-sm font-bold text-primary">
+                            &#8358;{formatNumber(product.price)}
+                          </span>
+                          {hasDiscount && (
+                            <span className="text-xs text-gray-400 line-through">
+                              &#8358;{formatNumber(product.old_price)}
+                            </span>
+                          )}
+                          <span
+                            className={classNames(
+                              "inline-flex items-center gap-1 text-[11px] font-semibold",
+                              product.availability ? "text-green-600" : "text-red-500"
+                            )}
+                          >
+                            <span
+                              className={classNames(
+                                "h-1.5 w-1.5 rounded-full",
+                                product.availability ? "bg-green-500" : "bg-red-500"
+                              )}
+                            />
+                            {product.availability ? "In stock" : "Sold out"}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
             <button
               onClick={submitSearch}
