@@ -22,6 +22,17 @@
       "static/chunks/main-app.js",
       "static/css/app/not-found.css",
       "static/chunks/app/not-found.js"
+    ],
+    "/search/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/search/[id]/page.css",
+      "static/chunks/app/search/[id]/page.js"
+    ],
+    "/search/[id]/not-found": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/search/[id]/not-found.js"
     ]
   }
 }
