@@ -120,7 +120,7 @@ const Checkout = () => {
     }
   };
 
-  const initiatePayment = async (e) => {
+  const handleInitiatePayment = async (e) => {
     e.preventDefault();
 
     let validationErrors = {};
@@ -166,6 +166,7 @@ const Checkout = () => {
       setSaving(false);
     } catch (error) {
       console.error("Error initiating payment:", error);
+      setSaving(false);
     }
   };
 
@@ -520,7 +521,7 @@ const Checkout = () => {
                 </div>
 
                 <button
-                  onClick={payNowSelected ? initiatePayment : handleSubmit}
+                  onClick={payNowSelected ? handleInitiatePayment : handleSubmit}
                   disabled={saving}
                   className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3.5 text-base font-bold text-white shadow-sm transition hover:bg-accent-600 hover:shadow-md active:scale-[0.98] disabled:opacity-70"
                 >
