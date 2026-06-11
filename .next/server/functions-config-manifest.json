@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/google-reviews": {},
+    "/black-friday": {},
+    "/sitemap.xml": {},
+    "/brands": {},
+    "/checkout": {},
+    "/flash-sales": {},
+    "/laptops": {},
+    "/mid-year-sales": {},
+    "/order-success": {},
+    "/blog": {},
+    "/order-failed": {},
+    "/order-summary": {},
+    "/": {},
+    "/product": {},
+    "/product/[id]": {},
+    "/products/[id]": {},
+    "/products": {},
+    "/promo-sales": {},
+    "/search/[id]": {},
+    "/two-days-prorders": {},
+    "/search": {},
+    "/verify": {},
+    "/verify/[id]": {},
+    "/warranty": {}
+  }
+}
