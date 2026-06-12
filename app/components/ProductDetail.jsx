@@ -23,6 +23,7 @@ import {
 } from "/app/services/productService";
 import { getProductSpecs } from "/app/lib/productSpecs";
 import useCartStore from "/app/store/zustand";
+import useHasMounted from "/app/hooks/useHasMounted";
 import { OFFICES as offices } from "/app/lib/business";
 import "./NumberButton.css";
 import Link from "next/link";
@@ -36,7 +37,13 @@ const ProductDetail = ({ product }) => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [showSpecs, setShowSpecs] = useState(true);
 
-  const { cart, addToCart, removeFromCart, updateCart } = useCartStore();
+  const { cart: persistedCart, addToCart, removeFromCart, updateCart } =
+    useCartStore();
+  // This component is server-rendered on the product page, so derive cart
+  // state only after mount to avoid a hydration mismatch when the product is
+  // already in the visitor's cart.
+  const hasMounted = useHasMounted();
+  const cart = hasMounted ? persistedCart : [];
   const itemInCart = cart.filter((item) => item.id === product.id);
   const cartItem = cart.find((cartItem) => cartItem.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;

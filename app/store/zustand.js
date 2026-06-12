@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+// On the server `localStorage` doesn't exist. Hand persist a no-op store there
+// so importing/evaluating this module (e.g. during SSR of a client component)
+// never throws "localStorage is not defined".
+const noopStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+};
+
 const useCartStore = create(
   persist(
     (set, get) => ({
@@ -83,7 +92,9 @@ const useCartStore = create(
     }),
     {
       name: 'cart-storage', // unique name for localStorage key
-      storage: createJSONStorage(() => localStorage), // use localStorage
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined" ? localStorage : noopStorage
+      ),
       partialize: (state) => ({ cart: state.cart }), // only persist the cart array
       onRehydrateStorage: () => (state) => {
         // Optional: Log when storage is rehydrated
