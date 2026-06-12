@@ -39,8 +39,8 @@ export const OFFICES = [
   },
   {
     name: "Ojoo Office",
-    address: "Shop 3, Zolo Complex, Olororo Junction (OnileAro), Ojo Road, Ibadan.",
-    street: "Shop 3, Zolo Complex, Olororo Junction (OnileAro), Ojo Road",
+    address: "Govt. Shops, Ojoo Roundabout, Across Ladegbua Filling Station, Ibadan.",
+    street: "Govt. Shops, Ojoo Roundabout, Across Ladegbua Filling Station",
     locality: "Ibadan",
     region: "Oyo",
     phone: "08076420157",

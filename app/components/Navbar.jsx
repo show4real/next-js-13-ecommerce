@@ -14,7 +14,6 @@ import {
   Squares2X2Icon,
   TagIcon,
   TruckIcon,
-  MapPinIcon,
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import { getAllCats, getBrands, getQuickSearch } from "/app/services/productService";
@@ -313,9 +312,6 @@ export default function Navbar() {
               </span>
               <span className="mx-6 inline-flex items-center gap-2">
                 <TruckIcon className="h-4 w-4 text-accent" /> Payment on Delivery nationwide
-              </span>
-              <span className="mx-6 inline-flex items-center gap-2">
-                <MapPinIcon className="h-4 w-4 text-accent" /> Free delivery within Ibadan (T&amp;C apply)
               </span>
               <span className="mx-6 inline-flex items-center gap-2">
                 🔥 Flash deals every week

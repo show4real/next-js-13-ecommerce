@@ -1,9 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getCategories } from "../services/productService";
 import CarouselHolder from "../products/CarouselHolder";
 import ProductCard from "app/components/ProductCard";
-import { ArrowRightIcon, PlayIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlayIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 const Category = ({}) => {
@@ -11,6 +16,16 @@ const Category = ({}) => {
   const [loading, setLoading] = useState(false);
   const [youtube, setYoutube] = useState("");
   const [activeTab, setActiveTab] = useState(0);
+  const trackRef = useRef(null);
+
+  // Scroll the product slider by roughly one card (plus gap) in either direction.
+  const scrollByCard = (dir) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector("[data-slide]");
+    const amount = card ? card.offsetWidth + 16 : track.clientWidth * 0.8;
+    track.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
 
   useEffect(() => {
     getData();
@@ -47,16 +62,6 @@ const Category = ({}) => {
         />
       </div>
     </div>
-  );
-
-  const CategoryViewAllButton = ({ category }) => (
-    <Link
-      href={`/categories/${category.slug}`}
-      className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-accent hover:shadow-md"
-    >
-      View more {category.name}
-      <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-    </Link>
   );
 
   const EmptyState = ({ categoryName }) => (
@@ -97,6 +102,14 @@ const Category = ({}) => {
             ready to ship. Browse by category and grab a deal today.
           </p>
         </div>
+
+        <Link
+          href={`/categories/${active.slug}`}
+          className="group inline-flex items-center justify-center gap-1.5 self-start whitespace-nowrap rounded-full border border-primary/30 px-3.5 py-1.5 text-xs font-semibold text-primary transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white hover:shadow-md hover:shadow-primary/20 active:scale-95 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
+        >
+          View more {active.name}
+          <ArrowRightIcon className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1 sm:h-4 sm:w-4" />
+        </Link>
       </div>
 
       {/* Category pills — swipeable on mobile, wraps on desktop */}
@@ -120,17 +133,41 @@ const Category = ({}) => {
         })}
       </div>
 
-      {/* Active category products */}
-      <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-card sm:p-6">
+      {/* Active category products — single-row slider with side arrows */}
+      <div className="relative rounded-2xl border border-gray-100 bg-white p-4 shadow-card sm:p-6">
         {active.products.length > 0 ? (
           <>
-            <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
+            {/* Left / right navigation icons */}
+            <button
+              type="button"
+              aria-label="Previous products"
+              onClick={() => scrollByCard(-1)}
+              className="absolute left-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-md transition hover:border-primary-300 hover:text-primary sm:flex"
+            >
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next products"
+              onClick={() => scrollByCard(1)}
+              className="absolute right-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-md transition hover:border-primary-300 hover:text-primary sm:flex"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+
+            <div
+              ref={trackRef}
+              className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scroll-smooth lg:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {active.products.map((product, productKey) => (
-                <ProductCard product={product} key={productKey} />
+                <div
+                  key={productKey}
+                  data-slide
+                  className="w-[78%] shrink-0 snap-start sm:w-[48%] md:w-[31%] lg:w-[23%]"
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
-            </div>
-            <div className="border-t border-gray-100 pt-6 text-center">
-              <CategoryViewAllButton category={active} />
             </div>
           </>
         ) : (

@@ -16,6 +16,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
   ArrowsUpDownIcon,
+  ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import ProductCard from "/app/components/ProductCard";
@@ -733,15 +734,33 @@ export default function ProductList({
                     </div>
                   ))}
                 </div>
+              ) : isTrending ? (
+                <>
+                  {/* Mobile: horizontal slider · Desktop: grid */}
+                  <div className="-mx-4 mb-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 scroll-smooth sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3 lg:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    {products.slice(0, 6).map((product, key) => (
+                      <div
+                        key={key}
+                        className="w-[78%] shrink-0 snap-start sm:w-auto"
+                      >
+                        <ProductCard product={product} />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mb-12 flex justify-center">
+                    <Link
+                      href="/products"
+                      className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-primary-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/20 transition-all duration-300 hover:from-accent hover:to-accent-500 hover:shadow-lg hover:shadow-accent/30 active:scale-95"
+                    >
+                      View all products
+                      <ArrowRightIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">
-                  {(isTrending ? products.slice(0, 6) : products).map((product, key) => (
-                    <div
-                      key={key}
-                      className={isTrending && key >= 4 ? "hidden sm:block" : ""}
-                    >
-                      <ProductCard product={product} />
-                    </div>
+                  {products.map((product, key) => (
+                    <ProductCard product={product} key={key} />
                   ))}
                 </div>
               )}

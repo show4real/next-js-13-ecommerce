@@ -14,6 +14,7 @@ import { getOtherSales } from "../services/productService";
 import "./styles.css";
 import Loading from "app/loading";
 import Link from "next/link";
+import ProductCard from "app/components/ProductCard";
 
 // Custom Arrow Components
 const CustomPrevArrow = ({ onClick }) => (
@@ -42,103 +43,14 @@ const CustomNextArrow = ({ onClick }) => (
   </button>
 );
 
-// Product Card Component
-const FlashSaleCard = ({ product }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const limitStringToThreeWords = (str) => {
-    const words = str.trim().split(/\s+/);
-    if (words.length > 3) {
-      return words.slice(0, 3).join(" ") + "...";
-    }
-    return str;
-  };
-
-  const formatNumber = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  return (
-    <div className="h-full px-2">
-      <Link href={`/products/${product.slug}`} className="block h-full">
-        <div
-          className="group flex h-full flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden relative"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Flash Sale Badge */}
-          <div className="absolute top-3 left-3 z-10">
-            <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center space-x-1 animate-pulse">
-              <FontAwesomeIcon icon={faFire} className="w-3 h-3" />
-              <span>FLASH</span>
-            </div>
-          </div>
-
-          {/* Discount Badge */}
-          {product.old_price && product.old_price > product.price && (
-            <div className="absolute top-3 right-3 z-10">
-              <div className="bg-yellow-400 text-gray-900 px-2 py-1 rounded-lg text-xs font-bold">
-                {Math.round(((product.old_price - product.price) / product.old_price) * 100)}% OFF
-              </div>
-            </div>
-          )}
-
-          {/* Product Image */}
-          <div className="relative aspect-square bg-gray-50 overflow-hidden">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
-              loading="lazy"
-            />
-            
-            {/* Overlay on hover */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-
-          {/* Product Info */}
-          <div className="flex flex-1 flex-col p-4">
-            <h3 className="text-sm font-semibold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-200 min-h-[2.5rem] flex items-center">
-              {limitStringToThreeWords(product.name)}
-            </h3>
-
-            <div className="mt-3 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-bold text-gray-900">
-                  &#8358;{formatNumber(product.price)}
-                </span>
-                {product.old_price && product.old_price > product.price && (
-                  <span className="text-sm text-gray-500 line-through">
-                    &#8358;{formatNumber(product.old_price)}
-                  </span>
-                )}
-
-              </div>
-
-
-              {/* Stock status */}
-              <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full ${product.availability ? 'bg-green-400' : 'bg-red-400'}`} />
-                <span className={`text-xs font-medium ${product.availability ? 'text-green-600' : 'text-red-600'}`}>
-                  {product.availability ? 'In Stock' : 'Sold Out'}
-                </span>
-              </div>
-            </div>
-
-            {/* Quick Action Button — collapsed (no height) until hover, then expands in */}
-            <div className="mt-auto grid grid-rows-[0fr] transition-all duration-300 group-hover:grid-rows-[1fr]">
-              <div className="overflow-hidden">
-                <button className="mt-3 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200 opacity-0 group-hover:opacity-100">
-                  Quick View
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Link>
-    </div>
-  );
-};
+// Reuse the shared, mobile-responsive ProductCard so the slider matches the
+// rest of the site. The px-2 wrapper keeps the slick slide gutters; h-full lets
+// cards stretch to equal height within the track.
+const FlashSaleCard = ({ product }) => (
+  <div className="h-full px-2">
+    <ProductCard product={product} />
+  </div>
+);
 
 const CategorySlider = ({ sale_type }) => {
   const [products, setProducts] = useState([]);
@@ -303,7 +215,7 @@ const CategorySlider = ({ sale_type }) => {
             {products.map((product, key) => (
               <div
                 key={key}
-                className="w-[47%] flex-shrink-0 snap-start sm:w-[33%]"
+                className="w-[78%] flex-shrink-0 snap-start sm:w-[48%]"
               >
                 <FlashSaleCard product={product} />
               </div>
