@@ -172,7 +172,7 @@ const ProductCard = ({ product }) => {
               </span>
             )}
 
-            <h3 className="line-clamp-2 min-h-[2.75rem] text-[15px] font-semibold leading-snug text-gray-800 transition-colors group-hover:text-primary group-hover:underline group-hover:underline-offset-2 sm:min-h-[2.5rem] sm:text-sm">
+            <h3 className="line-clamp-2 min-h-[2.5rem] text-[13px] font-semibold leading-snug text-gray-800 transition-colors group-hover:text-primary group-hover:underline group-hover:underline-offset-2 sm:text-sm">
               {limitProductName(product.name)}
             </h3>
 
@@ -193,7 +193,7 @@ const ProductCard = ({ product }) => {
 
             <div className="mt-auto pt-1">
               <div className="flex flex-wrap items-end gap-x-2 gap-y-0.5">
-                <span className="text-xl font-extrabold text-primary sm:text-lg">
+                <span className="text-base font-extrabold text-primary sm:text-lg">
                   &#8358;{formatNumber(product.price)}
                 </span>
                 {hasDiscount && (

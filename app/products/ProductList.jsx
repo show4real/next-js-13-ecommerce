@@ -84,6 +84,7 @@ export default function ProductList({
   categoryslug = "",
   initialCategory = "",
   flash_sale,
+  shop = false,
 }) {
   // Load initial state from global storage
   const [products, setProducts] = useState([]);
@@ -649,7 +650,7 @@ export default function ProductList({
         {/* Scroll anchor: lands right on the products area after a filter change */}
         <div ref={sectionRef} className="scroll-mt-[120px] lg:scroll-mt-[170px]" />
 
-        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+        <div className={`lg:grid lg:grid-cols-4 lg:gap-8 ${shop ? "lg:mt-6" : ""}`}>
             <div className="hidden lg:block lg:col-span-1">
               {sidebarFilters()}
             </div>
