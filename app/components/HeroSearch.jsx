@@ -49,7 +49,7 @@ export default function HeroSearch() {
             Describe what you want — we&apos;ll find it
           </h2>
           <p className="mt-1 text-sm text-white/80">
-            Search by brand, processor, RAM or storage in plain words.
+            Search by Brand, Processor, RAM or Storage in plain words.
           </p>
 
           <form onSubmit={onSubmit} className="mt-4">
