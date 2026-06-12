@@ -62,7 +62,7 @@ const ProductCard = ({ product }) => {
 
       <Link
         href={`/products/${product.slug}`}
-        className="group relative flex flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-card transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-card-hover"
+        className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-card transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:-translate-y-1.5 hover:border-primary-100 hover:shadow-card-hover"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -96,7 +96,7 @@ const ProductCard = ({ product }) => {
         </span>
 
         {/* Image */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-slate-100/80 to-slate-200/60">
+        <div className="relative mx-2 mt-2 aspect-[4/3] overflow-hidden rounded-lg bg-gradient-to-b from-slate-100/80 to-slate-200/60">
           <img
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             src={product.image}
@@ -172,13 +172,13 @@ const ProductCard = ({ product }) => {
               </span>
             )}
 
-            <h3 className="line-clamp-2 min-h-[2.5rem] text-[13px] font-semibold leading-snug text-gray-800 transition-colors group-hover:text-primary group-hover:underline group-hover:underline-offset-2 sm:text-sm">
+            <h3 className="line-clamp-3 min-h-[2.5rem] text-[13px] font-semibold leading-snug text-gray-800 transition-colors group-hover:text-primary group-hover:underline group-hover:underline-offset-2 sm:line-clamp-2 sm:text-sm">
               {limitProductName(product.name)}
             </h3>
 
             {/* Spec chips — single scrollable row, no wrapping into long rows */}
             {specChips.length > 0 && (
-              <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="-mx-1 mt-1 flex gap-1.5 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-0">
                 {specChips.map((spec, i) => (
                   <span
                     key={i}
