@@ -63,6 +63,7 @@ export default function HeroSearch() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="e.g. Core i7 MacBook 16GB RAM"
                 aria-label="Search products by description"
+                enterKeyHint="search"
                 className="w-full bg-transparent px-3 py-3.5 text-sm text-gray-800 placeholder-gray-400 outline-none sm:text-base"
               />
               <button
@@ -74,18 +75,20 @@ export default function HeroSearch() {
             </div>
           </form>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-white/70">Try:</span>
-            {EXAMPLES.map((ex) => (
-              <button
-                key={ex}
-                type="button"
-                onClick={() => go(ex)}
-                className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/20"
-              >
-                {ex}
-              </button>
-            ))}
+          <div className="mt-3 flex items-center gap-2">
+            <span className="shrink-0 text-xs font-semibold text-white/70">Try:</span>
+            <div className="-mr-5 flex gap-2 overflow-x-auto pr-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {EXAMPLES.map((ex) => (
+                <button
+                  key={ex}
+                  type="button"
+                  onClick={() => go(ex)}
+                  className="shrink-0 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur transition hover:bg-white/20"
+                >
+                  {ex}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
