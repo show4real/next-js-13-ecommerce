@@ -83,6 +83,21 @@ export default function Navbar() {
     fetchCategories();
   }, []);
 
+  // Let the mobile bottom-nav tabs drive the navbar's menu, cart and search.
+  useEffect(() => {
+    const openMenu = () => setOpen(true);
+    const openCart = () => setOpenCart(true);
+    const openSearch = () => setMobileSearch(true);
+    window.addEventListener("open-mobile-menu", openMenu);
+    window.addEventListener("open-cart", openCart);
+    window.addEventListener("open-mobile-search", openSearch);
+    return () => {
+      window.removeEventListener("open-mobile-menu", openMenu);
+      window.removeEventListener("open-cart", openCart);
+      window.removeEventListener("open-mobile-search", openSearch);
+    };
+  }, []);
+
   // Close search dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
@@ -390,22 +405,55 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile search row */}
-        <Transition
-          show={mobileSearch}
-          as={Fragment}
-          enter="transition ease-out duration-200"
-          enterFrom="opacity-0 -translate-y-2"
-          enterTo="opacity-100 translate-y-0"
-          leave="transition ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="px-4 pb-3 md:hidden" ref={searchRef}>
-            {SearchBar({ id: "mobile-search" })}
-          </div>
-        </Transition>
       </div>
+
+      {/* Mobile search overlay — opens from the top via the header toggle or the
+          bottom-nav Search tab. A fixed overlay so it's always clearly visible
+          (and doesn't clip the live-results dropdown). */}
+      <Transition show={mobileSearch} as={Fragment}>
+        <div className="fixed inset-0 z-[70] lg:hidden">
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-out duration-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-in duration-150"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div
+              className="absolute inset-0 bg-black/40"
+              onClick={() => setMobileSearch(false)}
+            />
+          </Transition.Child>
+
+          <Transition.Child
+            as={Fragment}
+            enter="transition ease-out duration-200"
+            enterFrom="opacity-0 -translate-y-3"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 -translate-y-3"
+          >
+            <div className="absolute inset-x-0 top-0 bg-white p-4 shadow-lg">
+              <div className="flex items-center gap-3">
+                <div ref={searchRef} className="flex-1">
+                  {SearchBar({ id: "mobile-search" })}
+                </div>
+                <button
+                  type="button"
+                  aria-label="Close search"
+                  onClick={() => setMobileSearch(false)}
+                  className="rounded-full p-2 text-gray-500 transition hover:bg-gray-100"
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+          </Transition.Child>
+        </div>
+      </Transition>
 
       {/* Category strip */}
       <div className="hidden border-b border-gray-200 bg-white lg:block">

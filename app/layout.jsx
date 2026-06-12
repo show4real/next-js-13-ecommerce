@@ -5,6 +5,7 @@ import { Rubik } from "next/font/google";
 
 // components
 import Navbar from "./components/Navbar";
+import BottomNav from "./components/BottomNav";
 import Footer from "./components/Footer";
 import { Facebook } from "/app/components/Facebook";
 import WhatsAppButton from "/app/components/WhatsAppButton";
@@ -140,7 +141,7 @@ const jsonLd = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en-NG" className={rubik.className}>
-      <body>
+      <body className="pb-16 lg:pb-0">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -154,6 +155,7 @@ export default function RootLayout({ children }) {
         />
 
         <Footer />
+        <BottomNav />
       </body>
     </html>
   );

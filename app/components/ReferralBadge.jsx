@@ -164,7 +164,7 @@ const ReferralBadge = () => {
   return (
     <>
       {showBadge && (
-        <div className="fixed bottom-5 left-3 z-50 bg-blue-500 text-white px-6 py-3 rounded-lg flex items-center">
+        <div className="fixed bottom-20 right-4 z-50 flex items-center rounded-lg bg-blue-500 px-6 py-3 text-white lg:bottom-5">
           <div className="mr-2">
             {/* Telegram icon - you can use FontAwesome's faTelegram or a custom SVG */}
             <svg

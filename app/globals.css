@@ -180,3 +180,16 @@ body::before {
     width: 100vw !important;
   }
 }
+
+/* Lift the Facebook Messenger chat bubble above the mobile bottom nav so it
+   doesn't cover the tab bar (or the WhatsApp button). FB re-applies its own
+   inline `bottom`, so we additionally shift it with `transform` (which FB does
+   not override) and target every known FB container. Reset on desktop. */
+@media (max-width: 1023px) {
+  .fb_dialog,
+  div.fb_dialog,
+  .fb_dialog.fb_dialog_advanced,
+  [class*="fb_dialog"] {
+    transform: translateY(-80px) !important;
+  }
+}
