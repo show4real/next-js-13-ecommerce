@@ -6,9 +6,15 @@ import {
   ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import useCartStore from "/app/store/zustand";
+import useHasMounted from "/app/hooks/useHasMounted";
 
 const CartQuick = () => {
-  const { cart, removeFromCart, updateCart, clearCart } = useCartStore();
+  const { cart: persistedCart, removeFromCart, updateCart, clearCart } =
+    useCartStore();
+  // Treat the cart as empty until mounted so server and first client render
+  // agree (the cart only exists in the browser's localStorage).
+  const hasMounted = useHasMounted();
+  const cart = hasMounted ? persistedCart : [];
 
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.quantity * item.price,

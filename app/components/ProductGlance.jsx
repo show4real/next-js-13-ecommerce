@@ -6,6 +6,7 @@ import { Tag, Button, Dropdown, Menu, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 import { getProductImages } from "/app/services/productService";
 import useCartStore from "/app/store/zustand";
+import useHasMounted from "/app/hooks/useHasMounted";
 import "./NumberButton.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,7 +14,10 @@ import { useRouter } from "next/navigation";
 export default function ProductGlance({ product, toggle, show }) {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { cart, addToCart, removeFromCart, updateCart } = useCartStore();
+  const { cart: persistedCart, addToCart, removeFromCart, updateCart } =
+    useCartStore();
+  const hasMounted = useHasMounted();
+  const cart = hasMounted ? persistedCart : [];
   const itemInCart = cart.filter((item) => item.id === product.id);
   const cartItem = cart.find((cartItem) => cartItem.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 import useCartStore from "/app/store/zustand";
+import useHasMounted from "/app/hooks/useHasMounted";
 import { notification, Spin } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,11 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Checkout = () => {
-  const { cart, clearCart } = useCartStore();
+  const { cart: persistedCart, clearCart } = useCartStore();
+  // The cart lives in localStorage, so it's empty during SSR. Render nothing
+  // cart-dependent until mounted to keep server and client markup in sync.
+  const hasMounted = useHasMounted();
+  const cart = hasMounted ? persistedCart : [];
 
   const router = useRouter();
 
@@ -269,6 +274,17 @@ const Checkout = () => {
   const errCls = "mt-1 block text-xs font-medium text-red-500";
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  // Before mount the cart is unknown (still in localStorage). Show a neutral
+  // loader that renders identically on the server and first client paint,
+  // instead of briefly flashing the empty-cart state.
+  if (!hasMounted) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <>

@@ -23,6 +23,7 @@ import { Drawer } from "antd";
 import Logo from "./Logo";
 import CartQuick from "./CartQuick";
 import useCartStore from "/app/store/zustand";
+import useHasMounted from "/app/hooks/useHasMounted";
 import "./social.css";
 
 const navigation = {
@@ -67,7 +68,13 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const { cart } = useCartStore();
-  const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
+  // Gate the cart count behind a mounted check: the server renders an empty
+  // cart (no localStorage), so without this the badge would mismatch on
+  // hydration for any visitor who already has items in their cart.
+  const hasMounted = useHasMounted();
+  const totalQuantity = hasMounted
+    ? cart.reduce((acc, item) => acc + item.quantity, 0)
+    : 0;
 
   const isActive = (href) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);

@@ -82,12 +82,13 @@ export const metadata = {
   verification: {
     google: "4Zkz1j8swUUwJUJrRx2wsqs4YwJy6ru1Xb-9WmFnjek",
   },
-};
-
-export const viewport = {
+  // Next 13.5 (installed here) does not support the separate `export const
+  // viewport` API that arrived in Next 14, so these live inside `metadata`.
   themeColor: "#0E1B4D",
-  width: "device-width",
-  initialScale: 1,
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
 };
 
 const jsonLd = {
