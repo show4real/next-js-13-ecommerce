@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { TESTIMONIALS, TESTIMONIALS_SUMMARY } from "/app/lib/testimonials";
 
 // Public link to the store's Google reviews. Override via env if you have the
@@ -34,6 +35,16 @@ export default function Testimonials() {
   const [reviews, setReviews] = useState(TESTIMONIALS);
   const [summary, setSummary] = useState(TESTIMONIALS_SUMMARY);
   const [source, setSource] = useState("seed");
+  const trackRef = useRef(null);
+
+  // Scroll the slider by roughly one card (plus gap) in either direction.
+  const scrollByCard = (dir) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector("figure");
+    const amount = card ? card.offsetWidth + 16 : track.clientWidth * 0.9;
+    track.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
 
   useEffect(() => {
     let active = true;
@@ -76,22 +87,57 @@ export default function Testimonials() {
           </div>
         </div>
 
-        <a
-          href={GOOGLE_REVIEW_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-primary-300 hover:text-primary"
-        >
-          <GoogleG className="h-4 w-4" />
-          Reviews on Google
-        </a>
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-2 sm:flex">
+            <button
+              type="button"
+              aria-label="Previous reviews"
+              onClick={() => scrollByCard(-1)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-primary-300 hover:text-primary"
+            >
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next reviews"
+              onClick={() => scrollByCard(1)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-primary-300 hover:text-primary"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div>
+
+          <a
+            href={GOOGLE_REVIEW_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-2.5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-card-hover"
+          >
+            <GoogleG className="h-7 w-7 shrink-0" />
+            <span className="flex flex-col items-start leading-tight">
+              <span className="flex items-center gap-1.5">
+                <span className="text-sm font-extrabold text-gray-900">
+                  {Number(summary.rating).toFixed(1)}
+                </span>
+                <Stars rating={summary.rating} className="h-3.5 w-3.5" />
+              </span>
+              <span className="text-xs font-medium text-gray-500">
+                Read {summary.total?.toLocaleString?.() || summary.total}+ reviews on Google
+              </span>
+            </span>
+            <ChevronRightIcon className="h-4 w-4 shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-primary" />
+          </a>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        ref={trackRef}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {reviews.map((r, i) => (
           <figure
             key={`${r.author}-${i}`}
-            className="flex h-full flex-col rounded-2xl border border-gray-200/80 bg-white p-5 shadow-card transition hover:shadow-card-hover"
+            className="flex w-[85%] shrink-0 snap-start flex-col rounded-2xl border border-gray-200/80 bg-white p-5 shadow-card transition hover:shadow-card-hover sm:w-[360px]"
           >
             <div className="flex items-center gap-3">
               {r.photo ? (
@@ -116,7 +162,7 @@ export default function Testimonials() {
                   {r.time}
                 </p>
               </div>
-              {source === "google" && <GoogleG className="ml-auto h-5 w-5" />}
+              <GoogleG className="ml-auto h-5 w-5" />
             </div>
 
             <Stars rating={r.rating} className="mt-4 h-4 w-4" />

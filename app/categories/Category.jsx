@@ -54,7 +54,7 @@ const Category = ({}) => {
       href={`/categories/${category.slug}`}
       className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-accent hover:shadow-md"
     >
-      View all {category.name}
+      View more {category.name}
       <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
     </Link>
   );
@@ -90,19 +90,13 @@ const Category = ({}) => {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-2xl font-extrabold tracking-tight text-primary md:text-3xl">
-            Explore Our Collections
+            Shop Smarter, Pay Less
           </h2>
           <p className="mt-1.5 max-w-xl text-gray-600">
-            Handpicked gadgets across every category — find your perfect match.
+            Quality US/UK-used laptops, phones &amp; gadgets — tested, trusted and
+            ready to ship. Browse by category and grab a deal today.
           </p>
         </div>
-        <Link
-          href="/categories"
-          className="group hidden items-center gap-2 whitespace-nowrap rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-primary shadow-sm transition hover:border-accent hover:text-accent sm:inline-flex"
-        >
-          View all categories
-          <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
       </div>
 
       {/* Category pills — swipeable on mobile, wraps on desktop */}

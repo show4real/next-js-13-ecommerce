@@ -1,6 +1,7 @@
-import React from "react";
+"use client";
+import React, { useRef } from "react";
 import Link from "next/link";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 /**
  * "Shop by Brand" — a logo wall on the homepage. Uses official brand logos
@@ -24,6 +25,17 @@ const BRANDS = [
 ];
 
 export default function BrandShowcase() {
+  const trackRef = useRef(null);
+
+  // Scroll the slider by roughly one logo card (plus gap) in either direction.
+  const scrollByCard = (dir) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector("a");
+    const amount = card ? card.offsetWidth + 16 : track.clientWidth * 0.8;
+    track.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       {/* Heading */}
@@ -34,23 +46,46 @@ export default function BrandShowcase() {
           </h2>
           <span className="mb-1.5 h-1 w-12 rounded-full bg-accent" />
         </div>
-        <Link
-          href="/brands"
-          className="group inline-flex items-center gap-1 text-sm font-semibold text-accent transition hover:text-accent-700"
-        >
-          View all
-          <ChevronRightIcon className="h-4 w-4 transition group-hover:translate-x-0.5" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-2 sm:flex">
+            <button
+              type="button"
+              aria-label="Previous brands"
+              onClick={() => scrollByCard(-1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-accent-200 hover:text-accent"
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next brands"
+              onClick={() => scrollByCard(1)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-accent-200 hover:text-accent"
+            >
+              <ChevronRightIcon className="h-4 w-4" />
+            </button>
+          </div>
+          <Link
+            href="/brands"
+            className="group inline-flex items-center gap-1 text-sm font-semibold text-accent transition hover:text-accent-700"
+          >
+            View all
+            <ChevronRightIcon className="h-4 w-4 transition group-hover:translate-x-0.5" />
+          </Link>
+        </div>
       </div>
 
-      {/* Logo grid */}
-      <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
+      {/* Single-row logo slider */}
+      <div
+        ref={trackRef}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 scroll-smooth sm:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {BRANDS.map((brand) => (
           <Link
             key={brand.name}
             href={brand.href}
             title={`Shop ${brand.name}`}
-            className="group flex flex-col items-center justify-center gap-2.5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover sm:p-5"
+            className="group flex w-[33%] shrink-0 snap-start flex-col items-center justify-center gap-2.5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-card-hover sm:w-[18%] sm:p-5"
           >
             <div className="flex h-10 w-full items-center justify-center sm:h-12">
               <img

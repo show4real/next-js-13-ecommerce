@@ -86,7 +86,9 @@ export default function ProductList({
 }) {
   // Load initial state from global storage
   const [products, setProducts] = useState([]);
-  const [rows, setRows] = useState(() => loadState('rows', 12, productSection, categoryslug, brandslug));
+  // Trending "Top Picks" is a teaser row: cap it at 6 (desktop) / 4 (mobile).
+  const isTrending = productSection === "Trending Products";
+  const [rows, setRows] = useState(() => loadState('rows', isTrending ? 6 : 12, productSection, categoryslug, brandslug));
   const [page, setPage] = useState(() =>
     initialCategory ? 1 : loadState('page', 1, productSection, categoryslug, brandslug)
   );
@@ -733,8 +735,13 @@ export default function ProductList({
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6 mb-12">
-                  {products.map((product, key) => (
-                    <ProductCard product={product} key={key} />
+                  {(isTrending ? products.slice(0, 6) : products).map((product, key) => (
+                    <div
+                      key={key}
+                      className={isTrending && key >= 4 ? "hidden sm:block" : ""}
+                    >
+                      <ProductCard product={product} />
+                    </div>
                   ))}
                 </div>
               )}

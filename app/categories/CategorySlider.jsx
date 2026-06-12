@@ -59,10 +59,10 @@ const FlashSaleCard = ({ product }) => {
   };
 
   return (
-    <div className="px-2">
-      <Link href={`/products/${product.slug}`}>
+    <div className="h-full px-2">
+      <Link href={`/products/${product.slug}`} className="block h-full">
         <div
-          className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden relative"
+          className="group flex h-full flex-col bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden relative"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -97,12 +97,12 @@ const FlashSaleCard = ({ product }) => {
           </div>
 
           {/* Product Info */}
-          <div className="p-4 space-y-3">
+          <div className="flex flex-1 flex-col p-4">
             <h3 className="text-sm font-semibold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-200 min-h-[2.5rem] flex items-center">
               {limitStringToThreeWords(product.name)}
             </h3>
 
-            <div className="space-y-1">
+            <div className="mt-3 space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold text-gray-900">
                   &#8358;{formatNumber(product.price)}
@@ -112,12 +112,10 @@ const FlashSaleCard = ({ product }) => {
                     &#8358;{formatNumber(product.old_price)}
                   </span>
                 )}
-                
+
               </div>
-               <span className="text-xs text-gray-800 mt-1">
-                    VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))}  (Total: &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))})
-                </span>
-              
+
+
               {/* Stock status */}
               <div className="flex items-center space-x-2">
                 <div className={`w-2 h-2 rounded-full ${product.availability ? 'bg-green-400' : 'bg-red-400'}`} />
@@ -127,10 +125,14 @@ const FlashSaleCard = ({ product }) => {
               </div>
             </div>
 
-            {/* Quick Action Button */}
-            <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200 transform group-hover:scale-105 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
-              Quick View
-            </button>
+            {/* Quick Action Button — collapsed (no height) until hover, then expands in */}
+            <div className="mt-auto grid grid-rows-[0fr] transition-all duration-300 group-hover:grid-rows-[1fr]">
+              <div className="overflow-hidden">
+                <button className="mt-3 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 px-4 rounded-lg font-medium text-sm transition-all duration-200 opacity-0 group-hover:opacity-100">
+                  Quick View
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </Link>

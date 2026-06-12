@@ -35,7 +35,7 @@
 
 .slick-track {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 .slick-slide {

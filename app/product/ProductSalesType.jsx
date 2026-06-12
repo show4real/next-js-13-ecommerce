@@ -71,7 +71,7 @@ const SaleProductCard = ({ product }) => {
 
         {/* Info */}
         <div className="p-3 flex flex-col gap-1.5 flex-1">
-          <h3 className="text-xs sm:text-sm font-medium text-gray-800 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="min-h-[2.5rem] text-xs sm:text-sm font-medium text-gray-800 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
             {limitName(product.name)}
           </h3>
 
@@ -86,9 +86,6 @@ const SaleProductCard = ({ product }) => {
                 </span>
               )}
             </div>
-            <p className="text-[10px] text-gray-500">
-              VAT: &#8358;{formatNumber(Math.round(product.price * 0.075))} &nbsp;|&nbsp; Total: &#8358;{formatNumber(Math.round(product.price * 1.075))}
-            </p>
             <div className="flex items-center gap-1.5">
               <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${product.availability ? "bg-green-500" : "bg-red-400"}`} />
               <span className={`text-[10px] font-medium ${product.availability ? "text-green-600" : "text-red-500"}`}>

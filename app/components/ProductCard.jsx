@@ -40,7 +40,6 @@ const ProductCard = ({ product }) => {
     ? Math.round(((product.old_price - product.price) / product.old_price) * 100)
     : 0;
   const saving = hasDiscount ? product.old_price - product.price : 0;
-  const vat = Math.round(product.price * 0.075);
 
   // Headline label above the title (brand · type) — adds context without clutter
   const brandName = product.brand?.name;
@@ -184,14 +183,9 @@ const ProductCard = ({ product }) => {
                 )}
               </div>
 
-              {hasDiscount ? (
+              {hasDiscount && (
                 <p className="mt-0.5 text-[11px] font-semibold text-emerald-600">
                   You save &#8358;{formatNumber(saving)}
-                </p>
-              ) : (
-                <p className="mt-0.5 text-[11px] text-gray-500">
-                  +VAT &#8358;{formatNumber(vat)} · Total &#8358;
-                  {formatNumber(product.price + vat)}
                 </p>
               )}
 
