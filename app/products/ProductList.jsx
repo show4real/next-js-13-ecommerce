@@ -736,12 +736,12 @@ export default function ProductList({
                 </div>
               ) : isTrending ? (
                 <>
-                  {/* Mobile: horizontal slider · Desktop: grid */}
-                  <div className="-mx-4 mb-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 scroll-smooth sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3 lg:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {/* Mobile: 2-col grid (4 products) · Desktop: grid (6 products) */}
+                  <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                     {products.slice(0, 6).map((product, key) => (
                       <div
                         key={key}
-                        className="w-[78%] shrink-0 snap-start sm:w-auto"
+                        className={key >= 4 ? "hidden sm:block" : ""}
                       >
                         <ProductCard product={product} />
                       </div>

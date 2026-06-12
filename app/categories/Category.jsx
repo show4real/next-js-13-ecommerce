@@ -163,7 +163,7 @@ const Category = ({}) => {
                 <div
                   key={productKey}
                   data-slide
-                  className="w-[78%] shrink-0 snap-start sm:w-[48%] md:w-[31%] lg:w-[23%]"
+                  className="w-[52%] shrink-0 snap-start sm:w-[48%] md:w-[31%] lg:w-[23%]"
                 >
                   <ProductCard product={product} />
                 </div>
