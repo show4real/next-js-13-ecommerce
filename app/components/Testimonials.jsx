@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { TESTIMONIALS, TESTIMONIALS_SUMMARY } from "/app/lib/testimonials";
+import useAutoScroll from "../hooks/useAutoScroll";
 
 // Public link to the store's Google reviews. Override via env if you have the
 // exact "write a review" / profile URL; otherwise we deep-link a Google search.
@@ -45,6 +46,11 @@ export default function Testimonials() {
     const amount = card ? card.offsetWidth + 16 : track.clientWidth * 0.9;
     track.scrollBy({ left: dir * amount, behavior: "smooth" });
   };
+
+  // Auto-advance the reviews rail; re-arms when live reviews replace the seed.
+  useAutoScroll(trackRef, { cardSelector: "figure", interval: 5000 }, [
+    reviews.length,
+  ]);
 
   useEffect(() => {
     let active = true;

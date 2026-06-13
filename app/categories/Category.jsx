@@ -10,6 +10,7 @@ import {
   PlayIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import useAutoScroll from "../hooks/useAutoScroll";
 
 const Category = ({}) => {
   const [categories, setCategories] = useState([]);
@@ -17,6 +18,7 @@ const Category = ({}) => {
   const [youtube, setYoutube] = useState("");
   const [activeTab, setActiveTab] = useState(0);
   const trackRef = useRef(null);
+  const pillsRef = useRef(null);
 
   // Scroll the product slider by roughly one card (plus gap) in either direction.
   const scrollByCard = (dir) => {
@@ -26,6 +28,32 @@ const Category = ({}) => {
     const amount = card ? card.offsetWidth + 16 : track.clientWidth * 0.8;
     track.scrollBy({ left: dir * amount, behavior: "smooth" });
   };
+
+  // Scroll the category-pills rail (mobile only — it wraps on desktop).
+  const scrollPills = (dir) => {
+    const track = pillsRef.current;
+    if (!track) return;
+    track.scrollBy({ left: dir * track.clientWidth * 0.7, behavior: "smooth" });
+  };
+
+  // Auto-advance the product slider and the category pills. The deps re-arm the
+  // timers once the async categories have rendered (the refs are null on the
+  // initial loading render). Pills are a no-op on desktop where they wrap.
+  const active = categories[activeTab] || categories[0];
+  useAutoScroll(
+    trackRef,
+    { cardSelector: "[data-slide]", interval: 5000 },
+    [active?.products?.length, activeTab]
+  );
+  useAutoScroll(pillsRef, { cardSelector: "button", interval: 5000 }, [
+    categories.length,
+  ]);
+
+  // Jump the product slider back to the start whenever a new category is
+  // selected, so it doesn't open part-way through where the last one left off.
+  useEffect(() => {
+    trackRef.current?.scrollTo({ left: 0, behavior: "instant" });
+  }, [activeTab]);
 
   useEffect(() => {
     getData();
@@ -87,8 +115,6 @@ const Category = ({}) => {
 
   if (!categories.length) return null;
 
-  const active = categories[activeTab] || categories[0];
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Header */}
@@ -112,25 +138,40 @@ const Category = ({}) => {
         </Link>
       </div>
 
-      {/* Category pills — swipeable on mobile, wraps on desktop */}
-      <div className="no-scrollbar -mx-4 mb-6 flex snap-x gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-        {categories.map((category, key) => {
-          const isActive = key === activeTab;
-          return (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setActiveTab(key)}
-              className={`snap-start whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
-                isActive
-                  ? "bg-primary text-white shadow-sm"
-                  : "border border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary"
-              }`}
-            >
-              {category.name}
-            </button>
-          );
-        })}
+      {/* Category pills — auto-scrolling & swipeable on mobile, wraps on desktop */}
+      <div className="relative mb-6">
+        <div
+          ref={pillsRef}
+          className="no-scrollbar -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 pr-12 sm:mx-0 sm:flex-wrap sm:px-0 sm:pr-0"
+        >
+          {categories.map((category, key) => {
+            const isActive = key === activeTab;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveTab(key)}
+                className={`snap-start whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
+                  isActive
+                    ? "bg-primary text-white shadow-sm"
+                    : "border border-gray-200 bg-white text-gray-600 hover:border-primary hover:text-primary"
+                }`}
+              >
+                {category.name}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Mobile-only navigation icon for the category list */}
+        <button
+          type="button"
+          aria-label="More categories"
+          onClick={() => scrollPills(1)}
+          className="absolute right-0 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/95 text-gray-600 shadow-md backdrop-blur transition hover:border-primary hover:text-primary active:scale-95 sm:hidden"
+        >
+          <ChevronRightIcon className="h-4 w-4" />
+        </button>
       </div>
 
       {/* Active category products — single-row slider with side arrows */}

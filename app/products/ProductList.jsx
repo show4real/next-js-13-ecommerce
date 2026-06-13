@@ -15,6 +15,8 @@ import {
   XMarkIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   ArrowsUpDownIcon,
   ArrowRightIcon,
   MagnifyingGlassIcon,
@@ -408,12 +410,13 @@ export default function ProductList({
   };
 
   const onPage = (newPage, newRows) => {
-    console.log('Pagination changed:', { newPage, newRows, currentPage: page, currentRows: rows });
     setPage(newPage);
     if (newRows && newRows !== rows) {
       setRows(newRows);
     }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Scroll back to the top of *this* section (not the whole page), so on the
+    // home page paginating one section keeps the user where they were.
+    scrollToSection();
   };
 
   const formatPrice = (value) =>
@@ -657,13 +660,35 @@ export default function ProductList({
             <div className="lg:col-span-3">
               <div className="mb-6 rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-card sm:px-5">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                  <p className="text-sm text-gray-600">
-                    Showing{" "}
-                    <span className="font-semibold text-primary">
-                      {total === 0 ? 0 : (page - 1) * rows + 1}–{Math.min(page * rows, total)}
-                    </span>{" "}
-                    of <span className="font-semibold text-primary">{total}</span> products
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <p className="text-sm text-gray-600">
+                      Showing{" "}
+                      <span className="font-semibold text-primary">
+                        {total === 0 ? 0 : (page - 1) * rows + 1}–{Math.min(page * rows, total)}
+                      </span>{" "}
+                      of <span className="font-semibold text-primary">{total}</span> products
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        aria-label="Previous page"
+                        onClick={() => onPage(page - 1, rows)}
+                        disabled={page <= 1}
+                        className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-200 disabled:hover:text-gray-600"
+                      >
+                        <ChevronLeftIcon className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Next page"
+                        onClick={() => onPage(page + 1, rows)}
+                        disabled={page >= Math.ceil(total / rows)}
+                        className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-200 disabled:hover:text-gray-600"
+                      >
+                        <ChevronRightIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
                     <span className="hidden text-sm font-medium text-gray-500 lg:inline">Sort by</span>
 

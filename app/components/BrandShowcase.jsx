@@ -2,6 +2,7 @@
 import React, { useRef } from "react";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import useAutoScroll from "../hooks/useAutoScroll";
 
 /**
  * "Shop by Brand" — a logo wall on the homepage. Uses official brand logos
@@ -35,6 +36,9 @@ export default function BrandShowcase() {
     const amount = card ? card.offsetWidth + 16 : track.clientWidth * 0.8;
     track.scrollBy({ left: dir * amount, behavior: "smooth" });
   };
+
+  // Auto-advance the logo wall; pauses on hover/touch.
+  useAutoScroll(trackRef, { cardSelector: "a", interval: 5000 });
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
