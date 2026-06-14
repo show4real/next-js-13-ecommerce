@@ -22,6 +22,7 @@ import {
   getRelatedProduct,
 } from "/app/services/productService";
 import { getProductSpecs } from "/app/lib/productSpecs";
+import { hasNewPrice, getEffectivePrice, getStrikePrice } from "/app/lib/price";
 import useCartStore from "/app/store/zustand";
 import useHasMounted from "/app/hooks/useHasMounted";
 import { OFFICES as offices } from "/app/lib/business";
@@ -282,6 +283,10 @@ const ProductDetail = ({ product }) => {
   // Number of Cores, Storage Type, Display Size, Graphics Card, etc.)
   const specs = getProductSpecs(product);
 
+  // Effective price (what we charge) and the normal price to strike, if on sale.
+  const effectivePrice = getEffectivePrice(product);
+  const strikePrice = getStrikePrice(product);
+
   return (
     <section className="bg-gray-50 py-8 sm:py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -331,17 +336,31 @@ const ProductDetail = ({ product }) => {
                     {product.name}
                   </h1>
 
-                  {/* Price */}
+                  {/* Price — when a sale price is set it's shown and the normal
+                      price is struck; the effective price drives VAT/total and
+                      is what we charge. */}
                   <div className="mt-5 rounded-xl bg-primary-50 p-4">
-                    <span className="text-3xl font-extrabold text-primary">
-                      &#8358;{formatNumber(product.price)}
-                    </span>
+                    <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
+                      <span className="text-3xl font-extrabold text-primary">
+                        &#8358;{formatNumber(effectivePrice)}
+                      </span>
+                      {strikePrice && (
+                        <span className="pb-1 text-lg text-gray-400 line-through">
+                          &#8358;{formatNumber(strikePrice)}
+                        </span>
+                      )}
+                      {strikePrice && (
+                        <span className="mb-1 inline-flex items-center rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold text-white">
+                          Save &#8358;{formatNumber(strikePrice - effectivePrice)}
+                        </span>
+                      )}
+                    </div>
                     <p className="mt-1 text-sm text-gray-600">
-                      Incl. VAT &#8358;{formatNumber(Math.round(product.price * 0.075))}
+                      Incl. VAT &#8358;{formatNumber(Math.round(effectivePrice * 0.075))}
                       <span className="mx-1.5 text-gray-300">•</span>
                       Total{" "}
                       <span className="font-semibold text-primary">
-                        &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))}
+                        &#8358;{formatNumber(Math.round(effectivePrice + Math.round(effectivePrice * 0.075)))}
                       </span>
                     </p>
                   </div>

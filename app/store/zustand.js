@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { getEffectivePrice } from '/app/lib/price';
 
 // On the server `localStorage` doesn't exist. Hand persist a no-op store there
 // so importing/evaluating this module (e.g. during SSR of a client component)
@@ -15,11 +16,13 @@ const useCartStore = create(
     (set, get) => ({
       cart: [],
       
-      // Add product to cart
+      // Add product to cart. Normalize `price` to the effective (unstruck)
+      // price so totals, payment and the order request all use what the
+      // customer actually pays — the new price when on sale, else the normal.
       addToCart: (product) => {
         const { cart } = get();
         const existingItem = cart.find(item => item.id === product.id);
-        
+
         if (existingItem) {
           set({
             cart: cart.map(item =>
@@ -30,7 +33,7 @@ const useCartStore = create(
           });
         } else {
           set({
-            cart: [...cart, { ...product, quantity: 1 }]
+            cart: [...cart, { ...product, price: getEffectivePrice(product), quantity: 1 }]
           });
         }
       },

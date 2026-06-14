@@ -5,6 +5,7 @@ import ProductGallery from "./ProductGallery";
 import { Tag, Button, Dropdown, Menu, message } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 import { getProductImages } from "/app/services/productService";
+import { getEffectivePrice, getStrikePrice } from "/app/lib/price";
 import useCartStore from "/app/store/zustand";
 import useHasMounted from "/app/hooks/useHasMounted";
 import "./NumberButton.css";
@@ -182,17 +183,24 @@ export default function ProductGlance({ product, toggle, show }) {
                       {product.name}
                     </h1>
 
-                    {/* Price */}
+                    {/* Price — sale price shown with the normal price struck */}
                     <div className="mb-6 rounded-xl bg-primary-50 p-4">
-                      <span className="text-2xl font-extrabold text-primary sm:text-3xl">
-                        &#8358;{formatNumber(product.price)}
-                      </span>
+                      <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
+                        <span className="text-2xl font-extrabold text-primary sm:text-3xl">
+                          &#8358;{formatNumber(getEffectivePrice(product))}
+                        </span>
+                        {getStrikePrice(product) && (
+                          <span className="pb-1 text-lg text-gray-400 line-through">
+                            &#8358;{formatNumber(getStrikePrice(product))}
+                          </span>
+                        )}
+                      </div>
                       <p className="mt-1 text-sm text-gray-600">
-                        Incl. VAT &#8358;{formatNumber(Math.round(product.price * 0.075))}
+                        Incl. VAT &#8358;{formatNumber(Math.round(getEffectivePrice(product) * 0.075))}
                         <span className="mx-1.5 text-gray-300">•</span>
                         Total{" "}
                         <span className="font-semibold text-primary">
-                          &#8358;{formatNumber(Math.round(product.price + Math.round(product.price * 0.075)))}
+                          &#8358;{formatNumber(Math.round(getEffectivePrice(product) + Math.round(getEffectivePrice(product) * 0.075)))}
                         </span>
                       </p>
                     </div>

@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import ProductGlance from "./ProductGlance";
 import Link from "next/link";
+import { hasNewPrice, getEffectivePrice, getStrikePrice } from "/app/lib/price";
 
 const ProductCard = ({ product }) => {
   const [productView, setProduct] = useState(null);
@@ -35,11 +36,14 @@ const ProductCard = ({ product }) => {
     String(v).trim().toLowerCase() !== "null";
 
   const inStock = product.availability == 1;
-  const hasDiscount = product.old_price && product.old_price > product.price;
+  // Two-price model: when a new (sale) price is set, it's the price shown and
+  // the normal price is struck through; otherwise only the normal price shows.
+  const effectivePrice = getEffectivePrice(product);
+  const strikePrice = getStrikePrice(product);
+  const hasDiscount = hasNewPrice(product);
   const discountPct = hasDiscount
-    ? Math.round(((product.old_price - product.price) / product.old_price) * 100)
+    ? Math.round(((strikePrice - effectivePrice) / strikePrice) * 100)
     : 0;
-  const saving = hasDiscount ? product.old_price - product.price : 0;
 
   // Headline label above the title (brand · type) — adds context without clutter
   const brandName = product.brand?.name;
@@ -194,20 +198,14 @@ const ProductCard = ({ product }) => {
             <div className="mt-auto pt-1">
               <div className="flex flex-wrap items-end gap-x-2 gap-y-0.5">
                 <span className="text-base font-extrabold text-primary sm:text-lg">
-                  &#8358;{formatNumber(product.price)}
+                  &#8358;{formatNumber(effectivePrice)}
                 </span>
                 {hasDiscount && (
                   <span className="pb-0.5 text-sm text-gray-400 line-through sm:text-xs">
-                    &#8358;{formatNumber(product.old_price)}
+                    &#8358;{formatNumber(strikePrice)}
                   </span>
                 )}
               </div>
-
-              {hasDiscount && (
-                <p className="mt-0.5 text-xs font-semibold text-emerald-600 sm:text-[11px]">
-                  You save &#8358;{formatNumber(saving)}
-                </p>
-              )}
 
               {/* <button
                 className="group/btn mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-500 py-2.5 text-xs font-semibold text-white shadow-sm shadow-primary/20 transition-all duration-300 hover:from-accent hover:to-accent-500 hover:shadow-lg hover:shadow-accent/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-100 disabled:bg-none disabled:text-gray-400 disabled:shadow-none sm:py-3 sm:text-sm"
