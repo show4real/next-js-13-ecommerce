@@ -125,7 +125,7 @@ export default function HeroSearch() {
                 placeholder="e.g. Core i7 MacBook 16GB RAM"
                 aria-label="Search products by description"
                 enterKeyHint="search"
-                className="w-full bg-transparent px-3 py-3.5 text-sm text-gray-800 placeholder-gray-400 outline-none sm:text-base"
+                className="w-full bg-transparent px-3 py-3.5 text-base text-gray-800 placeholder-gray-400 outline-none"
               />
               {query && (
                 <button

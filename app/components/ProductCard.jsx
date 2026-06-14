@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { EyeOutlined, HeartFilled, HeartOutlined } from "@ant-design/icons";
 import {
   CpuChipIcon,
@@ -15,6 +15,7 @@ const ProductCard = ({ product }) => {
   const [productView, setProduct] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
   const [wished, setWished] = useState(false);
+  const specsRef = useRef(null);
 
   const formatNumber = (number) =>
     number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0;
@@ -57,6 +58,52 @@ const ProductCard = ({ product }) => {
     { icon: CircleStackIcon, value: product.storage },
     { icon: ComputerDesktopIcon, value: product.display_size && `${product.display_size}"` },
   ].filter((chip) => isPresent(chip.value));
+
+  // On mobile, gently auto-scroll (ping-pong) the spec chips so all specs are
+  // visible without the user swiping. Stops once the user touches/scrolls it,
+  // and only runs when the row actually overflows and motion isn't reduced.
+  useEffect(() => {
+    const el = specsRef.current;
+    if (!el) return;
+    if (!window.matchMedia("(max-width: 639px)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (el.scrollWidth <= el.clientWidth) return;
+
+    let raf;
+    let dir = 1;
+    let paused = false;
+    const speed = 0.4; // px per frame
+
+    const pause = () => {
+      paused = true;
+    };
+    el.addEventListener("pointerdown", pause, { passive: true });
+    el.addEventListener("touchstart", pause, { passive: true });
+    el.addEventListener("wheel", pause, { passive: true });
+
+    const step = () => {
+      if (!paused) {
+        const max = el.scrollWidth - el.clientWidth;
+        el.scrollLeft += dir * speed;
+        if (el.scrollLeft >= max) {
+          el.scrollLeft = max;
+          dir = -1;
+        } else if (el.scrollLeft <= 0) {
+          el.scrollLeft = 0;
+          dir = 1;
+        }
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("touchstart", pause);
+      el.removeEventListener("wheel", pause);
+    };
+  }, [specChips.length]);
 
   return (
     <>
@@ -182,7 +229,10 @@ const ProductCard = ({ product }) => {
 
             {/* Spec chips — single scrollable row, no wrapping into long rows */}
             {specChips.length > 0 && (
-              <div className="-mx-1 mt-1 flex gap-1.5 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-0">
+              <div
+                ref={specsRef}
+                className="-mx-1 mt-1 flex gap-1.5 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-0"
+              >
                 {specChips.map((spec, i) => (
                   <span
                     key={i}
