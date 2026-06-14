@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import Paystack from "/app/components/paystack.webp";
+// Relative static import so the bundler emits a hashed asset URL that works in
+// production builds (a leading-slash "/app/..." specifier doesn't bundle).
+import Paystack from "./paystack.webp";
 
 const PaymentImage = () => {
   return (
