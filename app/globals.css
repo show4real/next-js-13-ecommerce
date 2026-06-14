@@ -11,6 +11,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Stop iOS Safari from auto-zooming when a form field is focused. iOS only
+   zooms when the focused control's font-size is < 16px, so enforce 16px on
+   phones. `!important` is needed to beat Tailwind's text-size utilities
+   (e.g. text-sm) which out-specify a bare element selector. */
+@media screen and (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 body {
   color: #15233f;
   background-color: #eef1f8;

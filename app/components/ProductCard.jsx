@@ -72,7 +72,11 @@ const ProductCard = ({ product }) => {
     let raf;
     let dir = 1;
     let paused = false;
-    const speed = 0.4; // px per frame
+    const speed = 0.5; // px per frame
+    // Track position in a float: iOS Safari rounds scrollLeft to integers, so
+    // reading it back and adding a sub-pixel step never accumulates. Keeping
+    // our own float and assigning it each frame makes the scroll actually move.
+    let pos = el.scrollLeft;
 
     const pause = () => {
       paused = true;
@@ -84,14 +88,15 @@ const ProductCard = ({ product }) => {
     const step = () => {
       if (!paused) {
         const max = el.scrollWidth - el.clientWidth;
-        el.scrollLeft += dir * speed;
-        if (el.scrollLeft >= max) {
-          el.scrollLeft = max;
+        pos += dir * speed;
+        if (pos >= max) {
+          pos = max;
           dir = -1;
-        } else if (el.scrollLeft <= 0) {
-          el.scrollLeft = 0;
+        } else if (pos <= 0) {
+          pos = 0;
           dir = 1;
         }
+        el.scrollLeft = pos;
       }
       raf = requestAnimationFrame(step);
     };
