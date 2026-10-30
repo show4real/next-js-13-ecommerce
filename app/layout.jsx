@@ -9,6 +9,7 @@ import BottomNav from "./components/BottomNav";
 import Footer from "./components/Footer";
 import { Facebook } from "/app/components/Facebook";
 import WhatsAppButton from "/app/components/WhatsAppButton";
+import ChatWidget from "/app/components/ChatWidget";
 import { socials } from "./components/socials";
 
 const rubik = Rubik({ subsets: ["latin"], display: "swap" });
@@ -153,6 +154,7 @@ export default function RootLayout({ children }) {
           phoneNumber="2349161401307"
           message="Hello! I need a gadget"
         />
+        <ChatWidget />
 
         <Footer />
         <BottomNav />
