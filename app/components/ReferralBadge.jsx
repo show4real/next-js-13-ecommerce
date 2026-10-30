@@ -163,8 +163,11 @@ const ReferralBadge = () => {
 
   return (
     <>
+      {/* Left lane: the right lane is taken by the AI chat launcher (mobile)
+          and the WhatsApp button (desktop), so this sits above WhatsApp on
+          mobile and bottom-left on desktop. */}
       {showBadge && (
-        <div className="fixed bottom-20 right-4 z-50 flex items-center rounded-lg bg-blue-500 px-6 py-3 text-white lg:bottom-5">
+        <div className="fixed bottom-36 left-4 right-auto z-50 flex items-center rounded-lg bg-blue-500 px-6 py-3 text-white shadow-lg lg:bottom-5">
           <div className="mr-2">
             {/* Telegram icon - you can use FontAwesome's faTelegram or a custom SVG */}
             <svg
